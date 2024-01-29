@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+
+  blogs Blog[]
+}
+
+model Blog {
+  id   String @id @default(uuid())
+  slug String @unique
+  name String
+
+  articles Article[]
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+}
+
+model Article {
+  id      String @id @default(uuid())
+  // should be unique if same blog
+  slug    String
+  title   String
+  content String
+
+  blog   Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  blogId String
+}
