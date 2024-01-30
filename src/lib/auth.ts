@@ -1,1 +1,4 @@
-export const user = { id: "e5e0c3fe-65cb-428e-8afb-03f3f51ac8f1" };
+export const user = {
+  id: "81a963a2-c3dc-4364-b377-c1000f2d14c8",
+  username: "philly",
+};
