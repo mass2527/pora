@@ -13,3 +13,17 @@ export function invariant(
     throw new Error(message ?? "Assertion failed");
   }
 }
+
+export function formatDate(
+  date: Date,
+  {
+    locales,
+    options,
+  }: { locales?: string | string[]; options?: Intl.DateTimeFormatOptions } = {}
+) {
+  return new Intl.DateTimeFormat(locales, options).format(date);
+}
+
+export function assertNever(x: never): never {
+  throw new Error("Unexpected object: " + x);
+}
