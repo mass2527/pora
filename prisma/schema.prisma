@@ -26,15 +26,38 @@ model Blog {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
+
+  categories Category[]
 }
 
 model Article {
-  id      String @id @default(uuid())
+  id          String  @id @default(uuid())
   // should be unique if same blog
-  slug    String
-  title   String
-  content String
+  slug        String
+  title       String
+  description String?
+  content     String
+  // writing | published | hidden
+  status      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   blog   Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  blogId String
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+}
+
+model Category {
+  id   String @id @default(uuid())
+  name String
+  // should be unique if same blog
+  slug String
+
+  articles Article[]
+
+  blog   Blog   @relation(fields: [blogId], references: [id])
   blogId String
 }
