@@ -37,6 +37,7 @@ export default async function BlogPage({
       articles: {
         include: {
           category: true,
+          blog: true,
         },
       },
     },
@@ -81,7 +82,7 @@ function BlogTable({
   blog,
 }: {
   blog: Prisma.BlogGetPayload<{
-    include: { articles: { include: { category: true } } };
+    include: { articles: { include: { category: true; blog: true } } };
   }>;
 }) {
   return (

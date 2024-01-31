@@ -1,7 +1,8 @@
 "use client";
 
-import { Article } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
@@ -9,10 +10,15 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
 } from "~/components/ui/dropdown-menu";
 import { ResponseError, handleError } from "~/lib/errors";
 
-export default function ArticleRowAction({ article }: { article: Article }) {
+export default function ArticleRowAction({
+  article,
+}: {
+  article: Prisma.ArticleGetPayload<{ include: { blog: true } }>;
+}) {
   const router = useRouter();
 
   return (
@@ -27,6 +33,12 @@ export default function ArticleRowAction({ article }: { article: Article }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
+        <DropdownMenuItem asChild>
+          <Link href={`/dashboard/${article.blog.slug}/${article.slug}/edit`}>
+            수정
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={async () => {
             try {
