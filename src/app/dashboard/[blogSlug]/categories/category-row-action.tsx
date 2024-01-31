@@ -75,15 +75,18 @@ export default function CategoryRowAction({
           <DropdownMenuItem
             onClick={async () => {
               try {
-                await fetch(
+                const response = await fetch(
                   `/api/blogs/${category.blogId}/categories/${category.id}`,
                   {
                     method: "DELETE",
                   }
                 );
+                if (!response.ok) {
+                  throw new ResponseError("Bad fetch response", response);
+                }
                 router.refresh();
               } catch (error) {
-                console.error(error);
+                handleError(error);
               }
             }}
           >
