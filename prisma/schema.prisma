@@ -32,7 +32,6 @@ model Blog {
 
 model Article {
   id          String  @id @default(uuid())
-  // should be unique if same blog
   slug        String
   title       String
   description String?
@@ -48,16 +47,22 @@ model Article {
 
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId String
+
+  // slug should be unique if same blog
+  @@unique([blogId, slug])
 }
 
 model Category {
   id   String @id @default(uuid())
   name String
-  // should be unique if same blog
   slug String
 
   articles Article[]
 
   blog   Blog   @relation(fields: [blogId], references: [id])
   blogId String
+
+  // name and slug should be unique if same blog
+  @@unique([blogId, name])
+  @@unique([blogId, slug])
 }
