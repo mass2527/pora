@@ -20,11 +20,21 @@ import {
   DropdownMenuItem,
 } from "~/components/ui/dropdown-menu";
 import { z } from "zod";
-import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { Loading } from "~/components/ui/loading";
-
-const editCategoryFormId = "edit_category";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { categorySchema } from "~/lib/validations/category";
+import { ResponseError, handleError } from "~/lib/errors";
 
 export default function CategoryRowAction({
   category,
@@ -33,7 +43,13 @@ export default function CategoryRowAction({
 }) {
   const router = useRouter();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const form = useForm<z.infer<typeof categorySchema>>({
+    resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: category.name,
+      slug: category.slug,
+    },
+  });
 
   return (
     <>
@@ -81,70 +97,87 @@ export default function CategoryRowAction({
             <DialogTitle>카테고리</DialogTitle>
           </DialogHeader>
 
-          <form
-            onSubmit={async (event) => {
-              event.preventDefault();
-
-              try {
-                const formData = new FormData(event.currentTarget);
-                const schema = z.object({
-                  name: z.string().min(1),
-                  slug: z.string().min(1),
-                });
-                const { name, slug } = schema.parse({
-                  name: formData.get("name"),
-                  slug: formData.get("slug"),
-                });
-                setIsEditing(true);
-                await fetch(
-                  `/api/blogs/${category.blogId}/categories/${category.id}`,
-                  {
-                    method: "PATCH",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      name,
-                      slug,
-                    }),
+          <Form {...form}>
+            <form
+              className="flex flex-col gap-2"
+              onSubmit={form.handleSubmit(async (values) => {
+                try {
+                  const response = await fetch(
+                    `/api/blogs/${category.blogId}/categories/${category.id}`,
+                    {
+                      method: "PATCH",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(values),
+                    }
+                  );
+                  if (!response.ok) {
+                    throw new ResponseError("Bad fetch response", response);
                   }
-                );
-                setIsEditDialogOpen(false);
-                router.refresh();
-              } catch (error) {
-                console.error(error);
-              } finally {
-                setIsEditing(false);
-              }
-            }}
-            className="flex flex-col gap-2"
-            id={editCategoryFormId}
-          >
-            <Label htmlFor="name">이름*</Label>
-            <Input
-              id="name"
-              name="name"
-              defaultValue={category.name}
-              required
-            />
-            <Label htmlFor="slug">슬러그*</Label>
-            <Input
-              id="slug"
-              name="slug"
-              defaultValue={category.slug}
-              required
-            />
-          </form>
 
-          <DialogFooter>
-            <Button
-              type="submit"
-              form={editCategoryFormId}
-              disabled={isEditing}
+                  setIsEditDialogOpen(false);
+                  router.refresh();
+                } catch (error) {
+                  if (error instanceof ResponseError) {
+                    if (error.response.status === 409) {
+                      const json = (await error.response.json()) as {
+                        target: [string, keyof z.infer<typeof categorySchema>];
+                      };
+                      const [, name] = json.target;
+
+                      form.setError(name, {
+                        message: `이미 존재하는 ${
+                          {
+                            name: "이름",
+                            slug: "슬러그",
+                          }[name]
+                        }입니다.`,
+                      });
+                    }
+                    return;
+                  }
+
+                  handleError(error);
+                }
+              })}
             >
-              {isEditing ? <Loading /> : "수정"}
-            </Button>
-          </DialogFooter>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>이름*</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormDescription />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>슬러그*</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormDescription />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? <Loading /> : "수정"}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </>

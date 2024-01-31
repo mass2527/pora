@@ -26,13 +26,13 @@ import {
 } from "~/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createCategorySchema } from "~/lib/validations/category";
+import { categorySchema } from "~/lib/validations/category";
 
 export default function CreateCategoryButton({ blogId }: { blogId: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const form = useForm<z.infer<typeof createCategorySchema>>({
-    resolver: zodResolver(createCategorySchema),
+  const form = useForm<z.infer<typeof categorySchema>>({
+    resolver: zodResolver(categorySchema),
   });
 
   return (
@@ -70,10 +70,7 @@ export default function CreateCategoryButton({ blogId }: { blogId: string }) {
                 if (error instanceof ResponseError) {
                   if (error.response.status === 409) {
                     const json = (await error.response.json()) as {
-                      target: [
-                        string,
-                        keyof z.infer<typeof createCategorySchema>
-                      ];
+                      target: [string, keyof z.infer<typeof categorySchema>];
                     };
                     const [, name] = json.target;
 

@@ -2,7 +2,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError, z } from "zod";
 import { user } from "~/lib/auth";
 import prisma from "~/lib/prisma";
-import { createCategorySchema } from "~/lib/validations/category";
+import { categorySchema } from "~/lib/validations/category";
 
 export async function POST(
   req: Request,
@@ -14,7 +14,7 @@ export async function POST(
     }
 
     const json = await req.json();
-    const { name, slug } = createCategorySchema.parse(json);
+    const { name, slug } = categorySchema.parse(json);
     const newCategory = await prisma.category.create({
       data: {
         name,

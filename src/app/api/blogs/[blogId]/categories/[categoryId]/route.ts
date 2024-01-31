@@ -1,6 +1,8 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError, z } from "zod";
 import { user } from "~/lib/auth";
 import prisma from "~/lib/prisma";
+import { categorySchema } from "~/lib/validations/category";
 
 export async function PATCH(
   req: Request,
@@ -12,12 +14,7 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const { name, slug } = z
-      .object({
-        name: z.string().min(1),
-        slug: z.string().min(1),
-      })
-      .parse(json);
+    const { name, slug } = categorySchema.parse(json);
     const updatedCategory = await prisma.category.update({
       where: {
         id: params.categoryId,
@@ -31,6 +28,12 @@ export async function PATCH(
   } catch (error) {
     if (error instanceof ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
+    }
+
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return new Response(JSON.stringify(error.meta), { status: 409 });
+      }
     }
 
     return new Response(null, { status: 500 });
