@@ -56,10 +56,6 @@ export async function DELETE(
     });
     return new Response(JSON.stringify(deletedCategory));
   } catch (error) {
-    if (error instanceof ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
     return new Response(null, { status: 500 });
   }
 }
