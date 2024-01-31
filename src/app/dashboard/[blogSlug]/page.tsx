@@ -16,6 +16,7 @@ import { getCurrentUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { assertNever, cn, formatDate, invariant } from "~/lib/utils";
 import { getArticleStatusLabel } from "~/services/article";
+import ArticleRowAction from "./article-row-action";
 
 export default async function BlogPage({
   params,
@@ -92,6 +93,7 @@ function BlogTable({
           <TableHead>카테고리</TableHead>
           <TableHead>슬러그</TableHead>
           <TableHead>작성일</TableHead>
+          <TableHead />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -130,6 +132,9 @@ function BlogTable({
               <TableCell>{article.category.name}</TableCell>
               <TableCell>{article.slug}</TableCell>
               <TableCell>{formatDate(article.createdAt)}</TableCell>
+              <TableCell>
+                <ArticleRowAction article={article} />
+              </TableCell>
             </TableRow>
           );
         })}
