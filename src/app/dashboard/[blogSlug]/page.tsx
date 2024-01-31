@@ -99,9 +99,8 @@ function BlogTable({
       <TableBody>
         {blog.articles.map((article) => {
           const statusLabel = getArticleStatusLabel(article.status);
-          let title: ReactNode;
-          if (statusLabel === "발행됨") {
-            title = (
+          const title =
+            statusLabel === "발행됨" ? (
               <Link
                 target="_blank"
                 className={cn(buttonVariants({ variant: "link" }), "p-0")}
@@ -109,21 +108,9 @@ function BlogTable({
               >
                 {article.title}
               </Link>
+            ) : (
+              article.title
             );
-          } else if (statusLabel === "숨겨짐") {
-            title = <span>{article.title}</span>;
-          } else if (statusLabel === "작성중") {
-            title = (
-              <Link
-                className={cn(buttonVariants({ variant: "link" }), "p-0")}
-                href={`/dashboard/${blog.slug}/${article.slug}/edit`}
-              >
-                {article.title}
-              </Link>
-            );
-          } else {
-            assertNever(statusLabel);
-          }
 
           return (
             <TableRow key={article.id}>
