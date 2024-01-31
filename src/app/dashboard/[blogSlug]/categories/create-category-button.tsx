@@ -12,14 +12,28 @@ import {
 import { useState } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
 import { Loading } from "~/components/ui/loading";
+import { ResponseError, handleError } from "~/lib/errors";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createCategorySchema } from "~/lib/validations/category";
 
 export default function CreateCategoryButton({ blogId }: { blogId: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const form = useForm<z.infer<typeof createCategorySchema>>({
+    resolver: zodResolver(createCategorySchema),
+  });
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -31,51 +45,90 @@ export default function CreateCategoryButton({ blogId }: { blogId: string }) {
           <DialogTitle>새 카테고리</DialogTitle>
         </DialogHeader>
 
-        <form
-          onSubmit={async (event) => {
-            event.preventDefault();
+        <Form {...form}>
+          <form
+            className="flex flex-col gap-2"
+            onSubmit={form.handleSubmit(async (values) => {
+              try {
+                const response = await fetch(
+                  `/api/blogs/${blogId}/categories`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(values),
+                  }
+                );
+                if (!response.ok) {
+                  throw new ResponseError("Bad fetch response", response);
+                }
 
-            const formData = new FormData(event.currentTarget);
-            const schema = z.object({
-              name: z.string().min(1),
-              slug: z.string().min(1),
-            });
+                setIsOpen(false);
+                router.refresh();
+              } catch (error) {
+                if (error instanceof ResponseError) {
+                  if (error.response.status === 409) {
+                    const json = (await error.response.json()) as {
+                      target: [
+                        string,
+                        keyof z.infer<typeof createCategorySchema>
+                      ];
+                    };
+                    const [, name] = json.target;
 
-            try {
-              const { name, slug } = schema.parse({
-                name: formData.get("name"),
-                slug: formData.get("slug"),
-              });
-              setIsLoading(true);
-              await fetch(`/api/blogs/${blogId}/categories`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ name, slug }),
-              });
-              setIsOpen(false);
-              router.refresh();
-            } catch (error) {
-              console.error(error);
-            } finally {
-              setIsLoading(false);
-            }
-          }}
-          className="flex flex-col gap-2"
-          id="new_category"
-        >
-          <Label htmlFor="name">이름*</Label>
-          <Input id="name" name="name" required />
-          <Label htmlFor="slug">슬러그*</Label>
-          <Input id="slug" name="slug" required />
-        </form>
+                    form.setError(name, {
+                      message: `이미 존재하는 ${
+                        {
+                          name: "이름",
+                          slug: "슬러그",
+                        }[name]
+                      }입니다.`,
+                    });
+                  }
+                  return;
+                }
 
-        <DialogFooter>
-          <Button type="submit" form="new_category" disabled={isLoading}>
-            {isLoading ? <Loading /> : "생성"}
-          </Button>
-        </DialogFooter>
+                handleError(error);
+              }
+            })}
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>이름*</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>슬러그*</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormDescription />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? <Loading /> : "생성"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

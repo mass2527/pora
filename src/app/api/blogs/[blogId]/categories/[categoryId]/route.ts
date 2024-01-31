@@ -8,7 +8,7 @@ export async function PATCH(
 ) {
   try {
     if (!user) {
-      return new Response("Unauthorized", { status: 403 });
+      return new Response("Unauthorized", { status: 401 });
     }
 
     const json = await req.json();
@@ -43,7 +43,7 @@ export async function DELETE(
 ) {
   try {
     if (!user) {
-      return new Response("Unauthorized", { status: 403 });
+      return new Response("Unauthorized", { status: 401 });
     }
 
     const deletedCategory = await prisma.category.delete({
