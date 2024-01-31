@@ -1,6 +1,6 @@
 import React from "react";
 
-import { user } from "~/lib/auth";
+import { getCurrentUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 
 import { notFound } from "next/navigation";
@@ -13,6 +13,11 @@ export default async function CategoriesPage({
 }: {
   params: { blogSlug: string };
 }) {
+  const user = await getCurrentUser();
+  if (!user) {
+    notFound();
+  }
+
   const blog = await prisma.blog.findUnique({
     where: {
       slug: params.blogSlug,

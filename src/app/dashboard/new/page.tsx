@@ -3,18 +3,23 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { z } from "zod";
 import prisma from "~/lib/prisma";
-import { user } from "~/lib/auth";
 import { Blog } from "@prisma/client";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button, buttonVariants } from "~/components/ui/button";
+import { getCurrentUser } from "~/lib/auth";
 
-export default function NewDashboardPage() {
+export default async function NewDashboardPage() {
   async function createBlog(formData: FormData) {
     "use server";
 
     let newBlog: Blog | undefined = undefined;
     try {
+      const user = await getCurrentUser();
+      if (!user) {
+        throw new Error("Forbidden");
+      }
+
       const schema = z.object({
         name: z.string(),
         slug: z.string(),
@@ -27,7 +32,6 @@ export default function NewDashboardPage() {
         data: {
           name,
           slug,
-          // FIXME
           userId: user.id,
         },
       });

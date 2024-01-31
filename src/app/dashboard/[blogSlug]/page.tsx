@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { user } from "~/lib/auth";
+import { getCurrentUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { assertNever, cn, formatDate, invariant } from "~/lib/utils";
 import { getArticleStatusLabel } from "~/services/article";
@@ -22,6 +22,11 @@ export default async function BlogPage({
 }: {
   params: { blogSlug: string };
 }) {
+  const user = await getCurrentUser();
+  if (!user) {
+    notFound();
+  }
+
   const blog = await prisma.blog.findUnique({
     where: {
       slug: params.blogSlug,

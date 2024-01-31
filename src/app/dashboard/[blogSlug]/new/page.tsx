@@ -14,7 +14,7 @@ import { buttonVariants, Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { user } from "~/lib/auth";
+import { getCurrentUser } from "~/lib/auth";
 import { ARTICLE_STATUS } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import { invariant } from "~/lib/utils";
@@ -24,6 +24,11 @@ export default async function NewArticlePage({
 }: {
   params: { blogSlug: string };
 }) {
+  const user = await getCurrentUser();
+  if (!user) {
+    notFound();
+  }
+
   const blog = await prisma.blog.findUnique({
     where: {
       slug: params.blogSlug,
