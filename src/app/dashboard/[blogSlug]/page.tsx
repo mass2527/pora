@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ReactNode } from "react";
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import { buttonVariants } from "~/components/ui/button";
 import {
@@ -14,9 +13,10 @@ import {
 } from "~/components/ui/table";
 import { getCurrentUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
-import { assertNever, cn, formatDate, invariant } from "~/lib/utils";
+import { cn, formatDate } from "~/lib/utils";
 import { getArticleStatusLabel } from "~/services/article";
 import ArticleRowAction from "./article-row-action";
+import NewArticleButton from "./new-article-button";
 
 export default async function BlogPage({
   params,
@@ -50,12 +50,8 @@ export default async function BlogPage({
     <div className="min-h-screen p-4 flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold tracking-tight">아티클</h1>
-        <Link
-          href={`/dashboard/${params.blogSlug}/new`}
-          className={buttonVariants()}
-        >
-          새 아티클
-        </Link>
+
+        <NewArticleButton blog={blog} />
       </div>
 
       {blog.articles.length > 0 ? (
@@ -64,14 +60,7 @@ export default async function BlogPage({
         <EmptyPlaceholder
           title="아직 아무 글도 쓰지 않았어요."
           description="생각과 경험을 공유하고 블로그를 더 풍부하게 만들어보세요."
-          action={
-            <Link
-              href={`/dashboard/${params.blogSlug}/new`}
-              className={buttonVariants({ size: "sm" })}
-            >
-              새 아티클
-            </Link>
-          }
+          action={<NewArticleButton blog={blog} />}
         />
       )}
     </div>
@@ -117,7 +106,7 @@ function BlogTable({
             <TableRow key={article.id}>
               <TableCell>{title}</TableCell>
               <TableCell>{statusLabel}</TableCell>
-              <TableCell>{article.category.name}</TableCell>
+              <TableCell>{article.category?.name}</TableCell>
               <TableCell>{article.slug}</TableCell>
               <TableCell>{formatDate(article.createdAt)}</TableCell>
               <TableCell>

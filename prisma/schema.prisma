@@ -45,8 +45,8 @@ model Article {
   blog   Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
   blogId String
 
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
 
   // slug should be unique if same blog
   @@unique([blogId, slug])

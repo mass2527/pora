@@ -2,9 +2,8 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError } from "zod";
 
 import { user } from "~/lib/auth";
-import { ARTICLE_STATUS } from "~/lib/constants";
 import prisma from "~/lib/prisma";
-import { articleSchema } from "~/lib/validations/article";
+import { createArticleSchema } from "~/lib/validations/article";
 
 export async function POST(
   req: Request,
@@ -16,8 +15,8 @@ export async function POST(
     }
 
     const json = await req.json();
-    const { categoryId, slug, title, description, content } =
-      articleSchema.parse(json);
+    const { categoryId, slug, title, description, content, status } =
+      createArticleSchema.parse(json);
     const newArticle = await prisma.article.create({
       data: {
         categoryId,
@@ -26,7 +25,7 @@ export async function POST(
         description,
         content,
         blogId: params.blogId,
-        status: ARTICLE_STATUS.published,
+        status,
       },
     });
 
