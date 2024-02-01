@@ -1,0 +1,17 @@
+import { useCallback, useEffect, useRef } from "react";
+
+export function useSavedCallback<T extends (...args: any[]) => any>(
+  callback: T
+) {
+  const callbackRef = useRef(callback);
+
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
+  const savedCallback = useCallback((...args: any[]) => {
+    return callbackRef.current(...args);
+  }, []) as T;
+
+  return savedCallback;
+}
