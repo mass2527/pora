@@ -1,8 +1,21 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { ZodError } from "zod";
+import { ZodError, z } from "zod";
 import { getCurrentUser, user } from "~/lib/auth";
+import { ARTICLE_STATUS } from "~/lib/constants";
 import prisma from "~/lib/prisma";
-import { updateArticleSchema } from "~/lib/validations/article";
+import { slugString } from "~/lib/validations/common";
+
+const schema = z
+  .object({
+    categoryId: z.string().optional(),
+    slug: slugString,
+    title: z.string(),
+    description: z.string().optional(),
+    jsonContent: z.string(),
+    htmlContent: z.string(),
+    status: z.enum(Object.values(ARTICLE_STATUS) as [string, ...string[]]),
+  })
+  .partial();
 
 export async function PATCH(
   req: Request,
@@ -22,7 +35,7 @@ export async function PATCH(
       jsonContent,
       htmlContent,
       status,
-    } = updateArticleSchema.partial().parse(json);
+    } = schema.parse(json);
     const updatedArticle = await prisma.article.update({
       where: {
         id: params.articleId,

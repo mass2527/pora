@@ -1,12 +1,10 @@
 "use client";
 
-import React from "react";
 import { Button } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { ResponseError, handleError } from "~/lib/errors";
-import { updateArticleSchema } from "~/lib/validations/article";
 import { useRouter } from "next/navigation";
 import {
   Form,
@@ -24,10 +22,21 @@ import {
   SelectItem,
 } from "~/components/ui/select";
 import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ARTICLE_STATUS } from "~/lib/constants";
+import Editor from "~/components/editor";
+import { debounce } from "~/lib/debounce";
+import { Editor as EditorType } from "@tiptap/react";
+import { slugString } from "~/lib/validations/common";
+
+const schema = z.object({
+  categoryId: z.string(),
+  slug: slugString,
+  title: z.string().min(1),
+  description: z.string(),
+  status: z.enum(Object.values(ARTICLE_STATUS) as [string, ...string[]]),
+});
 
 export default function EditArticleForm({
   article,
@@ -36,18 +45,43 @@ export default function EditArticleForm({
     include: { blog: { include: { categories: true } } };
   }>;
 }) {
-  const form = useForm<z.infer<typeof updateArticleSchema>>({
-    resolver: zodResolver(updateArticleSchema),
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: {
       categoryId: article.categoryId ?? undefined,
       slug: article.slug,
       title: article.title,
       description: article.description ?? undefined,
-      content: article.content,
       status: ARTICLE_STATUS.published,
     },
   });
   const router = useRouter();
+
+  const updateArticle = debounce(async ({ editor }: { editor: EditorType }) => {
+    const jsonContent = JSON.stringify(editor.getJSON());
+    const htmlContent = editor.getHTML();
+
+    try {
+      const response = await fetch(
+        `/api/blogs/${article.blogId}/articles/${article.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            jsonContent,
+            htmlContent,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new ResponseError("Bad fetch request", response);
+      }
+    } catch (error) {
+      handleError(error);
+    }
+  }, 750);
 
   return (
     <Form {...form}>
@@ -69,12 +103,13 @@ export default function EditArticleForm({
               throw new ResponseError("Bad fetch response", response);
             }
 
+            router.refresh();
             router.replace(`/dashboard/${article.blog.slug}`);
           } catch (error) {
             if (error instanceof ResponseError) {
               if (error.response.status === 409) {
                 const json = (await error.response.json()) as {
-                  target: [string, keyof z.infer<typeof updateArticleSchema>];
+                  target: [string, keyof z.infer<typeof schema>];
                 };
                 const [, name] = json.target;
 
@@ -89,6 +124,13 @@ export default function EditArticleForm({
           }
         })}
       >
+        <Button
+          className="ml-auto"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? <Loading /> : "발행"}
+        </Button>
         <FormField
           control={form.control}
           name="categoryId"
@@ -115,7 +157,6 @@ export default function EditArticleForm({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="slug"
@@ -129,7 +170,6 @@ export default function EditArticleForm({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="title"
@@ -143,7 +183,6 @@ export default function EditArticleForm({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="description"
@@ -158,27 +197,18 @@ export default function EditArticleForm({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>내용</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button
-          className="ml-auto"
-          type="submit"
-          disabled={form.formState.isSubmitting || !form.formState.isDirty}
-        >
-          {form.formState.isSubmitting ? <Loading /> : "발행"}
-        </Button>
+        <div className="border border-input rounded-md w-full">
+          <Editor
+            content={JSON.parse(article.jsonContent)}
+            editorProps={{
+              attributes: {
+                class: "prose prose-zinc w-full max-w-none",
+              },
+            }}
+            onUpdate={updateArticle}
+            onBlur={updateArticle}
+          />
+        </div>
       </form>
     </Form>
   );
