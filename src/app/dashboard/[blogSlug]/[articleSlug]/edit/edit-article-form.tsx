@@ -29,6 +29,8 @@ import Editor from "~/components/editor";
 import { debounce } from "~/lib/debounce";
 import { Editor as EditorType } from "@tiptap/react";
 import { slugString } from "~/lib/validations/common";
+import CreateCategoryButton from "../../categories/create-category-button";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 
 const schema = z.object({
   categoryId: z.string(),
@@ -131,32 +133,37 @@ export default function EditArticleForm({
         >
           {form.formState.isSubmitting ? <Loading /> : "발행"}
         </Button>
+
         <FormField
           control={form.control}
           name="categoryId"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>카테고리*</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="카테고리를 선택해 주세요." />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
+            <FormItem className="space-y-3">
+              <FormLabel>카테고리</FormLabel>
+              <FormControl>
+                <RadioGroup onValueChange={field.onChange} value={field.value}>
                   {article.blog.categories.map((category) => {
                     return (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
+                      <FormItem
+                        key={category.id}
+                        className="flex items-center space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <RadioGroupItem value={category.id} />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          {category.name}
+                        </FormLabel>
+                      </FormItem>
                     );
                   })}
-                </SelectContent>
-              </Select>
+                </RadioGroup>
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="slug"
@@ -175,9 +182,11 @@ export default function EditArticleForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>제목*</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  placeholder="아티클의 핵심 내용을 요약해 보세요."
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
