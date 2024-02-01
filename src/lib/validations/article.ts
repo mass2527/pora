@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { ARTICLE_STATUS } from "../constants";
+import { slugString } from "./common";
 
-export const articleSchema = z.object({
-  categoryId: z.string().min(1),
-  slug: z.string().min(1),
+export const updateArticleSchema = z.object({
+  categoryId: z.string(),
+  slug: slugString,
   title: z.string().min(1),
-  description: z.string().optional(),
-  content: z.string().min(1),
+  description: z.string(),
+  content: z.string(),
   status: z.enum(Object.values(ARTICLE_STATUS) as [string, ...string[]]),
 });
 

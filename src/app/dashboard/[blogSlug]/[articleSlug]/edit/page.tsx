@@ -1,5 +1,3 @@
-import { buttonVariants } from "~/components/ui/button";
-import Link from "next/link";
 import prisma from "~/lib/prisma";
 import { notFound } from "next/navigation";
 import EditArticleForm from "./edit-article-form";
@@ -37,16 +35,7 @@ export default async function ArticleEditPage({
 
   return (
     <div className="p-4">
-      <div>
-        <Link
-          className={buttonVariants({ variant: "outline" })}
-          href={`/dashboard/${params.blogSlug}`}
-        >
-          취소
-        </Link>
-      </div>
-
-      <div className="min-h-[calc(100vh-72px)] grid place-items-center">
+      <div className="max-w-[860px] mx-auto">
         <EditArticleForm article={article} />
       </div>
     </div>

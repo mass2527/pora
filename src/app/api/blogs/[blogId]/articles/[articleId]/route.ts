@@ -2,7 +2,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError } from "zod";
 import { getCurrentUser, user } from "~/lib/auth";
 import prisma from "~/lib/prisma";
-import { articleSchema } from "~/lib/validations/article";
+import { updateArticleSchema } from "~/lib/validations/article";
 
 export async function PATCH(
   req: Request,
@@ -14,8 +14,8 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const { categoryId, slug, title, description, content } =
-      articleSchema.parse(json);
+    const { categoryId, slug, title, description, content, status } =
+      updateArticleSchema.parse(json);
     const updatedArticle = await prisma.article.update({
       where: {
         id: params.articleId,
@@ -26,6 +26,7 @@ export async function PATCH(
         title,
         description,
         content,
+        status,
       },
     });
     return new Response(JSON.stringify(updatedArticle));

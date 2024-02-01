@@ -10,7 +10,7 @@ import { ARTICLE_STATUS } from "~/lib/constants";
 import { ResponseError, handleError } from "~/lib/errors";
 import { createArticleSchema } from "~/lib/validations/article";
 
-export default function NewArticleButton({ blog }: { blog: Blog }) {
+export default function CreateArticleButton({ blog }: { blog: Blog }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,6 +39,7 @@ export default function NewArticleButton({ blog }: { blog: Blog }) {
           }
 
           const article = (await response.json()) as Article;
+          router.refresh();
           router.push(`/dashboard/${blog.slug}/${article.slug}/edit`);
         } catch (error) {
           setIsLoading(false);

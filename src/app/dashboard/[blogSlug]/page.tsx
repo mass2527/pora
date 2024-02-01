@@ -16,7 +16,7 @@ import prisma from "~/lib/prisma";
 import { cn, formatDate } from "~/lib/utils";
 import { getArticleStatusLabel } from "~/services/article";
 import ArticleRowAction from "./article-row-action";
-import NewArticleButton from "./new-article-button";
+import CreateArticleButton from "./create-article-button";
 
 export default async function BlogPage({
   params,
@@ -50,8 +50,7 @@ export default async function BlogPage({
     <div className="min-h-screen p-4 flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-semibold tracking-tight">아티클</h1>
-
-        <NewArticleButton blog={blog} />
+        <CreateArticleButton blog={blog} />
       </div>
 
       {blog.articles.length > 0 ? (
@@ -60,7 +59,7 @@ export default async function BlogPage({
         <EmptyPlaceholder
           title="아직 아무 글도 쓰지 않았어요."
           description="생각과 경험을 공유하고 블로그를 더 풍부하게 만들어보세요."
-          action={<NewArticleButton blog={blog} />}
+          action={<CreateArticleButton blog={blog} />}
         />
       )}
     </div>
