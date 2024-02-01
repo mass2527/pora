@@ -15,15 +15,23 @@ export async function POST(
     }
 
     const json = await req.json();
-    const { categoryId, slug, title, description, content, status } =
-      createArticleSchema.parse(json);
+    const {
+      categoryId,
+      slug,
+      title,
+      description,
+      jsonContent,
+      htmlContent,
+      status,
+    } = createArticleSchema.parse(json);
     const newArticle = await prisma.article.create({
       data: {
         categoryId,
         slug,
         title,
         description,
-        content,
+        jsonContent,
+        htmlContent,
         blogId: params.blogId,
         status,
       },

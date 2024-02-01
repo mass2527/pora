@@ -7,7 +7,8 @@ export const updateArticleSchema = z.object({
   slug: slugString,
   title: z.string().min(1),
   description: z.string(),
-  content: z.string(),
+  jsonContent: z.string(),
+  htmlContent: z.string(),
   status: z.enum(Object.values(ARTICLE_STATUS) as [string, ...string[]]),
 });
 
@@ -16,6 +17,7 @@ export const createArticleSchema = z.object({
   slug: z.string(),
   title: z.string(),
   description: z.string(),
-  content: z.string(),
+  jsonContent: z.string(),
+  htmlContent: z.string(),
   status: z.enum(Object.values(ARTICLE_STATUS) as [string, ...string[]]),
 });

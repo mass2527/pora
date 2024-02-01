@@ -30,7 +30,8 @@ export default function CreateArticleButton({ blog }: { blog: Blog }) {
               slug: crypto.randomUUID(),
               title: "",
               description: "",
-              content: "",
+              jsonContent: JSON.stringify({}),
+              htmlContent: "",
               status: ARTICLE_STATUS.writing,
             } satisfies z.infer<typeof createArticleSchema>),
           });

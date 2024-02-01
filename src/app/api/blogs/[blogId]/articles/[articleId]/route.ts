@@ -14,8 +14,15 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const { categoryId, slug, title, description, content, status } =
-      updateArticleSchema.parse(json);
+    const {
+      categoryId,
+      slug,
+      title,
+      description,
+      jsonContent,
+      htmlContent,
+      status,
+    } = updateArticleSchema.partial().parse(json);
     const updatedArticle = await prisma.article.update({
       where: {
         id: params.articleId,
@@ -25,7 +32,8 @@ export async function PATCH(
         slug,
         title,
         description,
-        content,
+        jsonContent,
+        htmlContent,
         status,
       },
     });

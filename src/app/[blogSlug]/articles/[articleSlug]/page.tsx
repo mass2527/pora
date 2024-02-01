@@ -65,7 +65,9 @@ export default async function ArticleDetailsPage({
         }}
       >
         <div className="p-6 lg:p-0">
-          <div className="lg:pr-20 lg:pb-20 lg:border-r">{article.content}</div>
+          <div className="lg:pr-20 lg:pb-20 lg:border-r">
+            {article.htmlContent}
+          </div>
         </div>
         <div className="hidden lg:block">
           <div className="flex flex-col gap-16 p-10 pt-0">
