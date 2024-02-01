@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Button, buttonVariants } from "~/components/ui/button";
 import { getCurrentUser } from "~/lib/auth";
 
-export default async function NewDashboardPage() {
+export default async function NewBlogPage() {
   async function createBlog(formData: FormData) {
     "use server";
 
