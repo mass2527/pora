@@ -60,7 +60,10 @@ export default function EditArticleForm({
       renderAction={(formState) => {
         return (
           <div className="flex gap-2 ml-auto">
-            <Button type="submit" disabled={formState.isSubmitting}>
+            <Button
+              type="submit"
+              disabled={formState.isSubmitting || !formState.isDirty}
+            >
               {formState.isSubmitting ? <Loading /> : "수정"}
             </Button>
           </div>
