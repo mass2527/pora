@@ -73,7 +73,7 @@ export default async function ArticleDetailsPage({
       </div>
 
       <div className="lg:hidden border-b p-6">
-        <PostedBy user={blog.user} />
+        <WrittenBy user={blog.user} />
       </div>
 
       <div
@@ -92,7 +92,7 @@ export default async function ArticleDetailsPage({
         </div>
         <div className="hidden lg:block">
           <div className="flex flex-col gap-16 p-10 pt-0">
-            <PostedBy user={blog.user} />
+            <WrittenBy user={blog.user} />
           </div>
         </div>
       </div>
@@ -100,7 +100,7 @@ export default async function ArticleDetailsPage({
   );
 }
 
-function PostedBy({ user }: { user: User }) {
+function WrittenBy({ user }: { user: User }) {
   return (
     <div className="flex flex-col gap-4">
       <span className="text-sm text-zinc-500">작성자</span>
