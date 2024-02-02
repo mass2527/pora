@@ -209,7 +209,7 @@ export default function EditArticleForm({
             content={JSON.parse(article.jsonContent)}
             editorProps={{
               attributes: {
-                class: "prose prose-zinc w-full max-w-none",
+                class: "p-4 prose prose-zinc w-full max-w-none",
               },
             }}
             onUpdate={updateArticle}
