@@ -35,6 +35,9 @@ dependencies:
   '@radix-ui/react-slot':
     specifier: ^1.0.2
     version: 1.0.2(@types/react@18.2.48)(react@18.2.0)
+  '@tiptap/core':
+    specifier: ^2.2.1
+    version: 2.2.1(@tiptap/pm@2.2.1)
   '@tiptap/pm':
     specifier: ^2.2.1
     version: 2.2.1
@@ -44,6 +47,9 @@ dependencies:
   '@tiptap/starter-kit':
     specifier: ^2.2.1
     version: 2.2.1(@tiptap/pm@2.2.1)
+  '@tiptap/suggestion':
+    specifier: ^2.2.1
+    version: 2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -71,6 +77,9 @@ dependencies:
   tailwind-merge:
     specifier: ^2.2.1
     version: 2.2.1
+  tippy.js:
+    specifier: ^6.3.7
+    version: 6.3.7
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -1398,6 +1407,16 @@ packages:
       '@tiptap/extension-text': 2.2.1(@tiptap/core@2.2.1)
     transitivePeerDependencies:
       - '@tiptap/pm'
+    dev: false
+
+  /@tiptap/suggestion@2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1):
+    resolution: {integrity: sha512-DIT4zR5CoP0Q5n9BJj68EqmbFGzdyDgDon8yfX1NkynW8PtDrcfGhe5/31tcH6YuM6ZijqNV3fdCt+LPrVr/Nw==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/pm': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.2.1(@tiptap/pm@2.2.1)
+      '@tiptap/pm': 2.2.1
     dev: false
 
   /@types/json5@0.0.29:

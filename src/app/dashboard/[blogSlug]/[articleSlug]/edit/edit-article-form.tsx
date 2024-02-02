@@ -226,11 +226,6 @@ export default function EditArticleForm({
         <div className="border border-input rounded-md w-full">
           <Editor
             content={JSON.parse(article.jsonContent)}
-            editorProps={{
-              attributes: {
-                class: "p-4 prose prose-zinc w-full max-w-none",
-              },
-            }}
             onUpdate={updateArticle}
             onBlur={updateArticle}
           />
