@@ -9,7 +9,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { Input } from "~/components/ui/input";
@@ -28,18 +28,32 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "~/lib/validations/category";
 
-export default function CreateCategoryButton({ blogId }: { blogId: string }) {
+export default function CreateCategoryButton({
+  blogId,
+  trigger = <Button type="button">새 카테고리</Button>,
+}: {
+  blogId: string;
+  trigger?: ReactNode;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof categorySchema>>({
     resolver: zodResolver(categorySchema),
   });
 
+  const {
+    reset,
+    formState: { isSubmitSuccessful },
+  } = form;
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful, reset]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button>새 카테고리</Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>새 카테고리</DialogTitle>
