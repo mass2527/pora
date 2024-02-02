@@ -182,11 +182,9 @@ export default function EditArticleForm({
           name="title"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>제목*</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="아티클의 핵심 내용을 요약해 보세요."
-                  {...field}
-                />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
