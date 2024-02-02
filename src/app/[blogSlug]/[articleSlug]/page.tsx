@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import prisma from "~/lib/prisma";
 import { formatDate } from "~/lib/utils";
@@ -83,12 +84,14 @@ export default async function ArticleDetailsPage({
         }}
       >
         <div className="p-6 lg:p-0">
-          <div
-            className="prose prose-zinc lg:pr-20 lg:pb-20 lg:border-r"
-            dangerouslySetInnerHTML={{
-              __html: article.htmlContent,
-            }}
-          />
+          <div className="lg:pr-20 lg:pb-20 lg:border-r">
+            <div
+              className="prose prose-zinc"
+              dangerouslySetInnerHTML={{
+                __html: article.htmlContent,
+              }}
+            />
+          </div>
         </div>
         <div className="hidden lg:block">
           <div className="flex flex-col gap-16 p-10 pt-0">
@@ -101,10 +104,25 @@ export default async function ArticleDetailsPage({
 }
 
 function WrittenBy({ user }: { user: User }) {
+  const lastName = user.name?.split(" ")[1];
+
   return (
     <div className="flex flex-col gap-4">
       <span className="text-sm text-zinc-500">작성자</span>
-      <span className="text-sm text-foreground">{user.name}</span>
+      <div className="flex gap-4">
+        <Avatar>
+          <AvatarImage src={user.image ?? undefined} />
+          <AvatarFallback>{lastName}</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col">
+          <span className="text-sm text-foreground font-semibold">
+            {user.name}
+          </span>
+          {user.jobPosition && (
+            <span className="text-sm text-zinc-500">{user.jobPosition}</span>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
