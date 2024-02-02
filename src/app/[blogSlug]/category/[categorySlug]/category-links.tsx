@@ -15,22 +15,31 @@ export default function CategoryLinks({
   const params = useParams();
   const pathname = usePathname();
 
+  const allCategories: Category[] = [
+    { id: "all", name: "모든 아티클", slug: "", blogId: "" },
+    ...categories,
+  ];
+
   return (
     <nav>
       {categories.length > 0 ? (
         <ul className="flex">
-          {categories.map((category) => {
+          {allCategories.map((category) => {
+            let href = `/${params.blogSlug}`;
+            if (category.slug !== "") {
+              href += `/category/${category.slug}`;
+            }
+
             return (
               <li key={category.id}>
                 <Link
-                  href={`/${params.blogSlug}/category/${category.slug}`}
+                  href={href}
                   className={cn(
                     buttonVariants({ variant: "link" }),
                     "text-zinc-500 hover:no-underline hover:text-primary",
                     {
                       "text-primary underline hover:underline":
-                        pathname ===
-                        `/${params.blogSlug}/category/${category.slug}`,
+                        pathname === href,
                     }
                   )}
                 >
