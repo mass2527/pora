@@ -2,25 +2,23 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 import { buttonVariants } from "~/components/ui/button";
-import { user } from "~/lib/auth";
+import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 
 export default async function DashboardPage() {
-  const currentUser = await prisma.user.findUnique({
-    where: {
-      id: user.id,
-    },
-    include: {
-      blogs: {
-        include: {
-          articles: true,
-        },
-      },
-    },
-  });
-  if (!currentUser) {
+  const user = await getUser();
+  if (!user) {
     notFound();
   }
+
+  const blogs = await prisma.blog.findMany({
+    where: {
+      userId: user.id,
+    },
+    include: {
+      articles: true,
+    },
+  });
 
   return (
     <div className="min-h-screen p-4 flex flex-col gap-4">
@@ -31,9 +29,9 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      {currentUser.blogs.length > 0 ? (
+      {blogs.length > 0 ? (
         <ul className="grid grid-cols-2">
-          {currentUser.blogs.map((blog) => {
+          {blogs.map((blog) => {
             return (
               <li key={blog.id}>
                 <div className="flex flex-col gap-1">

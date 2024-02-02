@@ -1,14 +1,14 @@
 import prisma from "~/lib/prisma";
 import { notFound } from "next/navigation";
 import EditArticleForm from "./edit-article-form";
-import { getCurrentUser } from "~/lib/auth";
+import { getUser } from "~/lib/auth";
 
 export default async function ArticleEditPage({
   params,
 }: {
   params: { blogSlug: string; articleSlug: string };
 }) {
-  const user = await getCurrentUser();
+  const user = await getUser();
   if (!user) {
     notFound();
   }

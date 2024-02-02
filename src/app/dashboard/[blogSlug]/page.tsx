@@ -11,19 +11,19 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { getCurrentUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { cn, formatDate } from "~/lib/utils";
 import { getArticleStatusLabel } from "~/services/article";
 import ArticleRowAction from "./article-row-action";
 import CreateArticleButton from "./create-article-button";
+import { getUser } from "~/lib/auth";
 
 export default async function BlogPage({
   params,
 }: {
   params: { blogSlug: string };
 }) {
-  const user = await getCurrentUser();
+  const user = await getUser();
   if (!user) {
     notFound();
   }

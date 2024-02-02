@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -99,11 +100,11 @@ export default async function ArticleDetailsPage({
   );
 }
 
-function PostedBy({ user }: { user: { username: string } }) {
+function PostedBy({ user }: { user: User }) {
   return (
     <div className="flex flex-col gap-4">
       <span className="text-sm text-zinc-500">작성자</span>
-      <span className="text-sm text-foreground">{user.username}</span>
+      <span className="text-sm text-foreground">{user.name}</span>
     </div>
   );
 }

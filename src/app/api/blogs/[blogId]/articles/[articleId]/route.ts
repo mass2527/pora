@@ -1,6 +1,6 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError, z } from "zod";
-import { getCurrentUser, user } from "~/lib/auth";
+import { getUser } from "~/lib/auth";
 import { ARTICLE_STATUS } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import { slugString } from "~/lib/validations/common";
@@ -22,6 +22,7 @@ export async function PATCH(
   { params }: { params: { blogId: string; articleId: string } }
 ) {
   try {
+    const user = await getUser();
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
@@ -71,7 +72,7 @@ export async function DELETE(
   { params }: { params: { blogId: string; articleId: string } }
 ) {
   try {
-    const user = await getCurrentUser();
+    const user = await getUser();
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }

@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError } from "zod";
 
-import { user } from "~/lib/auth";
+import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { createArticleSchema } from "~/lib/validations/article";
 
@@ -10,6 +10,7 @@ export async function POST(
   { params }: { params: { blogId: string } }
 ) {
   try {
+    const user = await getUser();
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }

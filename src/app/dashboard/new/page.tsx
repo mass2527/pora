@@ -7,7 +7,7 @@ import { Blog } from "@prisma/client";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button, buttonVariants } from "~/components/ui/button";
-import { getCurrentUser } from "~/lib/auth";
+import { getUser } from "~/lib/auth";
 
 export default async function NewBlogPage() {
   async function createBlog(formData: FormData) {
@@ -15,7 +15,7 @@ export default async function NewBlogPage() {
 
     let newBlog: Blog | undefined = undefined;
     try {
-      const user = await getCurrentUser();
+      const user = await getUser();
       if (!user) {
         throw new Error("Forbidden");
       }
