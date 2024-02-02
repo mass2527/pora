@@ -31,6 +31,7 @@ import { Editor as EditorType } from "@tiptap/react";
 import { slugString } from "~/lib/validations/common";
 import CreateCategoryButton from "../../categories/create-category-button";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import { useRef } from "react";
 
 const schema = z.object({
   categoryId: z.string(),
@@ -58,6 +59,7 @@ export default function EditArticleForm({
     },
   });
   const router = useRouter();
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const updateArticle = debounce(async ({ editor }: { editor: EditorType }) => {
     const jsonContent = JSON.stringify(editor.getJSON());
@@ -87,6 +89,14 @@ export default function EditArticleForm({
 
   return (
     <Form {...form}>
+      <CreateCategoryButton
+        blogId={article.blogId}
+        trigger={
+          <button ref={buttonRef} type="button" className="hidden">
+            새 카테고리
+          </button>
+        }
+      />
       <form
         className="flex flex-col gap-4"
         onSubmit={form.handleSubmit(async (values) => {
@@ -139,7 +149,16 @@ export default function EditArticleForm({
           name="categoryId"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>카테고리</FormLabel>
+              <div className="flex justify-between items-center">
+                <FormLabel>카테고리</FormLabel>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => buttonRef.current?.click()}
+                >
+                  새 카테고리
+                </Button>
+              </div>
               <FormControl>
                 <RadioGroup onValueChange={field.onChange} value={field.value}>
                   {article.blog.categories.map((category) => {
