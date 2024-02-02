@@ -1,10 +1,8 @@
 import { notFound } from "next/navigation";
 import prisma from "~/lib/prisma";
-import CategoryLinks from "./category-links";
-import Link from "next/link";
-import { formatDate } from "~/lib/utils";
+import BlogPageTemplate from "../../blog-page-template";
 
-export default async function ArticleListInCategoryPage({
+export default async function BlogInCategoryPage({
   params,
 }: {
   params: { blogSlug: string; categorySlug: string };
@@ -40,38 +38,5 @@ export default async function ArticleListInCategoryPage({
     notFound();
   }
 
-  return (
-    <div className="min-h-screen p-4">
-      <CategoryLinks categories={blog.categories} />
-
-      <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight my-10">
-        {category.name}
-      </h1>
-
-      {blog.articles.length > 0 ? (
-        <ul className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {blog.articles.map((article) => {
-            return (
-              <li key={article.id}>
-                <Link href={`/${params.blogSlug}/${article.slug}`}>
-                  <div className="border rounded-md p-4 flex flex-col gap-2">
-                    <h2 className="text-xl lg:text-2xl font-semibold tracking-tight">
-                      {article.title}
-                    </h2>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-zinc-500">Author</span>
-                      <span className="text-sm text-zinc-500">
-                        {formatDate(article.createdAt)}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
-    </div>
-  );
+  return <BlogPageTemplate blog={blog} title={category.name} />;
 }
