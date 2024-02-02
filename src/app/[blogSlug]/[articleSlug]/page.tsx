@@ -36,7 +36,7 @@ export default async function ArticleDetailsPage({
     <main className="min-h-screen prose prose-zinc max-w-none">
       <div className="p-6 pt-3">
         <div className="max-w-[1200px] mx-auto">
-          <Link href={`/${params.blogSlug}/articles`}>다른 아티클 보기</Link>
+          <Link href={`/${params.blogSlug}`}>다른 아티클 보기</Link>
           <div className="mb-8">
             <time
               className="text-sm text-zinc-500"
@@ -65,9 +65,12 @@ export default async function ArticleDetailsPage({
         }}
       >
         <div className="p-6 lg:p-0">
-          <div className="lg:pr-20 lg:pb-20 lg:border-r">
-            {article.htmlContent}
-          </div>
+          <div
+            className="lg:pr-20 lg:pb-20 lg:border-r"
+            dangerouslySetInnerHTML={{
+              __html: article.htmlContent,
+            }}
+          />
         </div>
         <div className="hidden lg:block">
           <div className="flex flex-col gap-16 p-10 pt-0">
