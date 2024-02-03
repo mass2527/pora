@@ -2,7 +2,8 @@
 
 import { useEditor, EditorContent, EditorOptions } from "@tiptap/react";
 import { defaultExtensions } from "./extensions";
-import "./styles.css";
+import { EditorBubbleMenu } from "./bubble-menu";
+import { ImageResizer } from "./extensions/image-resizer";
 
 // https://github.com/steven-tey/novel
 export default function Editor(options: Partial<EditorOptions>) {
@@ -25,7 +26,18 @@ export default function Editor(options: Partial<EditorOptions>) {
         },
       },
     },
+    autofocus: "end",
   });
 
-  return <EditorContent editor={editor} />;
+  return (
+    <div
+      onClick={() => {
+        editor?.chain().focus().run();
+      }}
+    >
+      {editor && <EditorBubbleMenu editor={editor} />}
+      {editor?.isActive("image") && <ImageResizer editor={editor} />}
+      <EditorContent editor={editor} />
+    </div>
+  );
 }
