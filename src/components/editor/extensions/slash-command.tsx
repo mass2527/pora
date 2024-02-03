@@ -22,7 +22,7 @@ import {
   Text,
   TextQuote,
 } from "lucide-react";
-// import { startImageUpload } from "@/ui/editor/plugins/upload-images";
+import { startImageUpload } from "../plugins/upload-image";
 
 type CommandItemProps = {
   title: string;
@@ -186,10 +186,10 @@ const getSuggestionItems = ({ query }: { query: string }) => {
         input.type = "file";
         input.accept = "image/*";
         input.onchange = async () => {
-          if (input.files?.length) {
-            const file = input.files[0];
+          const file = input.files?.[0];
+          if (file) {
             const pos = editor.view.state.selection.from;
-            // startImageUpload(file, editor.view, pos);
+            startImageUpload(file, editor.view, pos);
           }
         };
         input.click();
@@ -295,7 +295,7 @@ const CommandList = ({
             key={index}
             onClick={() => selectItem(index)}
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-md border border-stone-200 bg-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-md border border-zinc-200 bg-white">
               {item.icon}
             </div>
             <div>

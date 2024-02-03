@@ -1,13 +1,14 @@
 "use client";
 
 import { useEditor, EditorContent, EditorOptions } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import SlashCommand from "./extensions/slash-command";
+import { defaultExtensions } from "./extensions";
+import "./styles.css";
 
+// https://github.com/steven-tey/novel
 export default function Editor(options: Partial<EditorOptions>) {
   const editor = useEditor({
     ...options,
-    extensions: [StarterKit, SlashCommand],
+    extensions: defaultExtensions,
     editorProps: {
       attributes: {
         class: "p-4 prose prose-zinc w-full max-w-none",
