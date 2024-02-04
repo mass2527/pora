@@ -6,7 +6,7 @@ export default function UserAvatar({
   user,
   className,
 }: {
-  user: Pick<User, "name" | "image">;
+  user: Pick<User, "name" | "image" | "email">;
   className?: string;
 }) {
   const lastName = user.name?.split(" ")[1];
