@@ -3,8 +3,8 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
+import UserAvatar from "~/components/user-avatar";
 import prisma from "~/lib/prisma";
 import { formatDate } from "~/lib/utils";
 import { getArticleStatusLabel } from "~/services/article";
@@ -104,16 +104,11 @@ export default async function ArticleDetailsPage({
 }
 
 function WrittenBy({ user }: { user: User }) {
-  const lastName = user.name?.split(" ")[1];
-
   return (
     <div className="flex flex-col gap-4">
       <span className="text-sm text-zinc-500">작성자</span>
       <div className="flex gap-4">
-        <Avatar>
-          <AvatarImage src={user.image ?? undefined} />
-          <AvatarFallback>{lastName}</AvatarFallback>
-        </Avatar>
+        <UserAvatar user={user} />
         <div className="flex flex-col">
           <span className="text-sm text-foreground font-semibold">
             {user.name}
