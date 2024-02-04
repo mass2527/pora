@@ -120,12 +120,7 @@ export default function EditArticleForm({
           } catch (error) {
             if (error instanceof ResponseError) {
               if (error.response.status === 409) {
-                const json = (await error.response.json()) as {
-                  target: [string, keyof z.infer<typeof schema>];
-                };
-                const [, name] = json.target;
-
-                form.setError(name, {
+                form.setError("slug", {
                   message: `이미 존재하는 슬러그입니다.`,
                 });
               }
