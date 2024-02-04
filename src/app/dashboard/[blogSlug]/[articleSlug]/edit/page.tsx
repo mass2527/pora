@@ -35,7 +35,7 @@ export default async function ArticleEditPage({
 
   return (
     <div className="p-4">
-      <div className="max-w-[860px] mx-auto">
+      <div className="max-w-[720px] mx-auto">
         <EditArticleForm article={article} />
       </div>
     </div>
