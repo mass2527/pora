@@ -30,8 +30,8 @@ import { debounce } from "~/lib/debounce";
 import { Editor as EditorType } from "@tiptap/react";
 import { slugString } from "~/lib/validations/common";
 import CreateCategoryButton from "../../categories/create-category-button";
-import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { useRef } from "react";
+import { PlusIcon } from "lucide-react";
 
 const schema = z.object({
   categoryId: z.string(),
@@ -131,49 +131,36 @@ export default function EditArticleForm({
           }
         })}
       >
-        <Button
-          className="ml-auto"
-          type="submit"
-          disabled={form.formState.isSubmitting}
-        >
-          {form.formState.isSubmitting ? <Loading /> : "발행"}
-        </Button>
-
         <FormField
           control={form.control}
           name="categoryId"
           render={({ field }) => (
-            <FormItem className="space-y-3">
-              <div className="flex justify-between items-center">
-                <FormLabel>카테고리</FormLabel>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => buttonRef.current?.click()}
-                >
-                  새 카테고리
-                </Button>
-              </div>
-              <FormControl>
-                <RadioGroup onValueChange={field.onChange} value={field.value}>
+            <FormItem>
+              <FormLabel>카테고리</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="카테고리 선택" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
                   {article.blog.categories.map((category) => {
                     return (
-                      <FormItem
-                        key={category.id}
-                        className="flex items-center space-x-3 space-y-0"
-                      >
-                        <FormControl>
-                          <RadioGroupItem value={category.id} />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          {category.name}
-                        </FormLabel>
-                      </FormItem>
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
                     );
                   })}
-                </RadioGroup>
-              </FormControl>
+                </SelectContent>
+              </Select>
               <FormMessage />
+              <button
+                className="text-blue-500 text-sm flex items-center gap-1"
+                type="button"
+                onClick={() => buttonRef.current?.click()}
+              >
+                <PlusIcon className="w-4 h-4" /> 새 카테고리
+              </button>
             </FormItem>
           )}
         />
@@ -225,6 +212,14 @@ export default function EditArticleForm({
             onBlur={updateArticle}
           />
         </div>
+
+        <Button
+          className="ml-auto"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting ? <Loading /> : "저장"}
+        </Button>
       </form>
     </Form>
   );
