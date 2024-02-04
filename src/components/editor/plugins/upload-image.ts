@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet, EditorView } from "@tiptap/pm/view";
 import { PutBlobResult } from "@vercel/blob";
+import { invariant } from "~/lib/utils";
 
 const uploadKey = new PluginKey("upload-image");
 
@@ -15,12 +16,12 @@ const UploadImagesPlugin = () =>
       apply(tr, set) {
         set = set.map(tr.mapping, tr.doc);
         // See if the transaction adds or removes any placeholders
+        // @ts-ignore
         const action = tr.getMeta(this);
         if (action && action.add) {
           const { id, pos, src } = action.add;
 
           const placeholder = document.createElement("div");
-          // TODO
           placeholder.setAttribute("class", "img-placeholder");
           const image = document.createElement("img");
           image.setAttribute(
@@ -35,6 +36,7 @@ const UploadImagesPlugin = () =>
           set = set.add(tr.doc, [deco]);
         } else if (action && action.remove) {
           set = set.remove(
+            // @ts-ignore
             set.find(null, null, (spec) => spec.id == action.remove.id)
           );
         }
@@ -52,6 +54,7 @@ export default UploadImagesPlugin;
 
 function findPlaceholder(state: EditorState, id: {}) {
   const decos = uploadKey.getState(state);
+  // @ts-ignore
   const found = decos.find(null, null, (spec) => spec.id == id);
   return found.length ? found[0].from : null;
 }
@@ -59,14 +62,12 @@ function findPlaceholder(state: EditorState, id: {}) {
 export function startImageUpload(file: File, view: EditorView, pos: number) {
   // check if the file is an image
   if (!file.type.includes("image/")) {
-    // toast.error("File type not supported.");
-    console.error("File type not supported.");
+    toast.error("File type not supported.");
     return;
 
     // check if the file size is less than 4.5MB
   } else if (file.size / 1024 / 1024 > 4.5) {
-    // toast.error("File size too big (max 4.5MB).");
-    console.error("File size too big (max 4.5MB).");
+    toast.error("File size too big (max 4.5MB).");
     return;
   }
 
@@ -91,10 +92,7 @@ export function startImageUpload(file: File, view: EditorView, pos: number) {
   };
 
   handleImageUpload(file).then((src) => {
-    debugger;
-
     const { schema } = view.state;
-
     let pos = findPlaceholder(view.state, id);
     // If the content around the placeholder has been deleted, drop
     // the image
@@ -106,8 +104,8 @@ export function startImageUpload(file: File, view: EditorView, pos: number) {
     // When BLOB_READ_WRITE_TOKEN is not valid or unavailable, read
     // the image locally
     const imageSrc = typeof src === "object" ? reader.result : src;
+    invariant(schema.nodes.image);
     const node = schema.nodes.image.create({ src: imageSrc });
-    console.info({ node });
     const transaction = view.state.tr
       .replaceWith(pos, pos, node)
       .setMeta(uploadKey, { remove: { id } });
@@ -122,8 +120,8 @@ export const handleImageUpload = (file: File) => {
       fetch("/api/upload", {
         method: "POST",
         headers: {
-          "content-type": file?.type || "application/octet-stream",
-          "x-vercel-filename": file?.name || "image.png",
+          "content-type": file.type,
+          "x-vercel-filename": encodeURIComponent(file.name),
         },
         body: file,
       }).then(async (res) => {
@@ -150,8 +148,8 @@ export const handleImageUpload = (file: File) => {
         }
       }),
       {
-        loading: "Uploading image...",
-        success: "Image uploaded successfully.",
+        loading: "이미지 업로드중...",
+        success: "이미지가 성공적으로 업로드 되었습니다.",
         error: (e) => e.message,
       }
     );

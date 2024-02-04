@@ -93,7 +93,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       },
     },
     {
-      title: "제목 1",
+      title: "제목1",
       description: "섹션 제목(대)",
       searchTerms: ["title", "big", "large"],
       icon: <Heading1 size={18} />,
@@ -107,7 +107,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       },
     },
     {
-      title: "제목 2",
+      title: "제목2",
       description: "섹션 제목(중)",
       searchTerms: ["subtitle", "medium"],
       icon: <Heading2 size={18} />,
@@ -121,7 +121,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       },
     },
     {
-      title: "제목 3",
+      title: "제목3",
       description: "섹션 제목(소)",
       searchTerms: ["subtitle", "small"],
       icon: <Heading3 size={18} />,
@@ -176,7 +176,7 @@ const getSuggestionItems = ({ query }: { query: string }) => {
     },
     {
       title: "이미지",
-      description: "파일을 업로드하거나 링크를 이용해 임베드하세요.",
+      description: "이미지 파일을 업로드하세요.",
       searchTerms: ["photo", "picture", "media"],
       icon: <ImageIcon size={18} />,
       command: ({ editor, range }: CommandProps) => {

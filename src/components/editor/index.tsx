@@ -5,6 +5,9 @@ import { defaultExtensions } from "./extensions";
 import { EditorBubbleMenu } from "./bubble-menu";
 import { ImageResizer } from "./extensions/image-resizer";
 
+import "./styles/index.css";
+import "./styles/prosemirror.css";
+
 // https://github.com/steven-tey/novel
 export default function Editor(options: Partial<EditorOptions>) {
   const editor = useEditor({
@@ -12,7 +15,7 @@ export default function Editor(options: Partial<EditorOptions>) {
     extensions: defaultExtensions,
     editorProps: {
       attributes: {
-        class: "p-4 prose prose-zinc w-full max-w-none",
+        class: "prose prose-zinc w-full max-w-none",
       },
       handleDOMEvents: {
         keydown: (_view, event) => {
