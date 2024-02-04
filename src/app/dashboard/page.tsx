@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 import { buttonVariants } from "~/components/ui/button";
+import { List, ListItem } from "~/components/ui/list";
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 
@@ -30,26 +31,24 @@ export default async function DashboardPage() {
       </div>
 
       {blogs.length > 0 ? (
-        <ul className="grid grid-cols-2">
+        <List>
           {blogs.map((blog) => {
             return (
-              <li key={blog.id}>
-                <div className="flex flex-col gap-1">
-                  <code className="text-xs text-zinc-500">{blog.slug}</code>
-                  <Link href={`/dashboard/${blog.slug}`}>
-                    <h2 className="text-2xl font-semibold tracking-tight">
-                      {blog.name}
-                    </h2>
-                  </Link>
+              <ListItem key={blog.id} className="flex flex-col gap-1">
+                <code className="text-xs text-zinc-500">{blog.slug}</code>
+                <Link href={`/dashboard/${blog.slug}`}>
+                  <h2 className="text-2xl font-semibold tracking-tight">
+                    {blog.name}
+                  </h2>
+                </Link>
 
-                  <span className="text-sm text-zinc-500">
-                    {blog.articles.length}개의 아티클
-                  </span>
-                </div>
-              </li>
+                <span className="text-sm text-zinc-500">
+                  {blog.articles.length}개의 아티클
+                </span>
+              </ListItem>
             );
           })}
-        </ul>
+        </List>
       ) : null}
     </div>
   );

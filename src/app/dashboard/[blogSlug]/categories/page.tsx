@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import CreateCategoryButton from "./create-category-button";
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import CategoryRowAction from "./category-row-action";
+import { List, ListItem } from "~/components/ui/list";
 
 export default async function CategoriesPage({
   params,
@@ -39,26 +40,25 @@ export default async function CategoriesPage({
       </div>
 
       {blog.categories.length > 0 ? (
-        <ul className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <List>
           {blog?.categories.map((category) => {
             return (
-              <li key={category.id}>
-                <div className="flex justify-between items-center p-4 border rounded-md">
-                  <div>
-                    <h2 className="text-xl font-semibold tracking-tight">
-                      {category.name}
-                    </h2>
-                    <span className="text-xs text-zinc-500">
-                      {category.slug}
-                    </span>
-                  </div>
-
-                  <CategoryRowAction category={category} />
+              <ListItem
+                key={category.id}
+                className="flex justify-between items-center"
+              >
+                <div>
+                  <h2 className="text-xl font-semibold tracking-tight">
+                    {category.name}
+                  </h2>
+                  <span className="text-xs text-zinc-500">{category.slug}</span>
                 </div>
-              </li>
+
+                <CategoryRowAction category={category} />
+              </ListItem>
             );
           })}
-        </ul>
+        </List>
       ) : (
         <EmptyPlaceholder
           title="추가된 카테고리가 없어요."
