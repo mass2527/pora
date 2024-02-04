@@ -5,6 +5,7 @@ import { buttonVariants } from "~/components/ui/button";
 import { List, ListItem } from "~/components/ui/list";
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
+import { cn } from "~/lib/utils";
 
 export default async function DashboardPage() {
   const user = await getUser();
@@ -34,9 +35,15 @@ export default async function DashboardPage() {
         <List>
           {blogs.map((blog) => {
             return (
-              <ListItem key={blog.id} className="flex flex-col gap-1">
+              <ListItem key={blog.id} className="flex flex-col">
                 <code className="text-xs text-zinc-500">{blog.slug}</code>
-                <Link href={`/dashboard/${blog.slug}`}>
+                <Link
+                  href={`/dashboard/${blog.slug}`}
+                  className={cn(
+                    buttonVariants({ variant: "link" }),
+                    "justify-start p-0"
+                  )}
+                >
                   <h2 className="text-2xl font-semibold tracking-tight">
                     {blog.name}
                   </h2>
