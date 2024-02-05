@@ -1,8 +1,10 @@
 import React, { ReactNode } from "react";
 import { getUser } from "~/lib/auth";
-import { notFound } from "next/navigation";
+import { notFound, useSelectedLayoutSegment } from "next/navigation";
 import Link from "next/link";
 import UserAccountNav from "./user-account-nav";
+import BlogNav from "./blog-nav";
+import prisma from "~/lib/prisma";
 
 export default async function DashboardLayout({
   children,
@@ -14,16 +16,23 @@ export default async function DashboardLayout({
     notFound();
   }
 
+  const blogs = await prisma.blog.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
+
   return (
     <div>
       <div className="flex justify-between items-center p-4">
-        <div>
+        <div className="flex items-center gap-4 h-8">
           <Link
             href="/dashboard"
             className="text-xl font-semibold tracking-tight"
           >
             Pora
           </Link>
+          <BlogNav blogs={blogs} />
         </div>
 
         <UserAccountNav
