@@ -6,7 +6,7 @@ import React from "react";
 import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
-type Link = { href: `/${string}`; name: string };
+type Link = { href: string; name: string };
 
 const LINKS: Link[] = [
   { href: "/dashboard", name: "블로그" },

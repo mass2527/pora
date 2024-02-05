@@ -3,6 +3,23 @@ import React, { ReactNode } from "react";
 import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
+type Link = { href: string; name: string };
+
+const LINKS: Link[] = [
+  {
+    href: "",
+    name: "아티클",
+  },
+  {
+    href: "/categories",
+    name: "카테고리",
+  },
+  {
+    href: "/settings",
+    name: "설정",
+  },
+] as const;
+
 export default function BlogLayout({
   params,
   children,
@@ -15,30 +32,18 @@ export default function BlogLayout({
       <div className="border-b">
         <nav className="px-4">
           <ul className="flex gap-4">
-            <li>
-              <Link
-                href={`/dashboard/${params.blogSlug}`}
-                className={cn(buttonVariants({ variant: "link" }), "px-0")}
-              >
-                아티클
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={`/dashboard/${params.blogSlug}/categories`}
-                className={cn(buttonVariants({ variant: "link" }), "px-0")}
-              >
-                카테고리
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={`/dashboard/${params.blogSlug}/settings`}
-                className={cn(buttonVariants({ variant: "link" }), "px-0")}
-              >
-                설정
-              </Link>
-            </li>
+            {LINKS.map((link) => {
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={`/dashboard/${params.blogSlug}${link.href}`}
+                    className={cn(buttonVariants({ variant: "link" }), "px-0")}
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </div>
