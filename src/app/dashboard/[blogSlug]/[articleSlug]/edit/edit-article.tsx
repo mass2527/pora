@@ -4,14 +4,15 @@ import { Prisma } from "@prisma/client";
 import { ResponseError, handleError } from "~/lib/errors";
 import { Input } from "~/components/ui/input";
 import Editor from "~/components/editor";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useDebounce } from "~/hooks/use-debounce";
 import { Badge } from "~/components/ui/badge";
-import { cn, sleep } from "~/lib/utils";
+import { sleep } from "~/lib/utils";
 import UpdateArticleForm from "./update-article-form";
 import { Button } from "~/components/ui/button";
 import { ARTICLE_STATUS } from "~/lib/constants";
 import { ArrowLeftIcon } from "lucide-react";
+import Switch from "~/components/switch";
 
 export default function EditArticle({
   article,
@@ -70,60 +71,72 @@ export default function EditArticle({
 
   return (
     <div>
-      <div
-        className={cn("flex flex-col gap-4", {
-          hidden: step !== "제목 및 내용 입력",
-        })}
-      >
-        <div className="min-h-6 flex justify-end items-center">
-          {saveStatus && <Badge>{saveStatus}</Badge>}
-        </div>
+      <Switch
+        value={step}
+        cases={
+          {
+            "제목 및 내용 입력": (
+              <div className="flex flex-col gap-4">
+                <div className="min-h-6 flex justify-end items-center">
+                  {saveStatus && <Badge>{saveStatus}</Badge>}
+                </div>
 
-        <Input
-          value={articleForm.title}
-          placeholder="핵심 내용을 요약해 보세요."
-          onChange={(event) => {
-            setSaveStatus("");
-            setArticleForm({
-              ...articleForm,
-              title: event.target.value,
-            });
-          }}
-        />
+                <Input
+                  value={articleForm.title}
+                  placeholder="핵심 내용을 요약해 보세요."
+                  onChange={(event) => {
+                    setSaveStatus("");
+                    setArticleForm({
+                      ...articleForm,
+                      title: event.target.value,
+                    });
+                  }}
+                />
 
-        <Editor
-          content={JSON.parse(articleForm.jsonContent)}
-          onUpdate={({ editor }) => {
-            setSaveStatus("");
-            setArticleForm({
-              ...articleForm,
-              htmlContent: editor.getHTML(),
-              jsonContent: JSON.stringify(editor.getJSON()),
-            });
-          }}
-        />
+                <Editor
+                  content={JSON.parse(articleForm.jsonContent)}
+                  onUpdate={({ editor }) => {
+                    setSaveStatus("");
+                    setArticleForm({
+                      ...articleForm,
+                      htmlContent: editor.getHTML(),
+                      jsonContent: JSON.stringify(editor.getJSON()),
+                    });
+                  }}
+                />
 
-        <Button onClick={() => setStep("메타 정보 입력")} className="ml-auto">
-          {article.status === ARTICLE_STATUS.writing ? "발행" : "저장 및 발행"}
-        </Button>
-      </div>
+                <Button
+                  onClick={() => setStep("메타 정보 입력")}
+                  className="ml-auto"
+                >
+                  {article.status === ARTICLE_STATUS.writing
+                    ? "발행"
+                    : "저장 및 발행"}
+                </Button>
+              </div>
+            ),
+            "메타 정보 입력": (
+              <>
+                <Button
+                  className="mb-4 p-0"
+                  type="button"
+                  onClick={() => setStep("제목 및 내용 입력")}
+                  variant="link"
+                >
+                  <ArrowLeftIcon className="w-4 h-4 mr-2" /> 제목 및 내용 수정
+                </Button>
 
-      <div
-        className={cn({
-          hidden: step !== "메타 정보 입력",
-        })}
-      >
-        <Button
-          className="mb-4 p-0"
-          type="button"
-          onClick={() => setStep("제목 및 내용 입력")}
-          variant="link"
-        >
-          <ArrowLeftIcon className="w-4 h-4 mr-2" /> 제목 및 내용 수정
-        </Button>
-
-        <UpdateArticleForm article={article} />
-      </div>
+                <UpdateArticleForm
+                  article={{
+                    ...article,
+                    ...articleForm,
+                  }}
+                />
+              </>
+            ),
+          } satisfies Record<typeof step, ReactNode>
+        }
+      />
     </div>
   );
 }
