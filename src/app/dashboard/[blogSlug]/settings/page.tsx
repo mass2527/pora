@@ -35,7 +35,7 @@ export default async function BlogSettingsPage({
 
       <Card
         title="정보"
-        description="블로그의 이름 및 주소를 나타내기 위해 사용됩니다."
+        description="블로그의 이름을 나타내기 위해 사용됩니다."
         content={<UpdateBlogForm blog={blog} />}
       />
 
