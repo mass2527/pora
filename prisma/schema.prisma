@@ -75,8 +75,8 @@ model Article {
   title       String
   description String?
 
-  jsonContent String
-  htmlContent String
+  jsonContent String @db.Text
+  htmlContent String @db.Text
 
   // writing | published | hidden
   status String
