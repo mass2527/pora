@@ -31,6 +31,14 @@ export default function BlogLayout({
                 카테고리
               </Link>
             </li>
+            <li>
+              <Link
+                href={`/dashboard/${params.blogSlug}/settings`}
+                className={cn(buttonVariants({ variant: "link" }), "px-0")}
+              >
+                설정
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
