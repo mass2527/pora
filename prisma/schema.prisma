@@ -98,7 +98,7 @@ model Category {
 
   articles Article[]
 
-  blog   Blog   @relation(fields: [blogId], references: [id])
+  blog   Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
   blogId String
 
   // name and slug should be unique if same blog
