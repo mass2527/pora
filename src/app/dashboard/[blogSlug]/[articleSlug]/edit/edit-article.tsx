@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client";
 import { ResponseError, handleError } from "~/lib/errors";
 import { Input } from "~/components/ui/input";
 import Editor from "~/components/editor";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useDebounce } from "~/hooks/use-debounce";
 import { Badge } from "~/components/ui/badge";
 import { sleep } from "~/lib/utils";
@@ -26,6 +26,7 @@ export default function EditArticle({
     htmlContent: article.htmlContent,
     jsonContent: article.jsonContent,
   });
+  const latestArticleFormRef = useRef(articleForm);
   const debouncedArticleForm = useDebounce(articleForm, 750);
   const [saveStatus, setSaveStatus] = useState<
     "저장중..." | "저장됨" | "저장 실패" | ""
@@ -35,6 +36,14 @@ export default function EditArticle({
   );
 
   useEffect(() => {
+    const isLatest =
+      latestArticleFormRef.current.title === debouncedArticleForm.title &&
+      latestArticleFormRef.current.jsonContent ===
+        debouncedArticleForm.jsonContent;
+    if (isLatest) {
+      return;
+    }
+
     const controller = new AbortController();
 
     async function updateArticle() {
@@ -57,6 +66,7 @@ export default function EditArticle({
         }
 
         setSaveStatus("저장됨");
+        latestArticleFormRef.current = debouncedArticleForm;
       } catch (error) {
         setSaveStatus("저장 실패");
         handleError(error);
