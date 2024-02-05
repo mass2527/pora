@@ -3,7 +3,7 @@
 import { Blog } from "@prisma/client";
 import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { useSelectedLayoutSegments } from "next/navigation";
 import React from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -17,8 +17,11 @@ import {
 import { cn } from "~/lib/utils";
 
 export default function BlogNav({ blogs }: { blogs: Blog[] }) {
-  const selectedBlogSlug = useSelectedLayoutSegment();
-
+  const selectedLayoutSegments = useSelectedLayoutSegments();
+  const selectedBlogSlug =
+    selectedLayoutSegments[0] === "dashboard"
+      ? selectedLayoutSegments[1]
+      : null;
   const selectedBlog = blogs.find((blog) => blog.slug === selectedBlogSlug);
   if (!selectedBlog) {
     return null;

@@ -9,9 +9,12 @@ export default withAuth(
 
     const { pathname, search } = req.nextUrl;
     const isDashboardPage = pathname.startsWith("/dashboard");
+    const isAccountPage = pathname.startsWith("/account");
+    const isProtectedPage = isDashboardPage || isAccountPage;
+
     const isLoginPage = pathname.startsWith("/login");
 
-    if (isDashboardPage) {
+    if (isProtectedPage) {
       if (!isLoggedIn) {
         let from = pathname;
         if (search) {

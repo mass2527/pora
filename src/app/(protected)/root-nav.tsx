@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { useSelectedLayoutSegments } from "next/navigation";
 import React from "react";
 import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
@@ -14,8 +14,8 @@ const LINKS: Link[] = [
 ] as const;
 
 export default function RootNav() {
-  const selectedLayoutSegment = useSelectedLayoutSegment();
-  if (selectedLayoutSegment) {
+  const selectedLayoutSegments = useSelectedLayoutSegments();
+  if (selectedLayoutSegments.length > 1) {
     return null;
   }
 

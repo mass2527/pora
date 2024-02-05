@@ -1,13 +1,14 @@
 import React, { ReactNode } from "react";
 import { getUser } from "~/lib/auth";
-import { notFound, useSelectedLayoutSegment } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
-import UserAccountNav from "./user-account-nav";
-import BlogNav from "./blog-nav";
-import prisma from "~/lib/prisma";
-import RootNav from "./root-nav";
 
-export default async function DashboardLayout({
+import prisma from "~/lib/prisma";
+import BlogNav from "./dashboard/blog-nav";
+import RootNav from "./root-nav";
+import UserAccountNav from "./dashboard/user-account-nav";
+
+export default async function ProtectedLayout({
   children,
 }: {
   children: ReactNode;
