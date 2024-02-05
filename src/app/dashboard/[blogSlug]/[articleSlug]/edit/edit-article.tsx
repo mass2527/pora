@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/button";
 import { ARTICLE_STATUS } from "~/lib/constants";
 import { ArrowLeftIcon } from "lucide-react";
 import Switch from "~/components/switch";
+import { useRouter } from "next/navigation";
 
 export default function EditArticle({
   article,
@@ -34,6 +35,7 @@ export default function EditArticle({
   const [step, setStep] = useState<"제목 및 내용 입력" | "메타 정보 입력">(
     "제목 및 내용 입력"
   );
+  const router = useRouter();
 
   useEffect(() => {
     const isLatest =
@@ -67,6 +69,7 @@ export default function EditArticle({
 
         setSaveStatus("저장됨");
         latestArticleFormRef.current = debouncedArticleForm;
+        router.refresh();
       } catch (error) {
         setSaveStatus("저장 실패");
         handleError(error);
@@ -77,7 +80,7 @@ export default function EditArticle({
     return () => {
       controller.abort();
     };
-  }, [article.blogId, article.id, debouncedArticleForm]);
+  }, [article.blogId, article.id, debouncedArticleForm, router]);
 
   return (
     <div>
