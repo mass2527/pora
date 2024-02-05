@@ -1,6 +1,6 @@
 import prisma from "~/lib/prisma";
 import { notFound } from "next/navigation";
-import EditArticleForm from "./edit-article-form";
+import EditArticle from "./edit-article";
 import { getUser } from "~/lib/auth";
 
 export default async function ArticleEditPage({
@@ -36,7 +36,7 @@ export default async function ArticleEditPage({
   return (
     <div className="p-4">
       <div className="max-w-[720px] mx-auto">
-        <EditArticleForm article={article} />
+        <EditArticle article={article} />
       </div>
     </div>
   );
