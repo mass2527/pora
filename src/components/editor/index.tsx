@@ -15,7 +15,8 @@ export default function Editor(options: Partial<EditorOptions>) {
     extensions: defaultExtensions,
     editorProps: {
       attributes: {
-        class: "prose prose-zinc w-full max-w-none",
+        class:
+          "prose prose-zinc w-full max-w-none border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       },
       handleDOMEvents: {
         keydown: (_view, event) => {
