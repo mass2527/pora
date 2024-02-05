@@ -31,7 +31,7 @@ export default async function BlogSettingsPage({
 
   return (
     <div className="flex flex-col gap-4 p-4 min-h-screen">
-      <h1 className="text-2xl font-semibold tracking-tight">블로그 설정</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">설정</h1>
 
       <Card
         title="정보"

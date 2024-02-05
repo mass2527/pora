@@ -2,12 +2,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError, z } from "zod";
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
-import { slugString } from "~/lib/validations/common";
-
-const updateBlogSchema = z.object({
-  name: z.string(),
-  slug: slugString,
-});
+import { updateBlogSchema } from "~/lib/validations/blog";
 
 export async function PATCH(
   req: Request,
@@ -20,14 +15,13 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const { name, slug } = updateBlogSchema.parse(json);
+    const { name } = updateBlogSchema.parse(json);
     const updatedCategory = await prisma.blog.update({
       where: {
         id: params.blogId,
       },
       data: {
         name,
-        slug,
       },
     });
     return new Response(JSON.stringify(updatedCategory));

@@ -20,19 +20,13 @@ import {
 import { Input } from "~/components/ui/input";
 import { Loading } from "~/components/ui/loading";
 import { ResponseError, handleError } from "~/lib/errors";
-import { slugString } from "~/lib/validations/common";
-
-const schema = z.object({
-  name: z.string(),
-  slug: slugString,
-});
+import { updateBlogSchema } from "~/lib/validations/blog";
 
 export default function UpdateBlogForm({ blog }: { blog: Blog }) {
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<z.infer<typeof updateBlogSchema>>({
+    resolver: zodResolver(updateBlogSchema),
     defaultValues: {
       name: blog.name,
-      slug: blog.slug,
     },
   });
   const router = useRouter();
@@ -54,22 +48,9 @@ export default function UpdateBlogForm({ blog }: { blog: Blog }) {
               throw new ResponseError("Bad fetch response", response);
             }
 
-            if (blog.slug !== values.slug) {
-              router.replace(`/dashboard/${values.slug}/settings`);
-            } else {
-              router.refresh();
-            }
+            router.refresh();
             toast.success("블로그 정보가 수정되었어요.");
           } catch (error) {
-            if (error instanceof ResponseError) {
-              if (error.response.status === 409) {
-                form.setError("slug", {
-                  message: "이미 존재하는 슬러그입니다.",
-                });
-              }
-              return;
-            }
-
             handleError(error);
           }
         })}
@@ -88,24 +69,10 @@ export default function UpdateBlogForm({ blog }: { blog: Blog }) {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>슬러그</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <Button
           type="submit"
-          disabled={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting || !form.formState.isDirty}
           className="mr-auto"
         >
           {form.formState.isSubmitting ? <Loading /> : "수정"}
