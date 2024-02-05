@@ -34,11 +34,7 @@ import { useRouter } from "next/navigation";
 const schema = z.object({
   categoryId: z.string(),
   slug: slugString,
-  title: z.string(),
   description: z.string(),
-
-  htmlContent: z.string(),
-  jsonContent: z.string(),
 });
 
 export default function UpdateArticleForm({
@@ -54,10 +50,6 @@ export default function UpdateArticleForm({
       categoryId: article.categoryId ?? undefined,
       slug: article.slug,
       description: article.description ?? undefined,
-
-      title: article.title,
-      htmlContent: article.htmlContent,
-      jsonContent: article.jsonContent,
     },
   });
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -77,7 +69,6 @@ export default function UpdateArticleForm({
         <form
           className="flex flex-col gap-2"
           onSubmit={form.handleSubmit(async (values) => {
-            console.info(values);
             try {
               const response = await fetch(
                 `/api/blogs/${article.blogId}/articles/${article.id}`,
@@ -88,6 +79,9 @@ export default function UpdateArticleForm({
                   },
                   body: JSON.stringify({
                     ...values,
+                    title: article.title,
+                    htmlContent: article.htmlContent,
+                    jsonContent: article.jsonContent,
                     status: ARTICLE_STATUS.published,
                   }),
                 }
