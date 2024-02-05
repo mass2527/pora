@@ -1,7 +1,7 @@
 "use client";
 
 import { Blog } from "@prisma/client";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import React from "react";
@@ -31,7 +31,7 @@ export default function BlogNav({ blogs }: { blogs: Blog[] }) {
           {selectedBlog?.name} <ChevronsUpDown className="w-4 h-4 ml-2" />{" "}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-56 text-sm">
         <DropdownMenuLabel>블로그</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {blogs.map((blog) => {
@@ -54,6 +54,12 @@ export default function BlogNav({ blogs }: { blogs: Blog[] }) {
             </DropdownMenuItem>
           );
         })}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link href="/dashboard/new">
+            <PlusCircle className="w-4 h-4 mr-2 text-blue-500" />새 블로그
+          </Link>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
