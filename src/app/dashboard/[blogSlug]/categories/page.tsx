@@ -8,6 +8,9 @@ import CreateCategoryButton from "./create-category-button";
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import CategoryRowAction from "./category-row-action";
 import { List, ListItem } from "~/components/ui/list";
+import Link from "next/link";
+import { buttonVariants } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 
 export default async function CategoriesPage({
   params,
@@ -47,10 +50,15 @@ export default async function CategoriesPage({
                 key={category.id}
                 className="flex justify-between items-center"
               >
-                <div>
-                  <h2 className="text-xl font-semibold tracking-tight">
-                    {category.name}
-                  </h2>
+                <div className="flex flex-col">
+                  <Link
+                    href={`/${blog.slug}/category/${category.slug}`}
+                    className={cn(buttonVariants({ variant: "link" }), "p-0")}
+                  >
+                    <h2 className="text-xl font-semibold tracking-tight">
+                      {category.name}
+                    </h2>
+                  </Link>
                   <span className="text-xs text-zinc-500">{category.slug}</span>
                 </div>
 
