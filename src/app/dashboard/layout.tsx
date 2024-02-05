@@ -5,6 +5,7 @@ import Link from "next/link";
 import UserAccountNav from "./user-account-nav";
 import BlogNav from "./blog-nav";
 import prisma from "~/lib/prisma";
+import RootNav from "./root-nav";
 
 export default async function DashboardLayout({
   children,
@@ -43,6 +44,8 @@ export default async function DashboardLayout({
           }}
         />
       </div>
+      <RootNav />
+
       {children}
     </div>
   );
