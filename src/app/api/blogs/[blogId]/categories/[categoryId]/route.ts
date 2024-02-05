@@ -51,6 +51,15 @@ export async function DELETE(
       return new Response("Unauthorized", { status: 401 });
     }
 
+    const articles = await prisma.article.findMany({
+      where: {
+        categoryId: params.categoryId,
+      },
+    });
+    if (articles.length > 0) {
+      return new Response("Conflict", { status: 409 });
+    }
+
     const deletedCategory = await prisma.category.delete({
       where: {
         id: params.categoryId,

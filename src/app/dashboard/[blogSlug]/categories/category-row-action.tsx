@@ -35,6 +35,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { categorySchema } from "~/lib/validations/category";
 import { ResponseError, handleError } from "~/lib/errors";
+import { toast } from "sonner";
 
 export default function CategoryRowAction({
   category,
@@ -86,6 +87,15 @@ export default function CategoryRowAction({
                 }
                 router.refresh();
               } catch (error) {
+                if (error instanceof ResponseError) {
+                  if (error.response.status === 409) {
+                    toast.error(
+                      "해당 카테고리에 연관된 아티클이 있어 카테고리를 삭제할 수 없어요."
+                    );
+                    return;
+                  }
+                }
+
                 handleError(error);
               }
             }}
