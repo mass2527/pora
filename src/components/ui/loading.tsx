@@ -1,13 +1,15 @@
 import React, { SVGProps } from "react";
+import { cn } from "~/lib/utils";
 
 export function Loading({
   width = 24,
   height = 24,
   dur = "0.75s",
+  className,
 }: SVGProps<SVGElement>): JSX.Element {
   return (
     <svg
-      className="fill-current"
+      className={cn("fill-current", className)}
       width={width}
       height={height}
       viewBox="0 0 24 24"

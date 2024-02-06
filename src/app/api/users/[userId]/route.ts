@@ -5,7 +5,7 @@ import { mysqlString } from "~/lib/validations/common";
 
 const updateUserSchema = z.object({
   name: mysqlString.optional(),
-  image: mysqlString.optional(),
+  image: z.string().optional(),
   jobPosition: mysqlString.optional(),
 });
 
