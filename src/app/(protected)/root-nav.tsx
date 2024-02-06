@@ -9,7 +9,7 @@ import { cn } from "~/lib/utils";
 type Link = { href: string; name: string };
 
 const LINKS: Link[] = [
-  { href: "/dashboard", name: "블로그" },
+  { href: "/dashboard", name: "대시보드" },
   { href: "/account", name: "계정" },
 ] as const;
 
