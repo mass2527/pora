@@ -1,7 +1,9 @@
 "use client";
 
+import { User } from "@prisma/client";
 import { signOut } from "next-auth/react";
-import React, { ComponentProps } from "react";
+import Link from "next/link";
+import React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +17,7 @@ import UserAvatar from "~/components/user-avatar";
 export default function UserAccountNav({
   user,
 }: {
-  user: ComponentProps<typeof UserAvatar>["user"];
+  user: Pick<User, "name" | "image" | "email">;
 }) {
   return (
     <DropdownMenu>
@@ -28,9 +30,16 @@ export default function UserAccountNav({
         <DropdownMenuLabel>
           <div className="flex flex-col font-normal">
             <span className="text-sm">{user.name}</span>
-            <span className="text-sm text-zinc-500">{user.email}</span>
+            <span className="text-sm text-zinc-500">{user?.email}</span>
           </div>
-        </DropdownMenuLabel>
+        </DropdownMenuLabel>{" "}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link href="/dashboard">대시보드</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link href="/account">계정</Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer"
