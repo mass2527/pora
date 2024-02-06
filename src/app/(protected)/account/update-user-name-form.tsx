@@ -22,12 +22,12 @@ import { Loading } from "~/components/ui/loading";
 import { ResponseError, handleError } from "~/lib/errors";
 
 const USER_NAME_MAX_LENGTH = 32;
-const userNameInvalidMessage = `최대 ${USER_NAME_MAX_LENGTH}글자 이하 작성해 주세요.`;
+const userNameInvalidMessage = `최대 ${USER_NAME_MAX_LENGTH}글자 이하 입력해 주세요.`;
 
 const updateUserSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "최소 1글자 이상 작성해 주세요." })
+    .min(1, { message: "최소 1글자 이상 입력해 주세요." })
     .max(USER_NAME_MAX_LENGTH, { message: userNameInvalidMessage }),
 });
 
