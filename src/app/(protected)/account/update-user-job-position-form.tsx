@@ -7,6 +7,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import SubmitButton from "~/components/submit-button";
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -87,17 +88,9 @@ export default function UpdateUserJobPositionForm({
           )}
         />
 
-        <Button
-          type="submit"
-          disabled={
-            form.formState.isSubmitting ||
-            !form.formState.isDirty ||
-            !form.formState.isValid
-          }
-          className="mr-auto"
-        >
-          {form.formState.isSubmitting ? <Loading /> : "수정"}
-        </Button>
+        <SubmitButton formState={form.formState} className="mr-auto">
+          수정
+        </SubmitButton>
       </form>
     </Form>
   );

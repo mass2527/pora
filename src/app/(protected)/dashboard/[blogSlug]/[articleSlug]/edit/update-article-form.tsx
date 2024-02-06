@@ -30,6 +30,7 @@ import { slugString } from "~/lib/validations/common";
 import CreateCategoryButton from "../../categories/create-category-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
+import SubmitButton from "~/components/submit-button";
 
 const schema = z.object({
   categoryId: z.string(),
@@ -171,13 +172,9 @@ export default function UpdateArticleForm({
             )}
           />
 
-          <Button
-            type="submit"
-            disabled={form.formState.isSubmitting}
-            className="ml-auto"
-          >
-            {form.formState.isSubmitting ? <Loading /> : "발행"}
-          </Button>
+          <SubmitButton formState={form.formState} className="ml-auto">
+            발행
+          </SubmitButton>
         </form>
       </Form>
     </div>

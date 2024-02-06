@@ -27,6 +27,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "~/lib/validations/category";
+import SubmitButton from "~/components/submit-button";
 
 export default function CreateCategoryButton({
   blogId,
@@ -132,9 +133,7 @@ export default function CreateCategoryButton({
             />
 
             <DialogFooter>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? <Loading /> : "생성"}
-              </Button>
+              <SubmitButton formState={form.formState}>생성</SubmitButton>
             </DialogFooter>
           </form>
         </Form>

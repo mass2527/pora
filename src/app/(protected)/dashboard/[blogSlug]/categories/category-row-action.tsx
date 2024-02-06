@@ -36,6 +36,7 @@ import { useForm } from "react-hook-form";
 import { categorySchema } from "~/lib/validations/category";
 import { ResponseError, handleError } from "~/lib/errors";
 import { toast } from "sonner";
+import SubmitButton from "~/components/submit-button";
 
 export default function CategoryRowAction({
   category,
@@ -183,9 +184,7 @@ export default function CategoryRowAction({
               />
 
               <DialogFooter>
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting ? <Loading /> : "수정"}
-                </Button>
+                <SubmitButton formState={form.formState}>수정</SubmitButton>
               </DialogFooter>
             </form>
           </Form>

@@ -7,11 +7,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Button } from "~/components/ui/button";
+import SubmitButton from "~/components/submit-button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -69,13 +68,9 @@ export default function UpdateBlogForm({ blog }: { blog: Blog }) {
           )}
         />
 
-        <Button
-          type="submit"
-          disabled={form.formState.isSubmitting || !form.formState.isDirty}
-          className="mr-auto"
-        >
-          {form.formState.isSubmitting ? <Loading /> : "수정"}
-        </Button>
+        <SubmitButton formState={form.formState} className="mr-auto">
+          수정
+        </SubmitButton>
       </form>
     </Form>
   );
