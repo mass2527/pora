@@ -7,3 +7,6 @@ export const slugString = z
     /^[a-z0-9]+(?:(?:-|_)+[a-z0-9]+)*$/,
     "소문자 알파벳, 숫자로 시작 및 종료하고, 하이픈(-) 또는 언더스코어(_)로 구분된 문자열이어야 합니다. 특수문자는 허용되지 않습니다."
   );
+
+// String(Prisma) === VARCHAR(191)(MySQL)
+export const mysqlString = z.string().max(191);
