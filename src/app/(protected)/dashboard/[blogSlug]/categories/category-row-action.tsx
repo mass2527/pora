@@ -164,7 +164,6 @@ export default function CategoryRowAction({
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormDescription />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -178,7 +177,6 @@ export default function CategoryRowAction({
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormDescription />
                     <FormMessage />
                   </FormItem>
                 )}

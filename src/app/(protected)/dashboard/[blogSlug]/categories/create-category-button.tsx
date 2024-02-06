@@ -113,7 +113,6 @@ export default function CreateCategoryButton({
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  <FormDescription />
                   <FormMessage />
                 </FormItem>
               )}
@@ -127,7 +126,6 @@ export default function CreateCategoryButton({
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
-                  <FormDescription />
                   <FormMessage />
                 </FormItem>
               )}

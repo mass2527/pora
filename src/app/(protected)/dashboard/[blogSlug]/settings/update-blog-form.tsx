@@ -64,7 +64,6 @@ export default function UpdateBlogForm({ blog }: { blog: Blog }) {
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormDescription />
               <FormMessage />
             </FormItem>
           )}
