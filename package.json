@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "db:push": "prisma db push",
+    "db:update": "pnpm db:push && prisma generate",
     "db:studio": "prisma studio",
     "type-check": "tsc --watch"
   },
