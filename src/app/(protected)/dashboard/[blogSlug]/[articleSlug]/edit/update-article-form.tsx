@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Prisma } from "@prisma/client";
+import { ArticleStatus, Prisma } from "@prisma/client";
 
 import { PlusIcon } from "lucide-react";
 import { useRef } from "react";
@@ -25,7 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { ARTICLE_STATUS } from "~/lib/constants";
 import { slugString } from "~/lib/validations/common";
 import CreateCategoryButton from "../../categories/create-category-button";
 import { ResponseError, handleError } from "~/lib/errors";
@@ -83,7 +82,7 @@ export default function UpdateArticleForm({
                     title: article.title,
                     htmlContent: article.htmlContent,
                     jsonContent: article.jsonContent,
-                    status: ARTICLE_STATUS.published,
+                    status: ArticleStatus.PUBLISHED,
                   }),
                 }
               );

@@ -13,7 +13,6 @@ import {
 } from "~/components/ui/table";
 import prisma from "~/lib/prisma";
 import { cn, formatDate } from "~/lib/utils";
-import { getArticleStatusLabel } from "~/services/article";
 import ArticleRowAction from "./article-row-action";
 import CreateArticleButton from "./create-article-button";
 import { getUser } from "~/lib/auth";
@@ -87,9 +86,8 @@ function BlogTable({
       </TableHeader>
       <TableBody>
         {blog.articles.map((article) => {
-          const statusLabel = getArticleStatusLabel(article.status);
           const title =
-            statusLabel === "발행됨" ? (
+            article.status === "PUBLISHED" ? (
               <Link
                 target="_blank"
                 className={cn(buttonVariants({ variant: "link" }), "p-0")}
@@ -104,7 +102,13 @@ function BlogTable({
           return (
             <TableRow key={article.id}>
               <TableCell>{title}</TableCell>
-              <TableCell>{statusLabel}</TableCell>
+              <TableCell>
+                {
+                  { PUBLISHED: "발행됨", WRITING: "작성중", HIDDEN: "숨겨짐" }[
+                    article.status
+                  ]
+                }
+              </TableCell>
               <TableCell>{article.category?.name}</TableCell>
               <TableCell>{article.slug}</TableCell>
               <TableCell>{formatDate(article.createdAt)}</TableCell>

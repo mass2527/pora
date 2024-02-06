@@ -10,7 +10,6 @@ import { Badge } from "~/components/ui/badge";
 import { sleep } from "~/lib/utils";
 import UpdateArticleForm from "./update-article-form";
 import { Button } from "~/components/ui/button";
-import { ARTICLE_STATUS } from "~/lib/constants";
 import { ArrowLeftIcon } from "lucide-react";
 import Switch from "~/components/switch";
 import { useRouter } from "next/navigation";
@@ -122,9 +121,7 @@ export default function EditArticle({
                   onClick={() => setStep("메타 정보 입력")}
                   className="ml-auto"
                 >
-                  {article.status === ARTICLE_STATUS.writing
-                    ? "발행"
-                    : "저장 및 발행"}
+                  {article.status === "WRITING" ? "발행" : "저장 및 발행"}
                 </Button>
               </div>
             ),

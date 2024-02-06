@@ -1,12 +1,11 @@
 "use client";
 
-import { Article, Blog } from "@prisma/client";
+import { Article, ArticleStatus, Blog } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
-import { ARTICLE_STATUS } from "~/lib/constants";
 import { ResponseError, handleError } from "~/lib/errors";
 import { createArticleSchema } from "~/lib/validations/article";
 
@@ -32,7 +31,7 @@ export default function CreateArticleButton({ blog }: { blog: Blog }) {
               description: "",
               jsonContent: JSON.stringify({}),
               htmlContent: "",
-              status: ARTICLE_STATUS.writing,
+              status: ArticleStatus.WRITING,
             } satisfies z.infer<typeof createArticleSchema>),
           });
           if (!response.ok) {

@@ -7,7 +7,6 @@ import { Badge } from "~/components/ui/badge";
 import UserAvatar from "~/components/user-avatar";
 import prisma from "~/lib/prisma";
 import { formatDate } from "~/lib/utils";
-import { getArticleStatusLabel } from "~/services/article";
 
 export default async function ArticleDetailsPage({
   params,
@@ -35,7 +34,7 @@ export default async function ArticleDetailsPage({
   }
 
   const article = blog.articles[0];
-  if (!article || getArticleStatusLabel(article.status) !== "발행됨") {
+  if (!article || article.status !== "PUBLISHED") {
     notFound();
   }
 

@@ -22,7 +22,7 @@ export default function UserAccountNav({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button type="button" aria-label="사용자 아바타">
+        <button type="button" aria-label="메뉴 열기">
           <UserAvatar user={user} className="w-8 h-8" />
         </button>
       </DropdownMenuTrigger>

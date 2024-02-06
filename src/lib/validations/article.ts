@@ -1,5 +1,5 @@
+import { ArticleStatus } from "@prisma/client";
 import { z } from "zod";
-import { ARTICLE_STATUS } from "../constants";
 
 export const createArticleSchema = z.object({
   categoryId: z.string().optional(),
@@ -8,5 +8,5 @@ export const createArticleSchema = z.object({
   description: z.string(),
   jsonContent: z.string(),
   htmlContent: z.string(),
-  status: z.enum(Object.values(ARTICLE_STATUS) as [string, ...string[]]),
+  status: z.nativeEnum(ArticleStatus),
 });

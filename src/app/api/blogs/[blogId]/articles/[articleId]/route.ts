@@ -1,7 +1,7 @@
+import { ArticleStatus } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError, z } from "zod";
 import { getUser } from "~/lib/auth";
-import { ARTICLE_STATUS } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import { slugString } from "~/lib/validations/common";
 
@@ -13,7 +13,7 @@ const schema = z
     description: z.string().optional(),
     jsonContent: z.string(),
     htmlContent: z.string(),
-    status: z.enum(Object.values(ARTICLE_STATUS) as [string, ...string[]]),
+    status: z.nativeEnum(ArticleStatus),
   })
   .partial();
 
