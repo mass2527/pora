@@ -36,7 +36,9 @@ export default async function DashboardPage() {
           {blogs.map((blog) => {
             return (
               <ListItem key={blog.id} className="flex flex-col">
-                <code className="text-xs text-zinc-500">{blog.slug}</code>
+                <code className="text-xs text-zinc-500 truncate">
+                  /{blog.slug}
+                </code>
                 <Link
                   href={`/dashboard/${blog.slug}`}
                   className={cn(
@@ -44,7 +46,7 @@ export default async function DashboardPage() {
                     "justify-start p-0"
                   )}
                 >
-                  <h2 className="text-2xl font-semibold tracking-tight">
+                  <h2 className="text-2xl font-semibold tracking-tight truncate">
                     {blog.name}
                   </h2>
                 </Link>
