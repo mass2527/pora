@@ -2,7 +2,7 @@
 
 import { Article, ArticleStatus, Blog } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
@@ -15,6 +15,12 @@ const isLoadingAtom = atom(false);
 export default function CreateArticleButton({ blog }: { blog: Blog }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+
+  useEffect(() => {
+    return () => {
+      setIsLoading(false);
+    };
+  }, [setIsLoading]);
 
   return (
     <Button
@@ -39,7 +45,7 @@ export default function CreateArticleButton({ blog }: { blog: Blog }) {
               status: ArticleStatus.WRITING,
             } satisfies z.infer<typeof createArticleSchema>),
           });
-          setIsLoading(false);
+
           if (!response.ok) {
             throw new ResponseError("Bad fetch response", response);
           }
@@ -48,6 +54,7 @@ export default function CreateArticleButton({ blog }: { blog: Blog }) {
           router.refresh();
           router.push(`/dashboard/${blog.slug}/${article.slug}/edit`);
         } catch (error) {
+          setIsLoading(false);
           handleError(error);
         }
       }}
