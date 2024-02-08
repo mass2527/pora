@@ -8,10 +8,13 @@ import { Button } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
 import { ResponseError, handleError } from "~/lib/errors";
 import { createArticleSchema } from "~/lib/validations/article";
+import { atom, useAtom } from "jotai";
+
+const isLoadingAtom = atom(false);
 
 export default function CreateArticleButton({ blog }: { blog: Blog }) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
 
   return (
     <Button
