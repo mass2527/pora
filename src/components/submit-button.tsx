@@ -5,7 +5,7 @@ import { FormState } from "react-hook-form";
 
 interface SubmitButton extends Omit<ButtonProps, "type" | "disabled"> {
   formState: FormState<any>;
-  allowNoChange: boolean;
+  allowNoChange?: boolean;
 }
 
 export default function SubmitButton({
