@@ -5,10 +5,12 @@ import { FormState } from "react-hook-form";
 
 interface SubmitButton extends Omit<ButtonProps, "type" | "disabled"> {
   formState: FormState<any>;
+  allowNoChange: boolean;
 }
 
 export default function SubmitButton({
   formState,
+  allowNoChange = false,
   children,
   ...props
 }: SubmitButton) {
@@ -16,7 +18,9 @@ export default function SubmitButton({
     <Button
       type="submit"
       disabled={
-        formState.isSubmitting || !formState.isDirty || !formState.isValid
+        formState.isSubmitting ||
+        !formState.isValid ||
+        (allowNoChange ? false : !formState.isDirty)
       }
       {...props}
     >
