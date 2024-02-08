@@ -2,7 +2,7 @@
 
 import { Article, ArticleStatus, Blog } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
@@ -31,12 +31,15 @@ export default function CreateArticleButton({ blog }: { blog: Blog }) {
               categoryId: undefined,
               slug: crypto.randomUUID(),
               title: "",
+              draftTitle: "",
               description: "",
               jsonContent: JSON.stringify({}),
+              draftJsonContent: JSON.stringify({}),
               htmlContent: "",
               status: ArticleStatus.WRITING,
             } satisfies z.infer<typeof createArticleSchema>),
           });
+          setIsLoading(false);
           if (!response.ok) {
             throw new ResponseError("Bad fetch response", response);
           }
@@ -45,7 +48,6 @@ export default function CreateArticleButton({ blog }: { blog: Blog }) {
           router.refresh();
           router.push(`/dashboard/${blog.slug}/${article.slug}/edit`);
         } catch (error) {
-          setIsLoading(false);
           handleError(error);
         }
       }}

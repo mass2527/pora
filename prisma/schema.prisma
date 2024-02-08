@@ -84,6 +84,9 @@ model Article {
   jsonContent String @db.Text
   htmlContent String @db.Text
 
+  draftTitle       String
+  draftJsonContent String @db.Text
+
   status ArticleStatus
 
   createdAt DateTime @default(now())

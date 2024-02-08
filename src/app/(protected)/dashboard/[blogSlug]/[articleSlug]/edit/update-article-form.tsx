@@ -80,8 +80,10 @@ export default function UpdateArticleForm({
                   body: JSON.stringify({
                     ...values,
                     title: article.title,
+                    draftTitle: article.title,
                     htmlContent: article.htmlContent,
                     jsonContent: article.jsonContent,
+                    draftJsonContent: article.jsonContent,
                     status: ArticleStatus.PUBLISHED,
                   }),
                 }

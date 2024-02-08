@@ -22,14 +22,14 @@ export default function EditArticle({
   }>;
 }) {
   const [articleForm, setArticleForm] = useState({
-    title: article.title,
+    title: article.draftTitle,
     htmlContent: article.htmlContent,
-    jsonContent: article.jsonContent,
+    jsonContent: article.draftJsonContent,
   });
   const latestArticleFormRef = useRef(articleForm);
   const debouncedArticleForm = useDebounce(articleForm, 750);
   const [saveStatus, setSaveStatus] = useState<
-    "저장중..." | "저장됨" | "저장 실패" | ""
+    "임시 저장중..." | "임시 저장됨" | "임시 저장 실패" | ""
   >("");
   const [step, setStep] = useState<"제목 및 내용 입력" | "메타 정보 입력">(
     "제목 및 내용 입력"
@@ -49,7 +49,7 @@ export default function EditArticle({
 
     async function updateArticle() {
       try {
-        setSaveStatus("저장중...");
+        setSaveStatus("임시 저장중...");
         const response = await fetch(
           `/api/blogs/${article.blogId}/articles/${article.id}`,
           {
@@ -57,7 +57,10 @@ export default function EditArticle({
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(debouncedArticleForm),
+            body: JSON.stringify({
+              draftTitle: debouncedArticleForm.title,
+              draftJsonContent: debouncedArticleForm.jsonContent,
+            }),
             signal: controller.signal,
           }
         );
@@ -66,11 +69,11 @@ export default function EditArticle({
           throw new ResponseError("Bad fetch request", response);
         }
 
-        setSaveStatus("저장됨");
+        setSaveStatus("임시 저장됨");
         latestArticleFormRef.current = debouncedArticleForm;
         router.refresh();
       } catch (error) {
-        setSaveStatus("저장 실패");
+        setSaveStatus("임시 저장 실패");
         handleError(error);
       }
     }
