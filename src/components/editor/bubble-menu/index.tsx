@@ -1,4 +1,9 @@
-import { BubbleMenu, BubbleMenuProps, isNodeSelection } from "@tiptap/react";
+import {
+  BubbleMenu,
+  BubbleMenuProps,
+  Editor,
+  isNodeSelection,
+} from "@tiptap/react";
 import { FC, useState } from "react";
 import {
   BoldIcon,
@@ -9,9 +14,8 @@ import {
 } from "lucide-react";
 import { NodeSelector } from "./node-selector";
 import { ColorSelector } from "./color-selector";
-
-import { cn, invariant } from "~/lib/utils";
 import { LinkSelector } from "./link-selector";
+import { cn } from "~/lib/utils";
 
 export interface BubbleMenuItem {
   name: string;
@@ -20,13 +24,12 @@ export interface BubbleMenuItem {
   icon: typeof BoldIcon;
 }
 
-type EditorBubbleMenuProps = Omit<BubbleMenuProps, "children">;
+type EditorBubbleMenuProps = Omit<BubbleMenuProps, "children" | "editor"> & {
+  editor: Editor;
+};
 
-export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = ({
-  editor,
-  ...props
-}) => {
-  invariant(editor);
+export const EditorBubbleMenu: FC<EditorBubbleMenuProps> = (props) => {
+  const { editor } = props;
 
   const items: BubbleMenuItem[] = [
     {
