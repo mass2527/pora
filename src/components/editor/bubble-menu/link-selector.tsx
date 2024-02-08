@@ -36,7 +36,7 @@ export const LinkSelector: FC<LinkSelectorProps> = ({
             "text-blue-500": editor.isActive("link"),
           })}
         >
-          Link
+          링크
         </p>
       </button>
       {isOpen && (

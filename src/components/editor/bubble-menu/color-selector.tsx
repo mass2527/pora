@@ -56,39 +56,39 @@ const TEXT_COLORS: BubbleColorMenuItem[] = [
 const HIGHLIGHT_COLORS: BubbleColorMenuItem[] = [
   {
     name: "기본 배경",
-    color: "#000000",
+    color: "#ffffff",
   },
   {
     name: "회색 배경",
-    color: "#3a3a3a",
+    color: "#f1f1ef",
   },
   {
     name: "주황색 배경",
-    color: "#5c3a1a",
+    color: "#faebdd",
   },
   {
     name: "노란색 배경",
-    color: "#5c4b1a",
+    color: "#fbf4a2",
   },
   {
     name: "초록색 배경",
-    color: "#1a5c20",
+    color: "#acf79f",
   },
   {
     name: "파란색 배경",
-    color: "#1a3d5c",
+    color: "#c1ecf9",
   },
   {
     name: "보라색 배경",
-    color: "#3f2c4b",
+    color: "#f6f3f8",
   },
   {
     name: "분홍색 배경",
-    color: "#5c1a3a",
+    color: "#faf1f5",
   },
   {
     name: "빨간색 배경",
-    color: "#5c1a1a",
+    color: "#fdebeb",
   },
 ];
 
@@ -129,7 +129,7 @@ export const ColorSelector: FC<ColorSelectorProps> = ({
           align="start"
           className="z-[99999] my-1 flex max-h-80 w-48 flex-col overflow-hidden overflow-y-auto rounded border border-zinc-200 bg-white p-1 shadow-xl animate-in fade-in slide-in-from-top-1"
         >
-          <div className="my-1 px-2 text-sm text-zinc-500">Color</div>
+          <div className="my-1 px-2 text-sm text-zinc-500">색</div>
           {TEXT_COLORS.map(({ name, color }, index) => (
             <button
               key={index}
@@ -161,7 +161,7 @@ export const ColorSelector: FC<ColorSelectorProps> = ({
             </button>
           ))}
 
-          <div className="mb-1 mt-2 px-2 text-sm text-zinc-500">Background</div>
+          <div className="mb-1 mt-2 px-2 text-sm text-zinc-500">배경</div>
 
           {HIGHLIGHT_COLORS.map(({ name, color }, index) => (
             <button
@@ -176,8 +176,8 @@ export const ColorSelector: FC<ColorSelectorProps> = ({
             >
               <div className="flex items-center space-x-2">
                 <div
-                  className="rounded-sm border border-zinc-200 px-1 py-px font-medium"
-                  style={{ backgroundColor: color }}
+                  className="rounded-sm border px-1 py-px font-medium"
+                  style={{ backgroundColor: color, borderColor: color }}
                 >
                   A
                 </div>
