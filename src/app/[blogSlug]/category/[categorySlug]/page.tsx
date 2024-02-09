@@ -19,7 +19,11 @@ export default async function BlogInCategoryPage({
           },
         },
       },
-      categories: true,
+      categories: {
+        orderBy: {
+          orderIndex: "asc",
+        },
+      },
     },
   });
   if (!blog) {

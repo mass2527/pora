@@ -15,7 +15,7 @@ export default function CategoryLinks({
   const params = useParams();
   const pathname = usePathname();
 
-  const allCategories: Category[] = [
+  const allCategories: Omit<Category, "orderIndex">[] = [
     { id: "all", name: "모든 아티클", slug: "", blogId: "" },
     ...categories,
   ];

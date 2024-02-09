@@ -13,7 +13,11 @@ export default async function BlogPage({
       slug: params.blogSlug,
     },
     include: {
-      categories: true,
+      categories: {
+        orderBy: {
+          orderIndex: "asc",
+        },
+      },
       articles: true,
     },
   });
