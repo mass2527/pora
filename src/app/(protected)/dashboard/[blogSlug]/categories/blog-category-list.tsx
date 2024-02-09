@@ -37,6 +37,11 @@ export default function BlogCategoryList({
               event.preventDefault();
             }}
             onDrop={async () => {
+              const isUnchanged = index === dragStartIndexRef.current;
+              if (isUnchanged) {
+                return;
+              }
+
               const targetCategory = categories.splice(
                 dragStartIndexRef.current,
                 1
