@@ -18,6 +18,9 @@ export default async function BlogInCategoryPage({
             slug: params.categorySlug,
           },
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       },
       categories: {
         orderBy: {

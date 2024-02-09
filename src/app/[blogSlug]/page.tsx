@@ -18,7 +18,11 @@ export default async function BlogPage({
           orderIndex: "asc",
         },
       },
-      articles: true,
+      articles: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
   if (!blog) {
