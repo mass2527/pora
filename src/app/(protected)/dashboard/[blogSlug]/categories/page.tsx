@@ -1,16 +1,10 @@
-import React from "react";
-
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 
 import { notFound } from "next/navigation";
 import CreateCategoryButton from "./create-category-button";
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
-import CategoryRowAction from "./category-row-action";
-import { List, ListItem } from "~/components/ui/list";
-import Link from "next/link";
-import { buttonVariants } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
+import BlogCategoryList from "./blog-category-list";
 
 export default async function CategoriesPage({
   params,
@@ -28,7 +22,7 @@ export default async function CategoriesPage({
       userId: user.id,
     },
     include: {
-      categories: true,
+      categories: { orderBy: { orderIndex: "asc" } },
     },
   });
   if (!blog) {
@@ -43,30 +37,7 @@ export default async function CategoriesPage({
       </div>
 
       {blog.categories.length > 0 ? (
-        <List>
-          {blog?.categories.map((category) => {
-            return (
-              <ListItem
-                key={category.id}
-                className="flex justify-between items-center"
-              >
-                <div className="flex flex-col">
-                  <Link
-                    href={`/${blog.slug}/category/${category.slug}`}
-                    className={cn(buttonVariants({ variant: "link" }), "p-0")}
-                  >
-                    <h2 className="text-xl font-semibold tracking-tight">
-                      {category.name}
-                    </h2>
-                  </Link>
-                  <span className="text-xs text-zinc-500">{category.slug}</span>
-                </div>
-
-                <CategoryRowAction category={category} />
-              </ListItem>
-            );
-          })}
-        </List>
+        <BlogCategoryList blog={blog} />
       ) : (
         <EmptyPlaceholder
           title="추가된 카테고리가 없어요."

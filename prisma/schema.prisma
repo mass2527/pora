@@ -104,9 +104,10 @@ model Article {
 }
 
 model Category {
-  id   String @id @default(uuid())
-  name String
-  slug String
+  id         String @id @default(uuid())
+  name       String
+  slug       String
+  orderIndex Int
 
   articles Article[]
 
