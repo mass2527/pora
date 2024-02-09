@@ -60,11 +60,38 @@ export async function DELETE(
       return new Response("Conflict", { status: 409 });
     }
 
-    const deletedCategory = await prisma.category.delete({
+    const categoryToDelete = await prisma.category.findUnique({
       where: {
         id: params.categoryId,
       },
     });
+    if (!categoryToDelete) {
+      return new Response("Not found", { status: 404 });
+    }
+
+    const deletedCategory = await prisma.$transaction(async (tx) => {
+      await prisma.category.updateMany({
+        where: {
+          orderIndex: {
+            gt: categoryToDelete.orderIndex,
+          },
+        },
+        data: {
+          orderIndex: {
+            decrement: 1,
+          },
+        },
+      });
+
+      const deletedCategory = await prisma.category.delete({
+        where: {
+          id: params.categoryId,
+        },
+      });
+
+      return deletedCategory;
+    });
+
     return new Response(JSON.stringify(deletedCategory));
   } catch (error) {
     return new Response(null, { status: 500 });
