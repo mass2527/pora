@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import CreateCategoryButton from "./create-category-button";
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import BlogCategoryList from "./blog-category-list";
+import BlogOrderSaveStatus from "./blog-order-save-status";
 
 export default async function CategoriesPage({
   params,
@@ -32,7 +33,10 @@ export default async function CategoriesPage({
   return (
     <div className="p-4 flex flex-col gap-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold tracking-tight">카테고리</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight">카테고리</h1>
+          <BlogOrderSaveStatus />
+        </div>
         <CreateCategoryButton blogId={blog.id} />
       </div>
 

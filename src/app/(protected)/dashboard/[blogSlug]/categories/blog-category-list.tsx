@@ -9,6 +9,8 @@ import { cn, invariant } from "~/lib/utils";
 import CategoryRowAction from "./category-row-action";
 import Link from "next/link";
 import { ResponseError, handleError } from "~/lib/errors";
+import { useAtom } from "jotai";
+import { blogOrderSaveStatusAtom } from "./blog-order-save-status-atom";
 
 export default function BlogCategoryList({
   blog,
@@ -19,6 +21,7 @@ export default function BlogCategoryList({
 }) {
   const [categories, setCategories] = useState(blog.categories);
   const dragStartIndexRef = useRef(-1);
+  const [saveStatus, setSaveStatus] = useAtom(blogOrderSaveStatusAtom);
 
   return (
     <List>
@@ -43,6 +46,7 @@ export default function BlogCategoryList({
               setCategories([...categories]);
 
               try {
+                setSaveStatus("순서 변경중...");
                 const response = await fetch(
                   `/api/blogs/${blog.id}/categories`,
                   {
@@ -61,11 +65,14 @@ export default function BlogCategoryList({
                 if (!response.ok) {
                   throw new ResponseError("Bad fetch request", response);
                 }
+
+                setSaveStatus("순서 변경됨");
               } catch (error) {
+                setSaveStatus("순서 변경 실패");
                 handleError(error);
               }
             }}
-            draggable
+            draggable={saveStatus !== "순서 변경중..."}
           >
             <div className="flex flex-col">
               <Link
