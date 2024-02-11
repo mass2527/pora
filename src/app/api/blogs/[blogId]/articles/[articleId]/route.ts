@@ -3,12 +3,12 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError, z } from "zod";
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
-import { slugString } from "~/lib/validations/common";
+import { slugStringSchema } from "~/lib/validations/common";
 
 const schema = z
   .object({
     categoryId: z.string().optional(),
-    slug: slugString,
+    slug: slugStringSchema,
     title: z.string(),
     draftTitle: z.string(),
     description: z.string().optional(),

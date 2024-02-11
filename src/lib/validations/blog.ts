@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { getMaxLengthMessage, getMinLengthMessage, slugString } from "./common";
+import {
+  getMaxLengthMessage,
+  getMinLengthMessage,
+  slugStringSchema,
+} from "./common";
 
 export const BLOG_NAME_MAX_LENGTH = 32;
 const BLOG_NAME_MIN_LENGTH = 1;
@@ -17,7 +21,7 @@ export const createBlogCommonSchema = z.object({
       getMaxLengthMessage(BLOG_DESCRIPTION_MAX_LENGTH)
     )
     .optional(),
-  slug: slugString,
+  slug: slugStringSchema,
 });
 
 export const updateBlogSchema = z.object({

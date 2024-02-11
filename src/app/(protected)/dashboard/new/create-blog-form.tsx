@@ -34,11 +34,11 @@ import {
 import {
   SLUG_STRING_REGEX_MESSAGE,
   getMaxLengthMessage,
-  imageFile,
+  imageFileSchema,
 } from "~/lib/validations/common";
 
 const createBlogSchema = createBlogCommonSchema.extend({
-  image: imageFile.optional(),
+  image: imageFileSchema.optional(),
 });
 
 export default function CreateBlogForm() {

@@ -9,7 +9,7 @@ export const SLUG_STRING_REGEX_MESSAGE =
 
 const STRING_MAX_LENGTH = 191;
 
-export const slugString = z
+export const slugStringSchema = z
   .string()
   .min(1, getMinLengthMessage(1))
   .max(STRING_MAX_LENGTH, getMaxLengthMessage(STRING_MAX_LENGTH))
@@ -31,7 +31,7 @@ const sizeInMB = (sizeInBytes: number, fractionDigits = 2) => {
   return Number(result.toFixed(fractionDigits));
 };
 
-export const imageFile = z
+export const imageFileSchema = z
   .custom<File>()
   .refine((file) => {
     return sizeInMB(file.size) <= MAX_IMAGE_SIZE_IN_MEGA_BYTES;
