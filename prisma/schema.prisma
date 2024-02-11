@@ -82,6 +82,7 @@ model Article {
   slug        String
   title       String
   description String?
+  image       String? @db.Text
 
   jsonContent String @db.Text
   htmlContent String @db.Text
