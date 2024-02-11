@@ -5,9 +5,9 @@ import { Blog } from "@prisma/client";
 import { PutBlobResult } from "@vercel/blob";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import ImageUploader from "~/components/image-uploader";
 import SubmitButton from "~/components/submit-button";
 import { buttonVariants } from "~/components/ui/button";
 import {
@@ -21,10 +21,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import {
-  ACCEPTED_IMAGE_TYPES,
-  MAX_IMAGE_SIZE_IN_MEGA_BYTES,
-} from "~/lib/constants";
+import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import { ResponseError, handleError } from "~/lib/errors";
 import {
   BLOG_DESCRIPTION_MAX_LENGTH,
@@ -54,14 +51,15 @@ export default function CreateBlogForm() {
         onSubmit={form.handleSubmit(async (values) => {
           try {
             let imageUrl: string | undefined;
-            if (values.image) {
+            const imageFile = values.image?.[0];
+            if (imageFile) {
               const uploadResponse = await fetch("/api/upload", {
                 method: "POST",
                 headers: {
-                  "content-type": values.image.type,
-                  "x-vercel-filename": encodeURIComponent(values.image.name),
+                  "content-type": imageFile.type,
+                  "x-vercel-filename": encodeURIComponent(imageFile.name),
                 },
-                body: values.image,
+                body: imageFile,
               });
               if (!uploadResponse.ok) {
                 throw new ResponseError("Bad fetch response", uploadResponse);
@@ -172,16 +170,11 @@ export default function CreateBlogForm() {
             <FormItem>
               <FormLabel>이미지</FormLabel>
               <FormControl>
-                <Input
-                  type="file"
-                  accept={ACCEPTED_IMAGE_TYPES.join(",")}
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    if (!file) {
-                      return;
-                    }
-
-                    field.onChange({ target: { value: file } });
+                <ImageUploader
+                  onFileListChange={(fileList) => {
+                    field.onChange({
+                      target: { value: fileList ?? undefined },
+                    });
                   }}
                 />
               </FormControl>
