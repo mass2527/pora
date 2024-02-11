@@ -23,8 +23,8 @@ export async function generateMetadata({
     description: blog.description,
     openGraph: {
       title: blog.name,
-      description: blog.description ?? "",
-      images: blog.image ? [blog.image] : [],
+      description: blog.description ?? undefined,
+      images: blog.image ? [blog.image] : undefined,
     },
   };
 }
