@@ -55,9 +55,11 @@ model User {
 }
 
 model Blog {
-  id   String @id @default(uuid())
-  slug String @unique
-  name String
+  id          String  @id @default(uuid())
+  slug        String  @unique
+  name        String
+  description String?
+  image       String? @db.Text
 
   articles Article[]
 
