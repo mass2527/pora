@@ -16,6 +16,7 @@ const schema = z
     draftJsonContent: z.string(),
     htmlContent: z.string(),
     status: z.nativeEnum(ArticleStatus),
+    image: z.string().optional(),
   })
   .partial();
 
@@ -40,6 +41,7 @@ export async function PATCH(
       draftJsonContent,
       htmlContent,
       status,
+      image,
     } = schema.parse(json);
     const updatedArticle = await prisma.article.update({
       where: {
@@ -55,6 +57,7 @@ export async function PATCH(
         draftJsonContent,
         htmlContent,
         status,
+        image,
       },
     });
     return new Response(JSON.stringify(updatedArticle));

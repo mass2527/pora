@@ -7,7 +7,6 @@ import { PlusIcon } from "lucide-react";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "~/components/ui/button";
 import {
   FormField,
   FormItem,
@@ -15,9 +14,9 @@ import {
   FormControl,
   FormMessage,
   Form,
+  FormDescription,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Loading } from "~/components/ui/loading";
 import {
   Select,
   SelectContent,
@@ -25,16 +24,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { slugString } from "~/lib/validations/common";
+import { imageFileSchema, slugStringSchema } from "~/lib/validations/common";
 import CreateCategoryButton from "../../categories/create-category-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 import SubmitButton from "~/components/submit-button";
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_IMAGE_SIZE_IN_MEGA_BYTES,
+} from "~/lib/constants";
+import { PutBlobResult } from "@vercel/blob";
 
 const schema = z.object({
   categoryId: z.string(),
-  slug: slugString,
+  slug: slugStringSchema,
   description: z.string(),
+  image: imageFileSchema.optional(),
 });
 
 export default function UpdateArticleForm({
@@ -70,6 +75,24 @@ export default function UpdateArticleForm({
           className="flex flex-col gap-2"
           onSubmit={form.handleSubmit(async (values) => {
             try {
+              let imageUrl: string | undefined;
+              if (values.image) {
+                const uploadResponse = await fetch("/api/upload", {
+                  method: "POST",
+                  headers: {
+                    "content-type": values.image.type,
+                    "x-vercel-filename": encodeURIComponent(values.image.name),
+                  },
+                  body: values.image,
+                });
+                if (!uploadResponse.ok) {
+                  throw new ResponseError("upload failed", uploadResponse);
+                }
+
+                const { url } = (await uploadResponse.json()) as PutBlobResult;
+                imageUrl = url;
+              }
+
               const response = await fetch(
                 `/api/blogs/${article.blogId}/articles/${article.id}`,
                 {
@@ -85,6 +108,7 @@ export default function UpdateArticleForm({
                     jsonContent: article.jsonContent,
                     draftJsonContent: article.jsonContent,
                     status: ArticleStatus.PUBLISHED,
+                    image: imageUrl,
                   }),
                 }
               );
@@ -168,6 +192,35 @@ export default function UpdateArticleForm({
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>이미지</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    accept={ACCEPTED_IMAGE_TYPES.join(",")}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (!file) {
+                        return;
+                      }
+
+                      field.onChange({ target: { value: file } });
+                    }}
+                  />
+                </FormControl>
+                <FormDescription>
+                  최대 {MAX_IMAGE_SIZE_IN_MEGA_BYTES}MB인 이미지를 업로드해
+                  주세요.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
