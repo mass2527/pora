@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import { ArrowLeft } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -7,6 +8,34 @@ import { Badge } from "~/components/ui/badge";
 import UserAvatar from "~/components/user-avatar";
 import prisma from "~/lib/prisma";
 import { formatDate } from "~/lib/utils";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { blogSlug: string; articleSlug: string };
+}): Promise<Metadata> {
+  const article = await prisma.article.findFirst({
+    where: {
+      blog: {
+        slug: params.blogSlug,
+      },
+      slug: params.articleSlug,
+    },
+  });
+  if (!article) {
+    notFound();
+  }
+
+  return {
+    title: article.title,
+    description: article.description,
+    openGraph: {
+      title: article.title,
+      description: article.description ?? undefined,
+      images: article.image ? [article.image] : undefined,
+    },
+  };
+}
 
 export default async function ArticleDetailsPage({
   params,
