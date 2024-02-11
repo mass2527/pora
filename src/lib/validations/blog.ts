@@ -5,7 +5,7 @@ export const BLOG_NAME_MAX_LENGTH = 32;
 const BLOG_NAME_MIN_LENGTH = 1;
 export const BLOG_DESCRIPTION_MAX_LENGTH = 160;
 
-export const createBlogSchema = z.object({
+export const createBlogCommonSchema = z.object({
   name: z
     .string()
     .min(BLOG_NAME_MIN_LENGTH, getMinLengthMessage(BLOG_NAME_MIN_LENGTH))
@@ -15,7 +15,8 @@ export const createBlogSchema = z.object({
     .max(
       BLOG_DESCRIPTION_MAX_LENGTH,
       getMaxLengthMessage(BLOG_DESCRIPTION_MAX_LENGTH)
-    ),
+    )
+    .optional(),
   slug: slugString,
 });
 

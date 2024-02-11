@@ -1,9 +1,13 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { ZodError } from "zod";
+import { ZodError, z } from "zod";
 
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
-import { createBlogSchema } from "~/lib/validations/blog";
+import { createBlogCommonSchema } from "~/lib/validations/blog";
+
+const createBlogSchema = createBlogCommonSchema.extend({
+  image: z.string().optional(),
+});
 
 export async function POST(req: Request) {
   try {
@@ -13,13 +17,14 @@ export async function POST(req: Request) {
     }
 
     const json = await req.json();
-    const { name, slug, description } = createBlogSchema.parse(json);
+    const { name, slug, description, image } = createBlogSchema.parse(json);
     const newBlog = await prisma.blog.create({
       data: {
         name,
         slug,
         description,
         userId: user.id,
+        image,
       },
     });
 

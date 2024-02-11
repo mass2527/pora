@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Blog } from "@prisma/client";
+import { PutBlobResult } from "@vercel/blob";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -24,12 +25,32 @@ import { ResponseError, handleError } from "~/lib/errors";
 import {
   BLOG_DESCRIPTION_MAX_LENGTH,
   BLOG_NAME_MAX_LENGTH,
-  createBlogSchema,
+  createBlogCommonSchema,
 } from "~/lib/validations/blog";
 import {
   SLUG_STRING_REGEX_MESSAGE,
   getMaxLengthMessage,
 } from "~/lib/validations/common";
+
+const ACCEPTED_IMAGE_TYPES = ["image/png", "image/jpeg"];
+const MAX_IMAGE_SIZE_IN_MEGA_BYTES = 4.5;
+
+const sizeInMB = (sizeInBytes: number, decimalsNum = 2) => {
+  const result = sizeInBytes / (1024 * 1024);
+  return Number(result.toFixed(decimalsNum));
+};
+
+const createBlogSchema = createBlogCommonSchema.extend({
+  image: z
+    .custom<File>()
+    .refine((file) => {
+      return sizeInMB(file.size) <= MAX_IMAGE_SIZE_IN_MEGA_BYTES;
+    }, `최대 ${MAX_IMAGE_SIZE_IN_MEGA_BYTES}MB인 이미지를 업로드해 주세요.`)
+    .refine((file) => {
+      return ACCEPTED_IMAGE_TYPES.includes(file.type);
+    }, "PNG 또는 JPEG 형식의 이미지 파일을 업로드해 주세요.")
+    .optional(),
+});
 
 export default function CreateBlogForm() {
   const form = useForm<z.infer<typeof createBlogSchema>>({
@@ -43,12 +64,33 @@ export default function CreateBlogForm() {
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
           try {
+            let imageUrl: string | undefined;
+            if (values.image) {
+              const uploadResponse = await fetch("/api/upload", {
+                method: "POST",
+                headers: {
+                  "content-type": values.image.type,
+                  "x-vercel-filename": encodeURIComponent(values.image.name),
+                },
+                body: values.image,
+              });
+              if (!uploadResponse.ok) {
+                throw new ResponseError("Bad fetch response", uploadResponse);
+              }
+
+              const { url } = (await uploadResponse.json()) as PutBlobResult;
+              imageUrl = url;
+            }
+
             const response = await fetch("/api/blogs", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify(values),
+              body: JSON.stringify({
+                ...values,
+                image: imageUrl,
+              }),
             });
             if (!response.ok) {
               throw new ResponseError("Bad fetch response", response);
@@ -60,7 +102,7 @@ export default function CreateBlogForm() {
             if (error instanceof ResponseError) {
               if (error.response.status === 409) {
                 form.setError("slug", {
-                  message: "이미 존재하는 슬러그입니다.",
+                  message: "이미 존재하는 주소입니다.",
                 });
                 return;
               }
@@ -120,7 +162,6 @@ export default function CreateBlogForm() {
               <FormLabel>설명</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="내 블로그"
                   maxLength={BLOG_DESCRIPTION_MAX_LENGTH}
                   autoFocus
                   className="resize-none"
@@ -129,6 +170,35 @@ export default function CreateBlogForm() {
               </FormControl>
               <FormDescription>
                 {getMaxLengthMessage(BLOG_DESCRIPTION_MAX_LENGTH)}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>이미지</FormLabel>
+              <FormControl>
+                <Input
+                  type="file"
+                  accept={ACCEPTED_IMAGE_TYPES.join(",")}
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    if (!file) {
+                      return;
+                    }
+
+                    field.onChange({ target: { value: file } });
+                  }}
+                />
+              </FormControl>
+              <FormDescription>
+                최대 {MAX_IMAGE_SIZE_IN_MEGA_BYTES}MB인 이미지를 업로드해
+                주세요.
               </FormDescription>
               <FormMessage />
             </FormItem>
