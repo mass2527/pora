@@ -21,6 +21,10 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_IMAGE_SIZE_IN_MEGA_BYTES,
+} from "~/lib/constants";
 import { ResponseError, handleError } from "~/lib/errors";
 import {
   BLOG_DESCRIPTION_MAX_LENGTH,
@@ -30,26 +34,11 @@ import {
 import {
   SLUG_STRING_REGEX_MESSAGE,
   getMaxLengthMessage,
+  imageFile,
 } from "~/lib/validations/common";
 
-const ACCEPTED_IMAGE_TYPES = ["image/png", "image/jpeg"];
-const MAX_IMAGE_SIZE_IN_MEGA_BYTES = 4.5;
-
-const sizeInMB = (sizeInBytes: number, decimalsNum = 2) => {
-  const result = sizeInBytes / (1024 * 1024);
-  return Number(result.toFixed(decimalsNum));
-};
-
 const createBlogSchema = createBlogCommonSchema.extend({
-  image: z
-    .custom<File>()
-    .refine((file) => {
-      return sizeInMB(file.size) <= MAX_IMAGE_SIZE_IN_MEGA_BYTES;
-    }, `최대 ${MAX_IMAGE_SIZE_IN_MEGA_BYTES}MB인 이미지를 업로드해 주세요.`)
-    .refine((file) => {
-      return ACCEPTED_IMAGE_TYPES.includes(file.type);
-    }, "PNG 또는 JPEG 형식의 이미지 파일을 업로드해 주세요.")
-    .optional(),
+  image: imageFile.optional(),
 });
 
 export default function CreateBlogForm() {
