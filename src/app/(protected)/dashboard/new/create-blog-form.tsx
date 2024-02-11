@@ -19,8 +19,13 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { ResponseError, handleError } from "~/lib/errors";
-import { BLOG_NAME_MAX_LENGTH, createBlogSchema } from "~/lib/validations/blog";
+import {
+  BLOG_DESCRIPTION_MAX_LENGTH,
+  BLOG_NAME_MAX_LENGTH,
+  createBlogSchema,
+} from "~/lib/validations/blog";
 import {
   SLUG_STRING_REGEX_MESSAGE,
   getMaxLengthMessage,
@@ -102,6 +107,29 @@ export default function CreateBlogForm() {
                 </FormControl>
               </div>
               <FormDescription>{SLUG_STRING_REGEX_MESSAGE}</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>설명</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="내 블로그"
+                  maxLength={BLOG_DESCRIPTION_MAX_LENGTH}
+                  autoFocus
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                {getMaxLengthMessage(BLOG_DESCRIPTION_MAX_LENGTH)}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
