@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
 import React from "react";
-import CategoryLinks from "./category/[categorySlug]/category-links";
 import Link from "next/link";
 import { formatDate } from "~/lib/utils";
+import CategoryLinks from "./category/[categorySlug]/category-links";
 
 export default function BlogPageTemplate({
   title,

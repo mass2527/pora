@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "~/lib/prisma";
-import BlogPageTemplate from "./blog-page-template";
+import BlogPageTemplate from "../(main)/blog-page-template";
+
 
 export default async function BlogPage({
   params,
