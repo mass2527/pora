@@ -34,18 +34,17 @@ export default function BlogCategoryList({
               dragStartIndexRef.current = index;
             }}
             onDragOver={(event) => {
-              event.preventDefault();
+              const isDroppableListItem = index !== dragStartIndexRef.current;
+              if (isDroppableListItem) {
+                event.preventDefault();
+              }
             }}
             onDrop={async () => {
-              const isUnchanged = index === dragStartIndexRef.current;
-              if (isUnchanged) {
-                return;
-              }
-
               const targetCategory = categories.splice(
                 dragStartIndexRef.current,
                 1
               )[0];
+              dragStartIndexRef.current = -1;
               invariant(targetCategory);
               categories.splice(index, 0, targetCategory);
               setCategories([...categories]);
