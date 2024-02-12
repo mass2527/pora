@@ -76,14 +76,15 @@ export default function UpdateArticleForm({
           onSubmit={form.handleSubmit(async (values) => {
             try {
               let imageUrl: string | undefined;
-              if (values.image) {
+              const file = values.image?.[0];
+              if (file) {
                 const uploadResponse = await fetch("/api/upload", {
                   method: "POST",
                   headers: {
-                    "content-type": values.image.type,
-                    "x-vercel-filename": encodeURIComponent(values.image.name),
+                    "content-type": file.type,
+                    "x-vercel-filename": encodeURIComponent(file.name),
                   },
-                  body: values.image,
+                  body: file,
                 });
                 if (!uploadResponse.ok) {
                   throw new ResponseError("upload failed", uploadResponse);
