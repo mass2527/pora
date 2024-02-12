@@ -32,7 +32,7 @@ import SubmitButton from "~/components/submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import { PutBlobResult } from "@vercel/blob";
 import SingleImageUploader from "~/components/single-image-uploader";
-import { uploadFile } from "~/services/file";
+import { deleteFile, uploadFile } from "~/services/file";
 
 const schema = z.object({
   categoryId: z.string(),
@@ -107,10 +107,8 @@ export default function UpdateArticleForm({
               const hasDeleted = !newImageUrl && article.image;
               const hasUpdated =
                 newImageUrl && article.image && newImageUrl !== article.image;
-              if (hasDeleted || hasUpdated) {
-                fetch(`/api/upload?url=${article.image}`, {
-                  method: "DELETE",
-                });
+              if ((hasDeleted || hasUpdated) && article.image) {
+                deleteFile(article.image);
               }
               router.replace(`/dashboard/${article.blog.slug}`);
             } catch (error) {

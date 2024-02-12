@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { PutBlobResult } from "@vercel/blob";
 import { imageFileSchema } from "~/lib/validations/common";
-import { uploadFile } from "~/services/file";
+import { deleteFile, uploadFile } from "~/services/file";
 
 const schema = z.object({
   image: imageFileSchema.optional(),
@@ -63,10 +63,8 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
             const hasDeleted = !newImageUrl && blog.image;
             const hasUpdated =
               newImageUrl && blog.image && newImageUrl !== blog.image;
-            if (hasDeleted || hasUpdated) {
-              fetch(`/api/upload?url=${blog.image}`, {
-                method: "DELETE",
-              });
+            if ((hasDeleted || hasUpdated) && blog.image) {
+              deleteFile(blog.image);
             }
 
             router.refresh();
