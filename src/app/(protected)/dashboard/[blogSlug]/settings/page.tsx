@@ -3,8 +3,9 @@ import React from "react";
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import DeleteBlogButton from "./delete-blog-button";
-import UpdateBlogForm from "./update-blog-form";
+import UpdateBlogNameForm from "./update-blog-name-form";
 import Card from "~/components/card";
+import UpdateBlogDescriptionForm from "./update-blog-description-form";
 
 export default async function BlogSettingsPage({
   params,
@@ -34,9 +35,15 @@ export default async function BlogSettingsPage({
       <h1 className="text-2xl font-semibold tracking-tight">설정</h1>
 
       <Card
-        title="정보"
+        title="이름"
         description="블로그의 이름을 나타내기 위해 사용됩니다."
-        content={<UpdateBlogForm blog={blog} />}
+        content={<UpdateBlogNameForm blog={blog} />}
+      />
+
+      <Card
+        title="설명"
+        description="블로그를 소개하기 위해 사용됩니다."
+        content={<UpdateBlogDescriptionForm blog={blog} />}
       />
 
       <Card

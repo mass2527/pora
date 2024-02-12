@@ -15,13 +15,14 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const { name } = updateBlogSchema.parse(json);
+    const { name, description } = updateBlogSchema.parse(json);
     const updatedCategory = await prisma.blog.update({
       where: {
         id: params.blogId,
       },
       data: {
         name,
+        description,
       },
     });
     return new Response(JSON.stringify(updatedCategory));
