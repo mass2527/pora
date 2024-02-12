@@ -18,9 +18,7 @@ export default function SubmitButton({
     <Button
       type="submit"
       disabled={
-        formState.isSubmitting ||
-        !formState.isValid ||
-        (allowNoChange ? false : !formState.isDirty)
+        formState.isSubmitting || (allowNoChange ? false : !formState.isDirty)
       }
       {...props}
     >
