@@ -32,14 +32,10 @@ const sizeInMB = (sizeInBytes: number, fractionDigits = 2) => {
 };
 
 export const imageFileSchema = z
-  .custom<FileList>()
-  .refine((fileList) => {
-    return Array.from(fileList).every((file) => {
-      return sizeInMB(file.size) <= MAX_IMAGE_SIZE_IN_MEGA_BYTES;
-    });
+  .custom<File>()
+  .refine((file) => {
+    return sizeInMB(file.size) <= MAX_IMAGE_SIZE_IN_MEGA_BYTES;
   }, `최대 ${MAX_IMAGE_SIZE_IN_MEGA_BYTES}MB인 이미지를 업로드해 주세요.`)
-  .refine((fileList) => {
-    return Array.from(fileList).every((file) => {
-      return ACCEPTED_IMAGE_TYPES.includes(file.type);
-    });
+  .refine((file) => {
+    return ACCEPTED_IMAGE_TYPES.includes(file.type);
   }, `${ACCEPTED_IMAGE_TYPES.map((type) => type.split("/")[1]).join(" 또는 ")} 형식의 이미지 파일을 업로드해 주세요.`);

@@ -74,15 +74,15 @@ export default function UpdateArticleForm({
           onSubmit={form.handleSubmit(async (values) => {
             try {
               let newImageUrl: string | undefined;
-              const file = values.image?.[0];
-              if (file) {
+              const imageFile = values.image;
+              if (imageFile) {
                 const uploadResponse = await fetch("/api/upload", {
                   method: "POST",
                   headers: {
-                    "content-type": file.type,
-                    "x-vercel-filename": encodeURIComponent(file.name),
+                    "content-type": imageFile.type,
+                    "x-vercel-filename": encodeURIComponent(imageFile.name),
                   },
-                  body: file,
+                  body: imageFile,
                 });
                 if (!uploadResponse.ok) {
                   throw new ResponseError("upload failed", uploadResponse);
@@ -214,12 +214,12 @@ export default function UpdateArticleForm({
                   <SingleImageUploader
                     value={article.image}
                     onChange={(event) => {
-                      const fileList = event.target.files;
-                      if (!fileList) {
+                      const file = event.target.files?.[0];
+                      if (!file) {
                         return;
                       }
 
-                      field.onChange({ target: { value: fileList } });
+                      field.onChange({ target: { value: file } });
                     }}
                   />
                 </FormControl>

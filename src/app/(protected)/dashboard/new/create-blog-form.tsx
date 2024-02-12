@@ -51,7 +51,7 @@ export default function CreateBlogForm() {
         onSubmit={form.handleSubmit(async (values) => {
           try {
             let imageUrl: string | undefined;
-            const imageFile = values.image?.[0];
+            const imageFile = values.image;
             if (imageFile) {
               const uploadResponse = await fetch("/api/upload", {
                 method: "POST",
@@ -172,13 +172,13 @@ export default function CreateBlogForm() {
               <FormControl>
                 <SingleImageUploader
                   onChange={(event) => {
-                    const fileList = event.target.files;
-                    if (!fileList) {
+                    const file = event.target.files?.[0];
+                    if (!file) {
                       return;
                     }
 
                     field.onChange({
-                      target: { value: fileList ?? undefined },
+                      target: { value: file },
                     });
                   }}
                 />
