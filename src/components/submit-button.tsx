@@ -10,18 +10,11 @@ interface SubmitButton extends Omit<ButtonProps, "type" | "disabled"> {
 
 export default function SubmitButton({
   formState,
-  allowNoChange = false,
   children,
   ...props
 }: SubmitButton) {
   return (
-    <Button
-      type="submit"
-      disabled={
-        formState.isSubmitting || (allowNoChange ? false : !formState.isDirty)
-      }
-      {...props}
-    >
+    <Button type="submit" disabled={formState.isSubmitting} {...props}>
       {formState.isSubmitting ? <Loading /> : children}
     </Button>
   );

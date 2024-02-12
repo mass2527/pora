@@ -232,11 +232,7 @@ export default function UpdateArticleForm({
             )}
           />
 
-          <SubmitButton
-            formState={form.formState}
-            allowNoChange
-            className="ml-auto"
-          >
+          <SubmitButton formState={form.formState} className="ml-auto">
             발행
           </SubmitButton>
         </form>
