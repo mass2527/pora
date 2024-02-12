@@ -27,7 +27,7 @@ export default function EditArticle({
     jsonContent: article.draftJsonContent,
   });
   const latestArticleFormRef = useRef(articleForm);
-  const debouncedArticleForm = useDebounce(articleForm, 750);
+  const debouncedArticleForm = useDebounce(articleForm, 3000);
   const [saveStatus, setSaveStatus] = useState<
     "임시 저장중..." | "임시 저장됨" | "임시 저장 실패" | ""
   >("");
