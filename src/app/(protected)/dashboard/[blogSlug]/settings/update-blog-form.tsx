@@ -1,33 +1,24 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Blog } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React from "react";
-import { useForm } from "react-hook-form";
+import { ReactNode } from "react";
+import { FieldValues, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import SubmitButton from "~/components/submit-button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import { Loading } from "~/components/ui/loading";
-import { ResponseError, handleError } from "~/lib/errors";
-import { updateBlogSchema } from "~/lib/validations/blog";
+import { Form } from "~/components/ui/form";
 
-export default function UpdateBlogForm({ blog }: { blog: Blog }) {
-  const form = useForm<z.infer<typeof updateBlogSchema>>({
-    resolver: zodResolver(updateBlogSchema),
-    defaultValues: {
-      name: blog.name,
-    },
-  });
+import { ResponseError, handleError } from "~/lib/errors";
+
+export default function UpdateBlogForm<T extends FieldValues>({
+  blog,
+  children,
+  form,
+}: {
+  blog: Blog;
+  children: ReactNode;
+  form: UseFormReturn<T>;
+}) {
   const router = useRouter();
 
   return (
@@ -54,20 +45,7 @@ export default function UpdateBlogForm({ blog }: { blog: Blog }) {
           }
         })}
       >
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>이름</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
+        {children}
         <SubmitButton formState={form.formState} className="mr-auto">
           수정
         </SubmitButton>
