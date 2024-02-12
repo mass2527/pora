@@ -17,6 +17,7 @@ import CustomKeymap from "./custom-keymap";
 import DragAndDrop from "./drag-and-drop";
 import UploadImagesPlugin from "../plugins/upload-image";
 import UpdatedImage from "./updated-image";
+import Typography from "@tiptap/extension-typography";
 
 export const defaultExtensions = [
   StarterKit.configure({
@@ -140,4 +141,5 @@ export const defaultExtensions = [
   }),
   CustomKeymap,
   DragAndDrop,
+  Typography,
 ];

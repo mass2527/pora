@@ -71,6 +71,9 @@ dependencies:
   '@tiptap/extension-text-style':
     specifier: ^2.2.1
     version: 2.2.1(@tiptap/core@2.2.1)
+  '@tiptap/extension-typography':
+    specifier: ^2.2.2
+    version: 2.2.2(@tiptap/core@2.2.1)
   '@tiptap/extension-underline':
     specifier: ^2.2.1
     version: 2.2.1(@tiptap/core@2.2.1)
@@ -1395,8 +1398,8 @@ packages:
       '@tiptap/extension-text-style': 2.2.1(@tiptap/core@2.2.1)
     dev: false
 
-  /@tiptap/extension-document@2.2.1(@tiptap/core@2.2.1):
-    resolution: {integrity: sha512-Pb0jSY6wYSKd8fgDotKiQN3mc4dKLWVq0IzYOpBGTLn+37WmyPzWCnA1vWjp81u2XRXvr3gFQBEa+zYXonG//w==}
+  /@tiptap/extension-document@2.2.2(@tiptap/core@2.2.1):
+    resolution: {integrity: sha512-eUhpYq8ErVAlxuTg5wslc96mniEQs+VN+tFmRrx9Q0n0nG/aDKUQFDgcSMpAMpHK7+h7tGc/rDq+ydpzZhFXlQ==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:
@@ -1573,8 +1576,16 @@ packages:
       '@tiptap/core': 2.2.1(@tiptap/pm@2.2.1)
     dev: false
 
-  /@tiptap/extension-text@2.2.1(@tiptap/core@2.2.1):
-    resolution: {integrity: sha512-1zjPuGyhLIODsYpCYeRSUgzfzdzk5uSo8PsV/WaF75ouilJYE3QvMQegivkuNmPBLz0nukPkOcXfQUI/D8wNOA==}
+  /@tiptap/extension-text@2.2.2(@tiptap/core@2.2.1):
+    resolution: {integrity: sha512-Zj53Vp/9MSQj5uiaObFaD3y7grUpMy+PfHmrK5XAZSFhRx+QpGUp+oItlKod6IJEIu8rq4dChgE7i6kT9uwWlA==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.2.1(@tiptap/pm@2.2.1)
+    dev: false
+
+  /@tiptap/extension-typography@2.2.2(@tiptap/core@2.2.1):
+    resolution: {integrity: sha512-mMK/VZQhwes/8HK5qoNbcgfBcNLorL+bZcISCmqHdXfhW6npJuuuzXBbfF3/dJr6pjdPO+qAVyrYkiCm1rr5Ow==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:
@@ -1637,7 +1648,7 @@ packages:
       '@tiptap/extension-bullet-list': 2.2.1(@tiptap/core@2.2.1)
       '@tiptap/extension-code': 2.2.1(@tiptap/core@2.2.1)
       '@tiptap/extension-code-block': 2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
-      '@tiptap/extension-document': 2.2.1(@tiptap/core@2.2.1)
+      '@tiptap/extension-document': 2.2.2(@tiptap/core@2.2.1)
       '@tiptap/extension-dropcursor': 2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
       '@tiptap/extension-gapcursor': 2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
       '@tiptap/extension-hard-break': 2.2.1(@tiptap/core@2.2.1)
@@ -1649,7 +1660,7 @@ packages:
       '@tiptap/extension-ordered-list': 2.2.1(@tiptap/core@2.2.1)
       '@tiptap/extension-paragraph': 2.2.1(@tiptap/core@2.2.1)
       '@tiptap/extension-strike': 2.2.1(@tiptap/core@2.2.1)
-      '@tiptap/extension-text': 2.2.1(@tiptap/core@2.2.1)
+      '@tiptap/extension-text': 2.2.2(@tiptap/core@2.2.1)
     transitivePeerDependencies:
       - '@tiptap/pm'
     dev: false
