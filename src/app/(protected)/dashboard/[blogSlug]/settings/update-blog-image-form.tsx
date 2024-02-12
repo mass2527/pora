@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { PutBlobResult } from "@vercel/blob";
 import { imageFileSchema } from "~/lib/validations/common";
+import { uploadFile } from "~/services/file";
 
 const schema = z.object({
   image: imageFileSchema.optional(),
@@ -41,19 +42,7 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
           let newImageUrl: string | undefined;
           const imageFile = values.image;
           if (imageFile) {
-            const uploadResponse = await fetch("/api/upload", {
-              method: "POST",
-              headers: {
-                "content-type": imageFile.type,
-                "x-vercel-filename": encodeURIComponent(imageFile.name),
-              },
-              body: imageFile,
-            });
-            if (!uploadResponse.ok) {
-              throw new ResponseError("upload error", uploadResponse);
-            }
-
-            const { url } = (await uploadResponse.json()) as PutBlobResult;
+            const { url } = await uploadFile(imageFile);
             newImageUrl = url;
           }
 

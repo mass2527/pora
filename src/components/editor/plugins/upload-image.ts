@@ -3,6 +3,8 @@ import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet, EditorView } from "@tiptap/pm/view";
 import { PutBlobResult } from "@vercel/blob";
 import { invariant } from "~/lib/utils";
+import { handleError } from "~/lib/errors";
+import { uploadFile } from "~/services/file";
 
 const uploadKey = new PluginKey("upload-image");
 
@@ -117,17 +119,10 @@ export const handleImageUpload = (file: File) => {
   // upload to Vercel Blob
   return new Promise((resolve) => {
     toast.promise(
-      fetch("/api/upload", {
-        method: "POST",
-        headers: {
-          "content-type": file.type,
-          "x-vercel-filename": encodeURIComponent(file.name),
-        },
-        body: file,
-      }).then(async (res) => {
-        // Successfully uploaded image
-        if (res.status === 200) {
-          const { url } = (await res.json()) as PutBlobResult;
+      uploadFile(file)
+        .then(async (result) => {
+          // Successfully uploaded image
+          const { url } = result;
 
           // preload the image
           let image = new Image();
@@ -136,17 +131,8 @@ export const handleImageUpload = (file: File) => {
             resolve(url);
           };
           // No blob store configured
-        } else if (res.status === 401) {
-          resolve(file);
-
-          throw new Error(
-            "`BLOB_READ_WRITE_TOKEN` environment variable not found, reading image locally instead."
-          );
-          // Unknown error
-        } else {
-          throw new Error(`Error uploading image. Please try again.`);
-        }
-      }),
+        })
+        .catch(handleError),
       {
         loading: "이미지 업로드중...",
         success: "이미지가 성공적으로 업로드 되었습니다.",

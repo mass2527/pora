@@ -32,6 +32,7 @@ import SubmitButton from "~/components/submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import { PutBlobResult } from "@vercel/blob";
 import SingleImageUploader from "~/components/single-image-uploader";
+import { uploadFile } from "~/services/file";
 
 const schema = z.object({
   categoryId: z.string(),
@@ -76,19 +77,7 @@ export default function UpdateArticleForm({
               let newImageUrl: string | undefined;
               const imageFile = values.image;
               if (imageFile) {
-                const uploadResponse = await fetch("/api/upload", {
-                  method: "POST",
-                  headers: {
-                    "content-type": imageFile.type,
-                    "x-vercel-filename": encodeURIComponent(imageFile.name),
-                  },
-                  body: imageFile,
-                });
-                if (!uploadResponse.ok) {
-                  throw new ResponseError("upload failed", uploadResponse);
-                }
-
-                const { url } = (await uploadResponse.json()) as PutBlobResult;
+                const { url } = await uploadFile(imageFile);
                 newImageUrl = url;
               }
 

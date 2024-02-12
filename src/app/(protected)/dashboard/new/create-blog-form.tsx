@@ -2,11 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Blog } from "@prisma/client";
-import { PutBlobResult } from "@vercel/blob";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { uploadFile } from "~/services/file";
 import SingleImageUploader from "~/components/single-image-uploader";
 import SubmitButton from "~/components/submit-button";
 import { buttonVariants } from "~/components/ui/button";
@@ -53,19 +53,7 @@ export default function CreateBlogForm() {
             let imageUrl: string | undefined;
             const imageFile = values.image;
             if (imageFile) {
-              const uploadResponse = await fetch("/api/upload", {
-                method: "POST",
-                headers: {
-                  "content-type": imageFile.type,
-                  "x-vercel-filename": encodeURIComponent(imageFile.name),
-                },
-                body: imageFile,
-              });
-              if (!uploadResponse.ok) {
-                throw new ResponseError("Bad fetch response", uploadResponse);
-              }
-
-              const { url } = (await uploadResponse.json()) as PutBlobResult;
+              const { url } = await uploadFile(imageFile);
               imageUrl = url;
             }
 

@@ -5,6 +5,7 @@ import { PutBlobResult } from "@vercel/blob";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { deleteFile, uploadFile } from "~/services/file";
 import { Loading } from "~/components/ui/loading";
 import UserAvatar from "~/components/user-avatar";
 import { ResponseError, handleError } from "~/lib/errors";
@@ -54,19 +55,7 @@ export default function UpdateUserImage({
 
           try {
             setIsLoading(true);
-            const uploadResponse = await fetch("/api/upload", {
-              method: "POST",
-              headers: {
-                "content-type": file.type,
-                "x-vercel-filename": encodeURIComponent(file.name),
-              },
-              body: file,
-            });
-            if (!uploadResponse.ok) {
-              throw new ResponseError("", uploadResponse);
-            }
-
-            const { url } = (await uploadResponse.json()) as PutBlobResult;
+            const { url } = await uploadFile(file);
             const userResponse = await fetch(`/api/users/${user.id}`, {
               method: "PATCH",
               headers: {
@@ -77,12 +66,12 @@ export default function UpdateUserImage({
               }),
             });
             if (!userResponse.ok) {
-              throw new ResponseError("", uploadResponse);
+              throw new ResponseError("", userResponse);
             }
 
-            fetch(`/api/upload?url=${user.image}`, {
-              method: "DELETE",
-            });
+            if (user.image) {
+              deleteFile(user.image);
+            }
 
             router.refresh();
             toast.success("이미지가 수정되었어요.");
