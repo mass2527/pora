@@ -22,6 +22,7 @@ export default async function BlogInCategoryPage({
           createdAt: "desc",
         },
       },
+      user: true,
       categories: {
         orderBy: {
           orderIndex: "asc",

@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { formatDate } from "~/lib/utils";
 import CategoryLinks from "./category/[categorySlug]/category-links";
+import UserAvatar from "~/components/user-avatar";
 
 export default function BlogPageTemplate({
   title,
@@ -13,6 +14,7 @@ export default function BlogPageTemplate({
     include: {
       articles: true;
       categories: true;
+      user: true;
     };
   }>;
 }) {
@@ -36,7 +38,18 @@ export default function BlogPageTemplate({
                     </h2>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-zinc-500">Author</span>
+                      <div className="flex items-center gap-2">
+                        <UserAvatar
+                          user={{
+                            image: blog.user.image,
+                            name: blog.user.name,
+                          }}
+                          className="w-6 h-6"
+                        />
+                        <span className="text-sm text-zinc-500 font-medium">
+                          {blog.user.name}
+                        </span>
+                      </div>
                       <span className="text-sm text-zinc-500">
                         {formatDate(article.createdAt)}
                       </span>

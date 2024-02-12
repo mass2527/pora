@@ -3,7 +3,6 @@ import React from "react";
 import prisma from "~/lib/prisma";
 import BlogPageTemplate from "../(main)/blog-page-template";
 
-
 export default async function BlogPage({
   params,
 }: {
@@ -19,6 +18,7 @@ export default async function BlogPage({
           orderIndex: "asc",
         },
       },
+      user: true,
       articles: {
         orderBy: {
           createdAt: "desc",
