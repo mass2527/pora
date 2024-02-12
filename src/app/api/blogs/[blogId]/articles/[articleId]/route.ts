@@ -16,7 +16,7 @@ const schema = z
     draftJsonContent: z.string(),
     htmlContent: z.string(),
     status: z.nativeEnum(ArticleStatus),
-    image: z.string().optional(),
+    image: z.string().nullish(),
   })
   .partial();
 

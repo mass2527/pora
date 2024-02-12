@@ -29,11 +29,9 @@ import CreateCategoryButton from "../../categories/create-category-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 import SubmitButton from "~/components/submit-button";
-import {
-  ACCEPTED_IMAGE_TYPES,
-  MAX_IMAGE_SIZE_IN_MEGA_BYTES,
-} from "~/lib/constants";
+import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import { PutBlobResult } from "@vercel/blob";
+import SingleImageUploader from "~/components/single-image-uploader";
 
 const schema = z.object({
   categoryId: z.string(),
@@ -75,7 +73,7 @@ export default function UpdateArticleForm({
           className="flex flex-col gap-2"
           onSubmit={form.handleSubmit(async (values) => {
             try {
-              let imageUrl: string | undefined;
+              let newImageUrl: string | undefined;
               const file = values.image?.[0];
               if (file) {
                 const uploadResponse = await fetch("/api/upload", {
@@ -91,7 +89,7 @@ export default function UpdateArticleForm({
                 }
 
                 const { url } = (await uploadResponse.json()) as PutBlobResult;
-                imageUrl = url;
+                newImageUrl = url;
               }
 
               const response = await fetch(
@@ -109,7 +107,7 @@ export default function UpdateArticleForm({
                     jsonContent: article.jsonContent,
                     draftJsonContent: article.jsonContent,
                     status: ArticleStatus.PUBLISHED,
-                    image: imageUrl,
+                    image: newImageUrl ?? article.image ? null : undefined,
                   }),
                 }
               );
@@ -117,6 +115,14 @@ export default function UpdateArticleForm({
                 throw new ResponseError("Bad fetch response", response);
               }
 
+              const hasDeleted = !newImageUrl && article.image;
+              const hasUpdated =
+                newImageUrl && article.image && newImageUrl !== article.image;
+              if (hasDeleted || hasUpdated) {
+                fetch(`/api/upload?url=${article.image}`, {
+                  method: "DELETE",
+                });
+              }
               router.replace(`/dashboard/${article.blog.slug}`);
             } catch (error) {
               if (error instanceof ResponseError) {
@@ -205,16 +211,15 @@ export default function UpdateArticleForm({
               <FormItem>
                 <FormLabel>이미지</FormLabel>
                 <FormControl>
-                  <Input
-                    type="file"
-                    accept={ACCEPTED_IMAGE_TYPES.join(",")}
+                  <SingleImageUploader
+                    value={article.image}
                     onChange={(event) => {
-                      const file = event.target.files?.[0];
-                      if (!file) {
+                      const fileList = event.target.files;
+                      if (!fileList) {
                         return;
                       }
 
-                      field.onChange({ target: { value: file } });
+                      field.onChange({ target: { value: fileList } });
                     }}
                   />
                 </FormControl>
