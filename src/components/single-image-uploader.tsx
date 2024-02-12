@@ -8,13 +8,13 @@ import Image from "next/image";
 
 interface ImageUploaderProps {
   accept?: string;
-  value: string | null;
+  value?: string | null;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function SingleImageUploader({
   accept = ACCEPTED_IMAGE_TYPES.join(","),
-  value,
+  value = null,
   onChange,
 }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);

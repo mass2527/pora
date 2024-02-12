@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import ImageUploader from "~/components/image-uploader";
+import SingleImageUploader from "~/components/single-image-uploader";
 import SubmitButton from "~/components/submit-button";
 import { buttonVariants } from "~/components/ui/button";
 import {
@@ -170,8 +170,13 @@ export default function CreateBlogForm() {
             <FormItem>
               <FormLabel>이미지</FormLabel>
               <FormControl>
-                <ImageUploader
-                  onFileListChange={(fileList) => {
+                <SingleImageUploader
+                  onChange={(event) => {
+                    const fileList = event.target.files;
+                    if (!fileList) {
+                      return;
+                    }
+
                     field.onChange({
                       target: { value: fileList ?? undefined },
                     });
