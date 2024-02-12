@@ -38,6 +38,10 @@ export default function CreateCategoryButton({
   const router = useRouter();
   const form = useForm<z.infer<typeof categorySchema>>({
     resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: "",
+      slug: "",
+    },
   });
 
   const {
@@ -77,8 +81,8 @@ export default function CreateCategoryButton({
                   throw new ResponseError("Bad fetch response", response);
                 }
 
-                setIsOpen(false);
                 router.refresh();
+                setIsOpen(false);
               } catch (error) {
                 if (error instanceof ResponseError) {
                   if (error.response.status === 409) {
@@ -95,8 +99,8 @@ export default function CreateCategoryButton({
                         }[name]
                       }입니다.`,
                     });
+                    return;
                   }
-                  return;
                 }
 
                 handleError(error);

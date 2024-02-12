@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 export class ResponseError extends Error {
   response: Response;
 
@@ -12,25 +14,20 @@ export function handleError(error: unknown) {
 
   if (error instanceof ResponseError) {
     switch (error.response.status) {
-      case 401:
-        // Prompt the user to log back in
-        // showUnauthorizedDialog();
-        console.info("Unauthorized");
-        break;
-      case 403:
-        console.info("Forbidden");
-        break;
-      case 500:
-        // Show user a dialog to apologize that we had an error and to
-        // try again and if that doesn't work contact support
-        // showErrorDialog();
-        console.info("Internal Server Error");
-        break;
-      default:
-        // Show
-        throw new Error("Unhandled fetch response", { cause: error });
+      case 401: {
+        toast.error("로그인 후 다시 시도해 주세요.");
+        return;
+      }
+      case 500: {
+        toast.error("오류가 발생했어요. 잠시 후 다시 시도해 주세요.");
+        return;
+      }
+      default: {
+        console.error("Unhandled fetch response", { error });
+        return;
+      }
     }
   }
 
-  throw new Error("Unknown fetch error", { cause: error });
+  console.error("Unknown error", { error });
 }

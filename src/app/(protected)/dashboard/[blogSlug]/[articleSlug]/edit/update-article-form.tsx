@@ -130,8 +130,8 @@ export default function UpdateArticleForm({
                   form.setError("slug", {
                     message: `이미 존재하는 슬러그입니다.`,
                   });
+                  return;
                 }
-                return;
               }
 
               handleError(error);

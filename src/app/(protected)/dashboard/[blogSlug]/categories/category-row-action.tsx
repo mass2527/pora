@@ -148,8 +148,8 @@ export default function CategoryRowAction({
                           }[name]
                         }입니다.`,
                       });
+                      return;
                     }
-                    return;
                   }
 
                   handleError(error);
