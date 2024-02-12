@@ -6,6 +6,7 @@ import DeleteBlogButton from "./delete-blog-button";
 import UpdateBlogNameForm from "./update-blog-name-form";
 import Card from "~/components/card";
 import UpdateBlogDescriptionForm from "./update-blog-description-form";
+import UpdateBlogImageForm from "./update-blog-image-form";
 
 export default async function BlogSettingsPage({
   params,
@@ -44,6 +45,12 @@ export default async function BlogSettingsPage({
         title="설명"
         description="블로그를 소개하기 위해 사용됩니다."
         content={<UpdateBlogDescriptionForm blog={blog} />}
+      />
+
+      <Card
+        title="이미지"
+        description="블로그를 소개하기 위해 사용됩니다."
+        content={<UpdateBlogImageForm blog={blog} />}
       />
 
       <Card

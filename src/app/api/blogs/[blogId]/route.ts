@@ -4,6 +4,10 @@ import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { updateBlogSchema } from "~/lib/validations/blog";
 
+const schema = updateBlogSchema.extend({
+  image: z.string().nullish(),
+});
+
 export async function PATCH(
   req: Request,
   { params }: { params: { blogId: string } }
@@ -15,7 +19,7 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const { name, description } = updateBlogSchema.parse(json);
+    const { name, description, image } = schema.parse(json);
     const updatedCategory = await prisma.blog.update({
       where: {
         id: params.blogId,
@@ -23,6 +27,7 @@ export async function PATCH(
       data: {
         name,
         description,
+        image,
       },
     });
     return new Response(JSON.stringify(updatedCategory));
