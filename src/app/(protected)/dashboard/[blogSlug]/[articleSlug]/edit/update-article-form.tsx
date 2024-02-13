@@ -169,9 +169,14 @@ export default function UpdateArticleForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>슬러그*</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
+                <div className="flex items-center gap-1">
+                  <span className="text-sm text-zinc-500">
+                    {process.env.NEXT_PUBLIC_DOMAIN_NAME}/{article.blog.slug}/
+                  </span>
+                  <FormControl>
+                    <Input placeholder="your-article-slug" {...field} />
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
