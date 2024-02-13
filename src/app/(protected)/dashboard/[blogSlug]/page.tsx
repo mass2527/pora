@@ -53,7 +53,7 @@ export default async function BlogPage({
       </div>
 
       {blog.articles.length > 0 ? (
-        <BlogTable blog={blog} />
+        <BlogArticlesTable blog={blog} />
       ) : (
         <EmptyPlaceholder
           title="아직 아무 글도 쓰지 않았어요."
@@ -65,7 +65,7 @@ export default async function BlogPage({
   );
 }
 
-function BlogTable({
+function BlogArticlesTable({
   blog,
 }: {
   blog: Prisma.BlogGetPayload<{
