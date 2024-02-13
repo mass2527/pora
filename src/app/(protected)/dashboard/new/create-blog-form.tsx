@@ -114,13 +114,13 @@ export default function CreateBlogForm() {
           name="slug"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>주소*</FormLabel>
+              <FormLabel>슬러그*</FormLabel>
               <div className="flex items-center gap-1">
                 <span className="text-sm text-zinc-500">
                   {process.env.NEXT_PUBLIC_DOMAIN_NAME}/
                 </span>
                 <FormControl>
-                  <Input placeholder="my-blog" {...field} />
+                  <Input placeholder="your-blog-slug" {...field} />
                 </FormControl>
               </div>
               <FormDescription>{SLUG_STRING_REGEX_MESSAGE}</FormDescription>
