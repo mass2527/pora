@@ -46,12 +46,26 @@ model User {
   blogs Blog[]
 
   name          String?
-  email         String?   @unique
+  email         String?        @unique
   emailVerified DateTime?
-  image         String?   @db.Text
+  image         String?        @db.Text
   jobPosition   String?
   accounts      Account[]
   sessions      Session[]
+  collaborators Collaborator[]
+}
+
+model Collaborator {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  blogId String
+  blog   Blog   @relation(fields: [blogId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([blogId])
 }
 
 model Blog {
@@ -69,7 +83,8 @@ model Blog {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
-  categories Category[]
+  categories    Category[]
+  collaborators Collaborator[]
 
   @@index([userId])
 }
