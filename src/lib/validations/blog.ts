@@ -2,7 +2,6 @@ import { z } from "zod";
 import {
   getMaxLengthMessage,
   getMinLengthMessage,
-  imageFileSchema,
   slugStringSchema,
 } from "./common";
 
@@ -20,8 +19,7 @@ export const createBlogCommonSchema = z.object({
     .max(
       BLOG_DESCRIPTION_MAX_LENGTH,
       getMaxLengthMessage(BLOG_DESCRIPTION_MAX_LENGTH)
-    )
-    .optional(),
+    ),
   slug: slugStringSchema,
 });
 
