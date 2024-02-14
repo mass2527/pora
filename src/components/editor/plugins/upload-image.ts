@@ -1,7 +1,6 @@
 import { toast } from "sonner";
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet, EditorView } from "@tiptap/pm/view";
-import { PutBlobResult } from "@vercel/blob";
 import { invariant } from "~/lib/utils";
 import { handleError } from "~/lib/errors";
 import { uploadFile } from "~/services/file";
@@ -80,9 +79,11 @@ export function startImageUpload(file: File, view: EditorView, pos: number) {
   const tr = view.state.tr;
   if (!tr.selection.empty) tr.deleteSelection();
 
+  const imageUploadPromise = handleImageUpload(file);
+
   const reader = new FileReader();
   reader.readAsDataURL(file);
-  reader.onload = () => {
+  reader.onload = async () => {
     tr.setMeta(uploadKey, {
       add: {
         id,
@@ -91,52 +92,63 @@ export function startImageUpload(file: File, view: EditorView, pos: number) {
       },
     });
     view.dispatch(tr);
+
+    try {
+      const src = await imageUploadPromise;
+      const { schema } = view.state;
+      let pos = findPlaceholder(view.state, id);
+      // If the content around the placeholder has been deleted, drop
+      // the image
+      if (pos == null) return;
+
+      // Otherwise, insert it at the placeholder's position, and remove
+      // the placeholder
+
+      // When BLOB_READ_WRITE_TOKEN is not valid or unavailable, read
+      // the image locally
+      const imageSrc = typeof src === "object" ? reader.result : src;
+      invariant(schema.nodes.image);
+      const node = schema.nodes.image.create({ src: imageSrc });
+      const transaction = view.state.tr
+        .replaceWith(pos, pos, node)
+        .setMeta(uploadKey, { remove: { id } });
+      view.dispatch(transaction);
+    } catch (error) {
+      tr.setMeta(uploadKey, {
+        remove: {
+          id,
+        },
+      });
+      view.dispatch(tr);
+    }
   };
-
-  handleImageUpload(file).then((src) => {
-    const { schema } = view.state;
-    let pos = findPlaceholder(view.state, id);
-    // If the content around the placeholder has been deleted, drop
-    // the image
-    if (pos == null) return;
-
-    // Otherwise, insert it at the placeholder's position, and remove
-    // the placeholder
-
-    // When BLOB_READ_WRITE_TOKEN is not valid or unavailable, read
-    // the image locally
-    const imageSrc = typeof src === "object" ? reader.result : src;
-    invariant(schema.nodes.image);
-    const node = schema.nodes.image.create({ src: imageSrc });
-    const transaction = view.state.tr
-      .replaceWith(pos, pos, node)
-      .setMeta(uploadKey, { remove: { id } });
-    view.dispatch(transaction);
-  });
 }
 
 export const handleImageUpload = (file: File) => {
   // upload to Vercel Blob
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     toast.promise(
-      uploadFile(file)
-        .then(async (result) => {
-          // Successfully uploaded image
-          const { url } = result;
+      uploadFile(file).then(async (result) => {
+        // Successfully uploaded image
+        const { url } = result;
 
-          // preload the image
-          let image = new Image();
-          image.src = url;
-          image.onload = () => {
-            resolve(url);
-          };
-          // No blob store configured
-        })
-        .catch(handleError),
+        // preload the image
+        let image = new Image();
+        image.src = url;
+        image.onload = () => {
+          resolve(url);
+        };
+        // No blob store configured
+      }),
       {
         loading: "이미지 업로드중...",
-        success: "이미지가 성공적으로 업로드 되었습니다.",
-        error: (e) => e.message,
+        success: "이미지가 성공적으로 업로드 되었어요.",
+        error: (error) => {
+          handleError(error);
+          reject(error);
+
+          return "이미지를 업로드할 수 없어요.";
+        },
       }
     );
   });
