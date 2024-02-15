@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import React, { ReactNode } from "react";
 import prisma from "~/lib/prisma";
 
@@ -14,6 +15,9 @@ export default async function BlogLayout({
       slug: params.blogSlug,
     },
   });
+  if (!blog) {
+    notFound();
+  }
 
   return (
     <div>
@@ -22,7 +26,7 @@ export default async function BlogLayout({
           href={`/${params.blogSlug}`}
           className="text-xl font-semibold tracking-tight"
         >
-          {blog?.name}
+          {blog.name}
         </Link>
       </div>
       {children}
