@@ -1,6 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError, z } from "zod";
 import { getUser } from "~/lib/auth";
+import { PRISMA_CLIENT_KNOWN_REQUEST_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import { categorySchema } from "~/lib/validations/category";
 
@@ -37,7 +38,10 @@ export async function POST(
     }
 
     if (error instanceof PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
+      if (
+        error.code ===
+        PRISMA_CLIENT_KNOWN_REQUEST_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED
+      ) {
         return new Response(JSON.stringify(error.meta), { status: 409 });
       }
     }
