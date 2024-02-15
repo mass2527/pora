@@ -16,6 +16,7 @@ import {
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
 import { ResponseError, handleError } from "~/lib/errors";
+import { tsFetch } from "~/lib/ts-fetch";
 
 export default function DeleteBlogButton({ blogId }: { blogId: string }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +44,7 @@ export default function DeleteBlogButton({ blogId }: { blogId: string }) {
               event.preventDefault();
               try {
                 setIsLoading(true);
-                const response = await fetch(`/api/blogs/${blogId}`, {
+                const response = await tsFetch(`/api/blogs/${blogId}`, {
                   method: "DELETE",
                 });
                 setIsLoading(false);

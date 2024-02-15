@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
 } from "~/components/ui/dropdown-menu";
 import { ResponseError, handleError } from "~/lib/errors";
+import { tsFetch } from "~/lib/ts-fetch";
 
 export default function ArticleRowAction({
   article,
@@ -42,7 +43,7 @@ export default function ArticleRowAction({
         <DropdownMenuItem
           onClick={async () => {
             try {
-              const response = await fetch(
+              const response = await tsFetch(
                 `/api/blogs/${article.blogId}/articles/${article.id}`,
                 {
                   method: "DELETE",

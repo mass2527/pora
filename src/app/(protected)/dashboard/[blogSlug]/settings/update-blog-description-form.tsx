@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
+import { tsFetch } from "~/lib/ts-fetch";
 
 export default function UpdateBlogDescriptionForm({ blog }: { blog: Blog }) {
   const form = useForm<z.infer<typeof updateBlogSchema>>({
@@ -33,7 +34,7 @@ export default function UpdateBlogDescriptionForm({ blog }: { blog: Blog }) {
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
           try {
-            const response = await fetch(`/api/blogs/${blog.id}`, {
+            const response = await tsFetch(`/api/blogs/${blog.id}`, {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json",

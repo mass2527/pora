@@ -13,6 +13,7 @@ import { Button } from "~/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import Switch from "~/components/switch";
 import { useRouter } from "next/navigation";
+import { tsFetch } from "~/lib/ts-fetch";
 
 export default function EditArticle({
   article,
@@ -50,7 +51,7 @@ export default function EditArticle({
     async function updateArticle() {
       try {
         setSaveStatus("임시 저장중...");
-        const response = await fetch(
+        const response = await tsFetch(
           `/api/blogs/${article.blogId}/articles/${article.id}`,
           {
             method: "PATCH",

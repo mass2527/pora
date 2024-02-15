@@ -35,6 +35,7 @@ import { categorySchema } from "~/lib/validations/category";
 import { ResponseError, handleError } from "~/lib/errors";
 import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
+import { tsFetch } from "~/lib/ts-fetch";
 
 export default function CategoryRowAction({
   category,
@@ -75,7 +76,7 @@ export default function CategoryRowAction({
           <DropdownMenuItem
             onClick={async () => {
               try {
-                const response = await fetch(
+                const response = await tsFetch(
                   `/api/blogs/${category.blogId}/categories/${category.id}`,
                   {
                     method: "DELETE",
@@ -114,7 +115,7 @@ export default function CategoryRowAction({
               className="flex flex-col gap-2"
               onSubmit={form.handleSubmit(async (values) => {
                 try {
-                  const response = await fetch(
+                  const response = await tsFetch(
                     `/api/blogs/${category.blogId}/categories/${category.id}`,
                     {
                       method: "PATCH",

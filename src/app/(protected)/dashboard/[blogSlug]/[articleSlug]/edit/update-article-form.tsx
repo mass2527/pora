@@ -32,6 +32,7 @@ import FormSubmitButton from "~/components/form-submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { deleteFile, uploadFile } from "~/services/file";
+import { tsFetch } from "~/lib/ts-fetch";
 
 const schema = z.object({
   categoryId: z.string(),
@@ -80,7 +81,7 @@ export default function UpdateArticleForm({
                 newImageUrl = url;
               }
 
-              const response = await fetch(
+              const response = await tsFetch(
                 `/api/blogs/${article.blogId}/articles/${article.id}`,
                 {
                   method: "PATCH",

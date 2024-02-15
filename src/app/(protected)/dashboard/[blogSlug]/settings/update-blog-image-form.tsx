@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { imageFileSchema } from "~/lib/validations/common";
 import { deleteFile, uploadFile } from "~/services/file";
+import { tsFetch } from "~/lib/ts-fetch";
 
 const schema = z.object({
   image: imageFileSchema.optional(),
@@ -46,7 +47,7 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
           }
 
           try {
-            const response = await fetch(`/api/blogs/${blog.id}`, {
+            const response = await tsFetch(`/api/blogs/${blog.id}`, {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json",

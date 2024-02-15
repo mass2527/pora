@@ -11,6 +11,7 @@ import { ResponseError, handleError } from "~/lib/errors";
 import { useAtom } from "jotai";
 import { blogOrderSaveStatusAtom } from "./blog-order-save-status-atom";
 import { useSortableList } from "~/hooks/use-sortable-list";
+import { tsFetch } from "~/lib/ts-fetch";
 
 export default function BlogCategoryList({
   blog,
@@ -27,7 +28,7 @@ export default function BlogCategoryList({
       onSorted: async (sortedCategories) => {
         try {
           setSaveStatus("순서 변경중...");
-          const response = await fetch(`/api/blogs/${blog.id}/categories`, {
+          const response = await tsFetch(`/api/blogs/${blog.id}/categories`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",

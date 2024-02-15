@@ -19,6 +19,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { ResponseError, handleError } from "~/lib/errors";
+import { tsFetch } from "~/lib/ts-fetch";
 
 const USER_NAME_MAX_LENGTH = 32;
 const userNameInvalidMessage = `최대 ${USER_NAME_MAX_LENGTH}글자 이하 입력해 주세요.`;
@@ -49,7 +50,7 @@ export default function UpdateUserNameForm({
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
           try {
-            const response = await fetch(`/api/users/${user.id}`, {
+            const response = await tsFetch(`/api/users/${user.id}`, {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json",

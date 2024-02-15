@@ -1,8 +1,9 @@
 import { PutBlobResult } from "@vercel/blob";
 import { ResponseError } from "~/lib/errors";
+import { tsFetch } from "~/lib/ts-fetch";
 
 export async function uploadFile(file: File): Promise<PutBlobResult> {
-  const response = await fetch("/api/upload", {
+  const response = await tsFetch("/api/upload", {
     method: "POST",
     headers: {
       "content-type": file.type,
@@ -25,7 +26,7 @@ export async function uploadFile(file: File): Promise<PutBlobResult> {
 }
 
 export function deleteFile(url: string) {
-  fetch(`/api/upload?url=${url}`, {
+  tsFetch(`/api/upload?url=${url}`, {
     method: "DELETE",
   });
 }

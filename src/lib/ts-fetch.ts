@@ -1,0 +1,14 @@
+import { StringLiteralUnion } from "./types";
+
+type Headers = HeadersInit & {
+  "Content-Type"?: StringLiteralUnion<"application/json" | "text/plain">;
+};
+
+interface Init extends RequestInit {
+  method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+  headers?: Headers;
+}
+
+export function tsFetch(input: StringLiteralUnion<"/api/"> | URL, init?: Init) {
+  return fetch(input, init);
+}

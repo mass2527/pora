@@ -26,6 +26,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "~/lib/validations/category";
 import FormSubmitButton from "~/components/form-submit-button";
+import { tsFetch } from "~/lib/ts-fetch";
 
 export default function CreateCategoryButton({
   blogId,
@@ -67,7 +68,7 @@ export default function CreateCategoryButton({
             className="flex flex-col gap-2"
             onSubmit={form.handleSubmit(async (values) => {
               try {
-                const response = await fetch(
+                const response = await tsFetch(
                   `/api/blogs/${blogId}/categories`,
                   {
                     method: "POST",

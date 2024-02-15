@@ -9,6 +9,7 @@ import { Loading } from "~/components/ui/loading";
 import UserAvatar from "~/components/user-avatar";
 import { ResponseError, handleError } from "~/lib/errors";
 import { cn } from "~/lib/utils";
+import { tsFetch } from "~/lib/ts-fetch";
 
 export default function UpdateUserImage({
   user,
@@ -55,7 +56,7 @@ export default function UpdateUserImage({
           try {
             setIsLoading(true);
             const { url } = await uploadFile(file);
-            const userResponse = await fetch(`/api/users/${user.id}`, {
+            const userResponse = await tsFetch(`/api/users/${user.id}`, {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json",

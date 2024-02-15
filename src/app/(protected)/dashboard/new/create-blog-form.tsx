@@ -33,6 +33,7 @@ import {
   getMaxLengthMessage,
   imageFileSchema,
 } from "~/lib/validations/common";
+import { tsFetch } from "~/lib/ts-fetch";
 
 const createBlogSchema = createBlogCommonSchema.extend({
   image: imageFileSchema.optional(),
@@ -57,7 +58,7 @@ export default function CreateBlogForm() {
               imageUrl = url;
             }
 
-            const response = await fetch("/api/blogs", {
+            const response = await tsFetch("/api/blogs", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
