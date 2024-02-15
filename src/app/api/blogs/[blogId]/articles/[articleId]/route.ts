@@ -2,7 +2,7 @@ import { ArticleStatus } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError, z } from "zod";
 import { getUser } from "~/lib/auth";
-import { PRISMA_CLIENT_KNOWN_REQUEST_ERROR_CODES } from "~/lib/constants";
+import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import { slugStringSchema } from "~/lib/validations/common";
 
@@ -47,6 +47,9 @@ export async function PATCH(
     const updatedArticle = await prisma.article.update({
       where: {
         id: params.articleId,
+        blog: {
+          id: params.blogId,
+        },
       },
       data: {
         categoryId,
@@ -68,11 +71,12 @@ export async function PATCH(
     }
 
     if (error instanceof PrismaClientKnownRequestError) {
-      if (
-        error.code ===
-        PRISMA_CLIENT_KNOWN_REQUEST_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED
-      ) {
+      if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED) {
         return new Response(JSON.stringify(error.meta), { status: 409 });
+      } else if (
+        error.code === PRISMA_ERROR_CODES.DEPENDENT_RECORDS_NOT_FOUND
+      ) {
+        return new Response(JSON.stringify(error.meta), { status: 404 });
       }
     }
 
@@ -93,10 +97,19 @@ export async function DELETE(
     const deletedArticle = await prisma.article.delete({
       where: {
         id: params.articleId,
+        blog: {
+          id: params.blogId,
+        },
       },
     });
     return new Response(JSON.stringify(deletedArticle));
   } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (error.code === PRISMA_ERROR_CODES.DEPENDENT_RECORDS_NOT_FOUND) {
+        return new Response(JSON.stringify(error.meta), { status: 404 });
+      }
+    }
+
     return new Response(null, { status: 500 });
   }
 }

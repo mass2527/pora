@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError } from "zod";
 import { getUser } from "~/lib/auth";
-import { PRISMA_CLIENT_KNOWN_REQUEST_ERROR_CODES } from "~/lib/constants";
+import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import { categorySchema } from "~/lib/validations/category";
 
@@ -20,6 +20,9 @@ export async function PATCH(
     const updatedCategory = await prisma.category.update({
       where: {
         id: params.categoryId,
+        blog: {
+          id: params.blogId,
+        },
       },
       data: {
         name,
@@ -33,11 +36,12 @@ export async function PATCH(
     }
 
     if (error instanceof PrismaClientKnownRequestError) {
-      if (
-        error.code ===
-        PRISMA_CLIENT_KNOWN_REQUEST_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED
-      ) {
+      if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED) {
         return new Response(JSON.stringify(error.meta), { status: 409 });
+      } else if (
+        error.code === PRISMA_ERROR_CODES.DEPENDENT_RECORDS_NOT_FOUND
+      ) {
+        return new Response(JSON.stringify(error.meta), { status: 404 });
       }
     }
 
@@ -55,18 +59,21 @@ export async function DELETE(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const articles = await prisma.article.findMany({
+    const articleCount = await prisma.article.count({
       where: {
         categoryId: params.categoryId,
       },
     });
-    if (articles.length > 0) {
+    if (articleCount > 0) {
       return new Response("Conflict", { status: 409 });
     }
 
     const categoryToDelete = await prisma.category.findUnique({
       where: {
         id: params.categoryId,
+        blog: {
+          id: params.blogId,
+        },
       },
     });
     if (!categoryToDelete) {
@@ -90,6 +97,9 @@ export async function DELETE(
       const deletedCategory = await tx.category.delete({
         where: {
           id: params.categoryId,
+          blog: {
+            id: params.blogId,
+          },
         },
       });
 
