@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import React from "react";
 import Link from "next/link";
 import { formatDate } from "~/lib/utils";
-import CategoryLinks from "./category/[categorySlug]/category-links";
+import CategoryNav from "./category/[categorySlug]/category-nav";
 import UserAvatar from "~/components/user-avatar";
 
 export default function BlogPageTemplate({
@@ -20,7 +20,7 @@ export default function BlogPageTemplate({
 }) {
   return (
     <div className="min-h-screen p-4">
-      <CategoryLinks categories={blog.categories} />
+      <CategoryNav categories={blog.categories} />
 
       <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight my-10">
         {title}

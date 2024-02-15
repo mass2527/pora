@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import React from "react";
 import Nav from "~/components/nav";
 
-export default function CategoryLinks({
+export default function CategoryNav({
   categories,
 }: {
   categories: Category[];
