@@ -41,11 +41,6 @@ const createBlogSchema = createBlogCommonSchema.extend({
 export default function CreateBlogForm() {
   const form = useForm<z.infer<typeof createBlogSchema>>({
     resolver: zodResolver(createBlogSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      slug: "",
-    },
   });
   const router = useRouter();
 
