@@ -1,6 +1,6 @@
 import { ArticleStatus } from "@prisma/client";
 import { z } from "zod";
-import { slugStringSchema } from "./common";
+import { slugSchema } from "./common";
 
 export const createBlogArticleSchema = z.object({
   categoryId: z.string().optional(),
@@ -17,7 +17,7 @@ export const createBlogArticleSchema = z.object({
 export const updateBlogArticleSchema = z
   .object({
     categoryId: z.string().optional(),
-    slug: slugStringSchema,
+    slug: slugSchema,
     title: z.string(),
     draftTitle: z.string(),
     description: z.string().optional(),

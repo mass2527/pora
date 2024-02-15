@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { mysqlString } from "./common";
+import { stringSchema } from "./common";
 
 export const updateUserSchema = z.object({
-  name: mysqlString.optional(),
+  name: stringSchema.optional(),
   image: z.string().optional(),
-  jobPosition: mysqlString.optional(),
+  jobPosition: stringSchema.optional(),
 });

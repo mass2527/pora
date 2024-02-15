@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { imageFileSchema, slugStringSchema } from "~/lib/validations/common";
+import { imageFileSchema, slugSchema } from "~/lib/validations/common";
 import CreateCategoryButton from "../../categories/create-category-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
@@ -36,7 +36,7 @@ import { updateBlogArticle } from "~/services/blog/article";
 
 const schema = z.object({
   categoryId: z.string(),
-  slug: slugStringSchema,
+  slug: slugSchema,
   description: z.string(),
   image: imageFileSchema.optional(),
 });
