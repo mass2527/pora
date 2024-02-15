@@ -28,7 +28,6 @@ export default function CreateArticleButton({ blog }: { blog: Blog }) {
         try {
           setIsLoading(true);
           const article = await createBlogArticle(blog.id, {
-            categoryId: undefined,
             slug: crypto.randomUUID(),
             title: "",
             draftTitle: "",

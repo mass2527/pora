@@ -28,9 +28,6 @@ const schema = z.object({
 export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      image: undefined,
-    },
   });
   const router = useRouter();
 

@@ -44,7 +44,7 @@ export default function UpdateUserJobPositionForm({
             router.refresh();
             toast.success("사용자 직책이 수정되었어요.");
             form.reset({
-              jobPosition: updatedUser.jobPosition ?? undefined,
+              jobPosition: updatedUser.jobPosition ?? "",
             });
           } catch (error) {
             handleError(error);

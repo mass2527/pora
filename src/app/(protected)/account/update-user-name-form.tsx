@@ -46,7 +46,7 @@ export default function UpdateUserNameForm({
             router.refresh();
             toast.success("사용자 이름이 수정되었어요.");
             form.reset({
-              name: updatedUser.name ?? undefined,
+              name: updatedUser.name ?? "",
             });
           } catch (error) {
             handleError(error);

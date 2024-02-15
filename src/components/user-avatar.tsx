@@ -13,7 +13,7 @@ export default function UserAvatar({
 
   return (
     <Avatar className={className}>
-      <AvatarImage src={user.image ?? undefined} />
+      {user.image && <AvatarImage src={user.image} />}
       <AvatarFallback>{lastName}</AvatarFallback>
     </Avatar>
   );
