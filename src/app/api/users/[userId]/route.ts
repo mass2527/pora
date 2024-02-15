@@ -1,13 +1,7 @@
-import { ZodError, z } from "zod";
+import { ZodError } from "zod";
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
-import { mysqlString } from "~/lib/validations/common";
-
-const updateUserSchema = z.object({
-  name: mysqlString.optional(),
-  image: z.string().optional(),
-  jobPosition: mysqlString.optional(),
-});
+import { updateUserSchema } from "~/lib/validations/user";
 
 export async function PATCH(
   req: Request,

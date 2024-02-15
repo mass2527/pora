@@ -18,8 +18,8 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { ResponseError, handleError } from "~/lib/errors";
-import { tsFetch } from "~/lib/ts-fetch";
+import { handleError } from "~/lib/errors";
+import { updateUser } from "~/services/users";
 
 const MAX_LENGTH = 32;
 const invalidMessage = `최대 ${MAX_LENGTH}글자 이하 입력해 주세요.`;
@@ -50,20 +50,9 @@ export default function UpdateUserJobPositionForm({
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
           try {
-            const response = await tsFetch(`/api/users/${user.id}`, {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(values),
-            });
-            if (!response.ok) {
-              throw new ResponseError("Bad fetch response", response);
-            }
-
+            const updatedUser = await updateUser(user.id, values);
             router.refresh();
             toast.success("사용자 직책이 수정되었어요.");
-            const updatedUser = (await response.json()) as User;
             form.reset({
               jobPosition: updatedUser.jobPosition ?? undefined,
             });

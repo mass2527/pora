@@ -1,7 +1,8 @@
 import { StringLiteralUnion } from "./types";
 
 type Headers = HeadersInit & {
-  "Content-Type"?: StringLiteralUnion<"application/json" | "text/plain">;
+  // Add required types on demand
+  "Content-Type"?: "application/json" | "text/plain";
 };
 
 interface Init extends RequestInit {

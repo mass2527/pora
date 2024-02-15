@@ -7,9 +7,9 @@ import { toast } from "sonner";
 import { deleteFile, uploadFile } from "~/services/file";
 import { Loading } from "~/components/ui/loading";
 import UserAvatar from "~/components/user-avatar";
-import { ResponseError, handleError } from "~/lib/errors";
+import { handleError } from "~/lib/errors";
 import { cn } from "~/lib/utils";
-import { tsFetch } from "~/lib/ts-fetch";
+import { updateUser } from "~/services/users";
 
 export default function UpdateUserImage({
   user,
@@ -56,19 +56,7 @@ export default function UpdateUserImage({
           try {
             setIsLoading(true);
             const { url } = await uploadFile(file);
-            const userResponse = await tsFetch(`/api/users/${user.id}`, {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                image: url,
-              }),
-            });
-            if (!userResponse.ok) {
-              throw new ResponseError("", userResponse);
-            }
-
+            await updateUser(user.id, { image: url });
             if (user.image) {
               deleteFile(user.image);
             }
