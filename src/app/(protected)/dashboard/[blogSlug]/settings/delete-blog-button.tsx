@@ -24,9 +24,7 @@ export default function DeleteBlogButton({ blogId }: { blogId: string }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button type="button" variant="destructive">
-          삭제
-        </Button>
+        <Button type="button">삭제</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
