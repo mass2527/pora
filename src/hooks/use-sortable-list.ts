@@ -7,6 +7,7 @@ export function useSortableList<T, U extends HTMLElement>({
   draggable,
 }: {
   initialSortableList: T[];
+  // eslint-disable-next-line unused-imports/no-unused-vars
   onSorted: (sortedList: T[]) => void;
   draggable: boolean;
 }) {

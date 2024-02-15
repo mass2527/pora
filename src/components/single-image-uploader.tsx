@@ -9,6 +9,7 @@ import Image from "next/image";
 interface ImageUploaderProps {
   accept?: string;
   value?: string | null;
+  // eslint-disable-next-line unused-imports/no-unused-vars
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 

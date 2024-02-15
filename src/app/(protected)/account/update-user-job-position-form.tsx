@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import SubmitButton from "~/components/submit-button";
-import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
@@ -19,7 +18,6 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { Loading } from "~/components/ui/loading";
 import { ResponseError, handleError } from "~/lib/errors";
 
 const MAX_LENGTH = 32;

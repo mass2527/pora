@@ -1,7 +1,6 @@
 "use client";
 
 import { User } from "@prisma/client";
-import { PutBlobResult } from "@vercel/blob";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";

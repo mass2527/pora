@@ -30,7 +30,6 @@ import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 import SubmitButton from "~/components/submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
-import { PutBlobResult } from "@vercel/blob";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { deleteFile, uploadFile } from "~/services/file";
 

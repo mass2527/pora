@@ -70,7 +70,7 @@ export async function DELETE(
     }
 
     const deletedCategory = await prisma.$transaction(async (tx) => {
-      await prisma.category.updateMany({
+      await tx.category.updateMany({
         where: {
           orderIndex: {
             gt: categoryToDelete.orderIndex,
@@ -83,7 +83,7 @@ export async function DELETE(
         },
       });
 
-      const deletedCategory = await prisma.category.delete({
+      const deletedCategory = await tx.category.delete({
         where: {
           id: params.categoryId,
         },

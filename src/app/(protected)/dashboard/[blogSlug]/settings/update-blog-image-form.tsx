@@ -17,7 +17,6 @@ import SubmitButton from "~/components/submit-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 import SingleImageUploader from "~/components/single-image-uploader";
-import { PutBlobResult } from "@vercel/blob";
 import { imageFileSchema } from "~/lib/validations/common";
 import { deleteFile, uploadFile } from "~/services/file";
 

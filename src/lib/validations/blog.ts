@@ -2,7 +2,6 @@ import { z } from "zod";
 import {
   getMaxLengthMessage,
   getMinLengthMessage,
-  imageFileSchema,
   slugStringSchema,
 } from "./common";
 

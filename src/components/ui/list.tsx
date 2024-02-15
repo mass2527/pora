@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, ReactNode } from "react";
+import React, { HTMLAttributes } from "react";
 import { cn } from "~/lib/utils";
 
 interface ListProps extends HTMLAttributes<HTMLUListElement> {}

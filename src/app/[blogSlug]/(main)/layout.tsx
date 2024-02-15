@@ -1,4 +1,3 @@
-import { Blog } from "@prisma/client";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import React, { ReactNode } from "react";

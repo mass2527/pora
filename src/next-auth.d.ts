@@ -1,3 +1,4 @@
+/* eslint-disable unused-imports/no-unused-vars */
 import { User } from "next-auth";
 
 type UserId = string;
