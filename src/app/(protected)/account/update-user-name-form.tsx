@@ -19,7 +19,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { handleError } from "~/lib/errors";
-import { updateUser } from "~/services/users";
+import { updateUser } from "~/services/user";
 
 const USER_NAME_MAX_LENGTH = 32;
 const userNameInvalidMessage = `최대 ${USER_NAME_MAX_LENGTH}글자 이하 입력해 주세요.`;

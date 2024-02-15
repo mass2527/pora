@@ -9,7 +9,7 @@ import { Loading } from "~/components/ui/loading";
 import UserAvatar from "~/components/user-avatar";
 import { handleError } from "~/lib/errors";
 import { cn } from "~/lib/utils";
-import { updateUser } from "~/services/users";
+import { updateUser } from "~/services/user";
 
 export default function UpdateUserImage({
   user,
