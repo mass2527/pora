@@ -42,27 +42,23 @@ export default async function ArticleDetailsPage({
 }: {
   params: { blogSlug: string; articleSlug: string };
 }) {
-  const blog = await prisma.blog.findUnique({
+  const article = await prisma.article.findFirst({
     where: {
-      slug: params.blogSlug,
+      blog: {
+        slug: params.blogSlug,
+      },
+      slug: params.articleSlug,
     },
     include: {
-      articles: {
-        where: {
-          slug: params.articleSlug,
-        },
+      category: true,
+      blog: {
         include: {
-          category: true,
+          user: true,
         },
       },
-      user: true,
     },
   });
-  if (!blog) {
-    notFound();
-  }
 
-  const article = blog.articles[0];
   if (!article || article.status !== "PUBLISHED") {
     notFound();
   }
@@ -102,7 +98,7 @@ export default async function ArticleDetailsPage({
       </div>
 
       <div className="lg:hidden border-b p-6">
-        <WrittenBy user={blog.user} />
+        <WrittenBy user={article.blog.user} />
       </div>
 
       <div
@@ -123,7 +119,7 @@ export default async function ArticleDetailsPage({
         </div>
         <div className="hidden lg:block">
           <div className="flex flex-col gap-16 p-10 pt-0">
-            <WrittenBy user={blog.user} />
+            <WrittenBy user={article.blog.user} />
           </div>
         </div>
       </div>

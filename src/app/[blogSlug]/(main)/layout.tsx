@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import prisma from "~/lib/prisma";
 
 export async function generateMetadata({
@@ -29,5 +29,5 @@ export async function generateMetadata({
 }
 
 export default function BlogMainLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return children;
 }
