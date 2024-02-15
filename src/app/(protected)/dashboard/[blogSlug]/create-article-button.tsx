@@ -1,15 +1,13 @@
 "use client";
 
-import { Article, ArticleStatus, Blog } from "@prisma/client";
+import { ArticleStatus, Blog } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import { z } from "zod";
 import { Button } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
-import { ResponseError, handleError } from "~/lib/errors";
-import { createArticleSchema } from "~/lib/validations/article";
+import { handleError } from "~/lib/errors";
 import { atom, useAtom } from "jotai";
-import { tsFetch } from "~/lib/ts-fetch";
+import { createBlogArticle } from "~/services/blog/article";
 
 const isLoadingAtom = atom(false);
 
@@ -29,30 +27,17 @@ export default function CreateArticleButton({ blog }: { blog: Blog }) {
       onClick={async () => {
         try {
           setIsLoading(true);
-          const response = await tsFetch(`/api/blogs/${blog.id}/articles`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              categoryId: undefined,
-              slug: crypto.randomUUID(),
-              title: "",
-              draftTitle: "",
-              description: "",
-              jsonContent: JSON.stringify({}),
-              draftJsonContent: JSON.stringify({}),
-              htmlContent: "",
-              status: ArticleStatus.WRITING,
-            } satisfies z.infer<typeof createArticleSchema>),
+          const article = await createBlogArticle(blog.id, {
+            categoryId: undefined,
+            slug: crypto.randomUUID(),
+            title: "",
+            draftTitle: "",
+            description: "",
+            jsonContent: JSON.stringify({}),
+            draftJsonContent: JSON.stringify({}),
+            htmlContent: "",
+            status: ArticleStatus.WRITING,
           });
-
-          if (!response.ok) {
-            throw new ResponseError("Bad fetch response", response);
-          }
-
-          const article = (await response.json()) as Article;
-          router.refresh();
           router.push(`/dashboard/${blog.slug}/${article.slug}/edit`);
         } catch (error) {
           setIsLoading(false);

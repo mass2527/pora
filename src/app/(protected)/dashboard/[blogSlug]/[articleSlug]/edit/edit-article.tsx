@@ -1,19 +1,18 @@
 "use client";
 
 import { Prisma } from "@prisma/client";
-import { ResponseError, handleError } from "~/lib/errors";
+import { handleError } from "~/lib/errors";
 import { Input } from "~/components/ui/input";
 import Editor from "~/components/editor";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { useDebounce } from "~/hooks/use-debounce";
 import { Badge } from "~/components/ui/badge";
-import { sleep } from "~/lib/utils";
 import UpdateArticleForm from "./update-article-form";
 import { Button } from "~/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import Switch from "~/components/switch";
 import { useRouter } from "next/navigation";
-import { tsFetch } from "~/lib/ts-fetch";
+import { updateBlogArticle } from "~/services/blog/article";
 
 export default function EditArticle({
   article,
@@ -46,30 +45,13 @@ export default function EditArticle({
       return;
     }
 
-    const controller = new AbortController();
-
     async function updateArticle() {
       try {
         setSaveStatus("임시 저장중...");
-        const response = await tsFetch(
-          `/api/blogs/${article.blogId}/articles/${article.id}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              draftTitle: debouncedArticleForm.title,
-              draftJsonContent: debouncedArticleForm.jsonContent,
-            }),
-            signal: controller.signal,
-          }
-        );
-        await sleep(300);
-        if (!response.ok) {
-          throw new ResponseError("Bad fetch request", response);
-        }
-
+        await updateBlogArticle(article.blogId, article.id, {
+          draftTitle: debouncedArticleForm.title,
+          draftJsonContent: debouncedArticleForm.jsonContent,
+        });
         setSaveStatus("임시 저장됨");
         latestArticleFormRef.current = debouncedArticleForm;
         router.refresh();
@@ -79,10 +61,6 @@ export default function EditArticle({
       }
     }
     updateArticle();
-
-    return () => {
-      controller.abort();
-    };
   }, [article.blogId, article.id, debouncedArticleForm, router]);
 
   return (

@@ -1,25 +1,9 @@
-import { ArticleStatus } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { ZodError, z } from "zod";
+import { ZodError } from "zod";
 import { getUser } from "~/lib/auth";
 import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
-import { slugStringSchema } from "~/lib/validations/common";
-
-const schema = z
-  .object({
-    categoryId: z.string().optional(),
-    slug: slugStringSchema,
-    title: z.string(),
-    draftTitle: z.string(),
-    description: z.string().optional(),
-    jsonContent: z.string(),
-    draftJsonContent: z.string(),
-    htmlContent: z.string(),
-    status: z.nativeEnum(ArticleStatus),
-    image: z.string().nullish(),
-  })
-  .partial();
+import { updateBlogArticleSchema } from "~/lib/validations/article";
 
 export async function PATCH(
   req: Request,
@@ -43,7 +27,7 @@ export async function PATCH(
       htmlContent,
       status,
       image,
-    } = schema.parse(json);
+    } = updateBlogArticleSchema.parse(json);
     const updatedArticle = await prisma.article.update({
       where: {
         id: params.articleId,

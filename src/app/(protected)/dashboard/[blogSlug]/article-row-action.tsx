@@ -12,8 +12,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "~/components/ui/dropdown-menu";
-import { ResponseError, handleError } from "~/lib/errors";
-import { tsFetch } from "~/lib/ts-fetch";
+import { handleError } from "~/lib/errors";
+import { deleteBlogArticle } from "~/services/blog/article";
 
 export default function ArticleRowAction({
   article,
@@ -43,16 +43,7 @@ export default function ArticleRowAction({
         <DropdownMenuItem
           onClick={async () => {
             try {
-              const response = await tsFetch(
-                `/api/blogs/${article.blogId}/articles/${article.id}`,
-                {
-                  method: "DELETE",
-                }
-              );
-              if (!response.ok) {
-                throw new ResponseError("Bad fetch response", response);
-              }
-
+              await deleteBlogArticle(article.blogId, article.id);
               router.refresh();
             } catch (error) {
               handleError(error);

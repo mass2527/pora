@@ -4,7 +4,7 @@ import { ZodError } from "zod";
 import { getUser } from "~/lib/auth";
 import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
-import { createArticleSchema } from "~/lib/validations/article";
+import { createBlogArticleSchema } from "~/lib/validations/article";
 
 export async function POST(
   req: Request,
@@ -27,7 +27,7 @@ export async function POST(
       draftJsonContent,
       htmlContent,
       status,
-    } = createArticleSchema.parse(json);
+    } = createBlogArticleSchema.parse(json);
     const newArticle = await prisma.article.create({
       data: {
         categoryId,
