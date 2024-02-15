@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import {
-  AlertDialog as AlertDialogRoot,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -25,7 +24,7 @@ export default function AlertDialog({
   action: ReactNode;
 }) {
   return (
-    <AlertDialogRoot>
+    <AlertDialogAction>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -39,6 +38,6 @@ export default function AlertDialog({
           <AlertDialogAction asChild>{action}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
-    </AlertDialogRoot>
+    </AlertDialogAction>
   );
 }
