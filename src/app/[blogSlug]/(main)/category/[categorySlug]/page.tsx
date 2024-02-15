@@ -46,5 +46,5 @@ export default async function BlogInCategoryPage({
     notFound();
   }
 
-  return <BlogPageTemplate blog={blog} title={category.name} />;
+  return <BlogPageTemplate params={params} title={category.name} blog={blog} />;
 }

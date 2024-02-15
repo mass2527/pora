@@ -30,5 +30,5 @@ export default async function BlogPage({
     notFound();
   }
 
-  return <BlogPageTemplate blog={blog} title="모든 아티클" />;
+  return <BlogPageTemplate params={params} title="모든 아티클" blog={blog} />;
 }

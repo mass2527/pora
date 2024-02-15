@@ -2,13 +2,17 @@ import { Prisma } from "@prisma/client";
 import React from "react";
 import Link from "next/link";
 import { formatDate } from "~/lib/utils";
-import CategoryNav from "./category/[categorySlug]/category-nav";
 import UserAvatar from "~/components/user-avatar";
+import Nav from "~/components/nav";
 
 export default function BlogPageTemplate({
+  params,
   title,
   blog,
 }: {
+  params: {
+    blogSlug: string;
+  };
   title: string;
   blog: Prisma.BlogGetPayload<{
     include: {
@@ -18,9 +22,19 @@ export default function BlogPageTemplate({
     };
   }>;
 }) {
+  const allCategories = [{ name: "모든 아티클", slug: "" }, ...blog.categories];
+  const links = allCategories.map((category) => {
+    let href = `/${params.blogSlug}`;
+    if (category.slug !== "") {
+      href += `/category/${category.slug}`;
+    }
+
+    return { name: category.name, href };
+  });
+
   return (
     <div className="min-h-screen p-4">
-      <CategoryNav categories={blog.categories} />
+      <Nav links={links} />
 
       <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight my-10">
         {title}
