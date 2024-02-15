@@ -14,7 +14,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import UserAvatar from "~/components/user-avatar";
 
-export default function UserAccountNav({
+export default function UserAccountMenu({
   user,
 }: {
   user: Pick<User, "name" | "image" | "email">;

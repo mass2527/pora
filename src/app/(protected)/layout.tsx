@@ -6,7 +6,7 @@ import Link from "next/link";
 import prisma from "~/lib/prisma";
 import BlogNav from "./dashboard/blog-nav";
 import RootNav from "./root-nav";
-import UserAccountNav from "./dashboard/user-account-nav";
+import UserAccountMenu from "./dashboard/user-account-menu";
 import Image from "next/image";
 
 export default async function ProtectedLayout({
@@ -38,7 +38,7 @@ export default async function ProtectedLayout({
           <BlogNav blogs={blogs} />
         </div>
 
-        <UserAccountNav
+        <UserAccountMenu
           user={{
             name: user.name || null,
             email: user.email || null,
