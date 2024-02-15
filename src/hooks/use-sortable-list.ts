@@ -16,6 +16,7 @@ export function useSortableList<T, U extends HTMLElement>({
 
   return {
     sortableList,
+    setSortableList,
     getSortableListItemProps: (index: number) => {
       return {
         onDragStart: () => {

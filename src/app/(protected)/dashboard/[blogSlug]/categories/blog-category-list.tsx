@@ -12,6 +12,7 @@ import { useAtom } from "jotai";
 import { blogOrderSaveStatusAtom } from "./blog-order-save-status-atom";
 import { useSortableList } from "~/hooks/use-sortable-list";
 import { tsFetch } from "~/lib/ts-fetch";
+import { useEffect } from "react";
 
 export default function BlogCategoryList({
   blog,
@@ -21,36 +22,43 @@ export default function BlogCategoryList({
   }>;
 }) {
   const [saveStatus, setSaveStatus] = useAtom(blogOrderSaveStatusAtom);
-  const { sortableList: sortableCategories, getSortableListItemProps } =
-    useSortableList({
-      draggable: saveStatus !== "순서 변경중...",
-      initialSortableList: blog.categories,
-      onSorted: async (sortedCategories) => {
-        try {
-          setSaveStatus("순서 변경중...");
-          const response = await tsFetch(`/api/blogs/${blog.id}/categories`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(
-              sortedCategories.map((category, index) => ({
-                id: category.id,
-                orderIndex: index,
-              }))
-            ),
-          });
-          if (!response.ok) {
-            throw new ResponseError("Bad fetch request", response);
-          }
-
-          setSaveStatus("순서 변경됨");
-        } catch (error) {
-          setSaveStatus("순서 변경 실패");
-          handleError(error);
+  const {
+    sortableList: sortableCategories,
+    setSortableList,
+    getSortableListItemProps,
+  } = useSortableList({
+    draggable: saveStatus !== "순서 변경중...",
+    initialSortableList: blog.categories,
+    onSorted: async (sortedCategories) => {
+      try {
+        setSaveStatus("순서 변경중...");
+        const response = await tsFetch(`/api/blogs/${blog.id}/categories`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(
+            sortedCategories.map((category, index) => ({
+              id: category.id,
+              orderIndex: index,
+            }))
+          ),
+        });
+        if (!response.ok) {
+          throw new ResponseError("Bad fetch request", response);
         }
-      },
-    });
+
+        setSaveStatus("순서 변경됨");
+      } catch (error) {
+        setSaveStatus("순서 변경 실패");
+        handleError(error);
+      }
+    },
+  });
+
+  useEffect(() => {
+    setSortableList(blog.categories);
+  }, [setSortableList, blog.categories]);
 
   return (
     <List>
