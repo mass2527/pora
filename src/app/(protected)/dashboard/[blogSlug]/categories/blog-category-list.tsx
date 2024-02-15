@@ -7,12 +7,12 @@ import { List, ListItem } from "~/components/ui/list";
 import { cn } from "~/lib/utils";
 import CategoryRowAction from "./category-row-action";
 import Link from "next/link";
-import { ResponseError, handleError } from "~/lib/errors";
+import { handleError } from "~/lib/errors";
 import { useAtom } from "jotai";
 import { blogOrderSaveStatusAtom } from "./blog-order-save-status-atom";
 import { useSortableList } from "~/hooks/use-sortable-list";
-import { tsFetch } from "~/lib/ts-fetch";
 import { useEffect } from "react";
+import { updateBlogCategories } from "~/services/blog/category";
 
 export default function BlogCategoryList({
   blog,
@@ -32,22 +32,7 @@ export default function BlogCategoryList({
     onSorted: async (sortedCategories) => {
       try {
         setSaveStatus("순서 변경중...");
-        const response = await tsFetch(`/api/blogs/${blog.id}/categories`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(
-            sortedCategories.map((category, index) => ({
-              id: category.id,
-              orderIndex: index,
-            }))
-          ),
-        });
-        if (!response.ok) {
-          throw new ResponseError("Bad fetch request", response);
-        }
-
+        await updateBlogCategories(blog.id, sortedCategories);
         setSaveStatus("순서 변경됨");
       } catch (error) {
         setSaveStatus("순서 변경 실패");

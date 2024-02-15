@@ -1,9 +1,12 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { ZodError, z } from "zod";
+import { ZodError } from "zod";
 import { getUser } from "~/lib/auth";
 import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
-import { categorySchema } from "~/lib/validations/category";
+import {
+  createBlogCategorySchema,
+  updateBlogCategoriesSchema,
+} from "~/lib/validations/category";
 
 export async function POST(
   req: Request,
@@ -16,7 +19,7 @@ export async function POST(
     }
 
     const json = await req.json();
-    const { name, slug } = categorySchema.parse(json);
+    const { name, slug } = createBlogCategorySchema.parse(json);
     const categoryCount = await prisma.category.count({
       where: {
         blogId: params.blogId,
@@ -70,13 +73,7 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const schema = z.array(
-      z.object({
-        id: z.string(),
-        orderIndex: z.coerce.number(),
-      })
-    );
-    const categories = schema.parse(json);
+    const categories = updateBlogCategoriesSchema.parse(json);
     const updatedCategories = await prisma.$transaction(
       categories.map((category) => {
         return prisma.category.update({
