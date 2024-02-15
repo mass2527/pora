@@ -7,7 +7,7 @@ interface SubmitButtonProps extends Omit<ButtonProps, "type" | "disabled"> {
   formState: FormState<any>;
 }
 
-export default function SubmitButton({
+export default function FormSubmitButton({
   formState,
   children,
   ...props

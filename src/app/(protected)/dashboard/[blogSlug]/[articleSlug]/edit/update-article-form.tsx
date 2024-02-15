@@ -28,7 +28,7 @@ import { imageFileSchema, slugStringSchema } from "~/lib/validations/common";
 import CreateCategoryButton from "../../categories/create-category-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
-import SubmitButton from "~/components/submit-button";
+import FormSubmitButton from "~/components/form-submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { deleteFile, uploadFile } from "~/services/file";
@@ -223,9 +223,9 @@ export default function UpdateArticleForm({
             )}
           />
 
-          <SubmitButton formState={form.formState} className="ml-auto">
+          <FormSubmitButton formState={form.formState} className="ml-auto">
             발행
-          </SubmitButton>
+          </FormSubmitButton>
         </form>
       </Form>
     </div>

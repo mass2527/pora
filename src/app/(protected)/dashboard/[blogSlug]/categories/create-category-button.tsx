@@ -25,7 +25,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "~/lib/validations/category";
-import SubmitButton from "~/components/submit-button";
+import FormSubmitButton from "~/components/form-submit-button";
 
 export default function CreateCategoryButton({
   blogId,
@@ -135,7 +135,9 @@ export default function CreateCategoryButton({
             />
 
             <DialogFooter>
-              <SubmitButton formState={form.formState}>생성</SubmitButton>
+              <FormSubmitButton formState={form.formState}>
+                생성
+              </FormSubmitButton>
             </DialogFooter>
           </form>
         </Form>

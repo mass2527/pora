@@ -14,7 +14,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { updateBlogSchema } from "~/lib/validations/blog";
 import { toast } from "sonner";
-import SubmitButton from "~/components/submit-button";
+import FormSubmitButton from "~/components/form-submit-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 
@@ -63,9 +63,9 @@ export default function UpdateBlogDescriptionForm({ blog }: { blog: Blog }) {
             </FormItem>
           )}
         />
-        <SubmitButton formState={form.formState} className="mr-auto">
+        <FormSubmitButton formState={form.formState} className="mr-auto">
           수정
-        </SubmitButton>
+        </FormSubmitButton>
       </form>
     </Form>
   );

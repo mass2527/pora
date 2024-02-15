@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { uploadFile } from "~/services/file";
 import SingleImageUploader from "~/components/single-image-uploader";
-import SubmitButton from "~/components/submit-button";
+import FormSubmitButton from "~/components/form-submit-button";
 import { buttonVariants } from "~/components/ui/button";
 import {
   Form,
@@ -187,7 +187,7 @@ export default function CreateBlogForm() {
           >
             취소
           </Link>
-          <SubmitButton formState={form.formState}>생성</SubmitButton>
+          <FormSubmitButton formState={form.formState}>생성</FormSubmitButton>
         </div>
       </form>
     </Form>

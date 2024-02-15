@@ -13,7 +13,7 @@ import {
 } from "~/components/ui/form";
 
 import { toast } from "sonner";
-import SubmitButton from "~/components/submit-button";
+import FormSubmitButton from "~/components/form-submit-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 import SingleImageUploader from "~/components/single-image-uploader";
@@ -95,9 +95,9 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
             </FormItem>
           )}
         />
-        <SubmitButton formState={form.formState} className="mr-auto">
+        <FormSubmitButton formState={form.formState} className="mr-auto">
           수정
-        </SubmitButton>
+        </FormSubmitButton>
       </form>
     </Form>
   );
