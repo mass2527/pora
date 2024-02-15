@@ -24,10 +24,18 @@ export const createBlogCommonSchema = z.object({
   slug: slugStringSchema,
 });
 
-export const updateBlogSchema = z.object({
+export const createBlogSchema = createBlogCommonSchema.extend({
+  image: z.string().optional(),
+});
+
+export const updateBlogCommonSchema = z.object({
   name: z
     .string()
     .min(1, { message: "최소 1글자 이상 입력해 주세요." })
     .optional(),
   description: z.string().optional(),
+});
+
+export const updateBlogSchema = updateBlogCommonSchema.extend({
+  image: z.string().nullish(),
 });

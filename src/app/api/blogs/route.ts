@@ -1,13 +1,9 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { ZodError, z } from "zod";
+import { ZodError } from "zod";
 
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
-import { createBlogCommonSchema } from "~/lib/validations/blog";
-
-const createBlogSchema = createBlogCommonSchema.extend({
-  image: z.string().optional(),
-});
+import { createBlogSchema } from "~/lib/validations/blog";
 
 export async function POST(req: Request) {
   try {

@@ -12,16 +12,16 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { updateBlogSchema } from "~/lib/validations/blog";
+import { updateBlogCommonSchema } from "~/lib/validations/blog";
 import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
-import { ResponseError, handleError } from "~/lib/errors";
+import { handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
-import { tsFetch } from "~/lib/ts-fetch";
+import { updateBlog } from "~/services/blog";
 
 export default function UpdateBlogDescriptionForm({ blog }: { blog: Blog }) {
-  const form = useForm<z.infer<typeof updateBlogSchema>>({
-    resolver: zodResolver(updateBlogSchema),
+  const form = useForm<z.infer<typeof updateBlogCommonSchema>>({
+    resolver: zodResolver(updateBlogCommonSchema),
     defaultValues: {
       description: blog.description ?? "",
     },
@@ -34,17 +34,7 @@ export default function UpdateBlogDescriptionForm({ blog }: { blog: Blog }) {
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
           try {
-            const response = await tsFetch(`/api/blogs/${blog.id}`, {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(values),
-            });
-            if (!response.ok) {
-              throw new ResponseError("Bad fetch response", response);
-            }
-
+            await updateBlog(blog.id, values);
             router.refresh();
             toast.success("설명이 수정되었어요.");
           } catch (error) {

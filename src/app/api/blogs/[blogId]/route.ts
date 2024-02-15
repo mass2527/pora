@@ -1,12 +1,8 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { ZodError, z } from "zod";
+import { ZodError } from "zod";
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { updateBlogSchema } from "~/lib/validations/blog";
-
-const schema = updateBlogSchema.extend({
-  image: z.string().nullish(),
-});
 
 export async function PATCH(
   req: Request,
@@ -19,8 +15,8 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const { name, description, image } = schema.parse(json);
-    const updatedCategory = await prisma.blog.update({
+    const { name, description, image } = updateBlogSchema.parse(json);
+    const updatedBlog = await prisma.blog.update({
       where: {
         id: params.blogId,
       },
@@ -30,7 +26,7 @@ export async function PATCH(
         image,
       },
     });
-    return new Response(JSON.stringify(updatedCategory));
+    return new Response(JSON.stringify(updatedBlog));
   } catch (error) {
     if (error instanceof ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });

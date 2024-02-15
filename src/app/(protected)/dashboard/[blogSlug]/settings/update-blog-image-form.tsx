@@ -14,12 +14,12 @@ import {
 
 import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
-import { ResponseError, handleError } from "~/lib/errors";
+import { handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { imageFileSchema } from "~/lib/validations/common";
 import { deleteFile, uploadFile } from "~/services/file";
-import { tsFetch } from "~/lib/ts-fetch";
+import { updateBlog } from "~/services/blog";
 
 const schema = z.object({
   image: imageFileSchema.optional(),
@@ -47,18 +47,9 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
           }
 
           try {
-            const response = await tsFetch(`/api/blogs/${blog.id}`, {
-              method: "PATCH",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                image: newImageUrl ?? (blog.image ? null : undefined),
-              }),
+            await updateBlog(blog.id, {
+              image: newImageUrl ?? (blog.image ? null : undefined),
             });
-            if (!response.ok) {
-              throw new ResponseError("Bad fetch response", response);
-            }
 
             const hasDeleted = !newImageUrl && blog.image;
             const hasUpdated =

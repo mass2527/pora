@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Blog } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -33,7 +32,7 @@ import {
   getMaxLengthMessage,
   imageFileSchema,
 } from "~/lib/validations/common";
-import { tsFetch } from "~/lib/ts-fetch";
+import { createBlog } from "~/services/blog";
 
 const createBlogSchema = createBlogCommonSchema.extend({
   image: imageFileSchema.optional(),
@@ -58,21 +57,10 @@ export default function CreateBlogForm() {
               imageUrl = url;
             }
 
-            const response = await tsFetch("/api/blogs", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                ...values,
-                image: imageUrl,
-              }),
+            const newBlog = await createBlog({
+              ...values,
+              image: imageUrl,
             });
-            if (!response.ok) {
-              throw new ResponseError("Bad fetch response", response);
-            }
-
-            const newBlog = (await response.json()) as Blog;
             router.replace(`/dashboard/${newBlog.slug}`);
           } catch (error) {
             if (error instanceof ResponseError) {
