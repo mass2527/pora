@@ -1,11 +1,7 @@
-import Link from "next/link";
 import React, { ReactNode } from "react";
-import { buttonVariants } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
+import Nav, { NavProps } from "~/components/nav";
 
-type Link = { href: string; name: string };
-
-const LINKS: Link[] = [
+const LINKS: NavProps["links"] = [
   {
     href: "",
     name: "아티클",
@@ -30,22 +26,14 @@ export default function BlogLayout({
   return (
     <div>
       <div className="border-b">
-        <nav className="px-4">
-          <ul className="flex gap-4">
-            {LINKS.map((link) => {
-              return (
-                <li key={link.href}>
-                  <Link
-                    href={`/dashboard/${params.blogSlug}${link.href}`}
-                    className={cn(buttonVariants({ variant: "link" }), "px-0")}
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        <Nav
+          links={LINKS.map((link) => {
+            return {
+              ...link,
+              href: `/dashboard/${params.blogSlug}${link.href}`,
+            };
+          })}
+        />
       </div>
       {children}
     </div>

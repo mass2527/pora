@@ -7,7 +7,7 @@ export interface NavProps {
 
 export default function Nav({ links }: NavProps) {
   return (
-    <nav className="px-4">
+    <nav>
       <ul className="flex">
         {links.map((link) => {
           return (
