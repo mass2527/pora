@@ -11,7 +11,6 @@ import FormSubmitButton from "~/components/form-submit-button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,27 +18,18 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { handleError } from "~/lib/errors";
+import { updateUserSchema } from "~/lib/validations/user";
 import { updateUser } from "~/services/user";
-
-const MAX_LENGTH = 32;
-const invalidMessage = `최대 ${MAX_LENGTH}글자 이하 입력해 주세요.`;
-
-const schema = z.object({
-  jobPosition: z
-    .string()
-    .min(1, { message: "최소 1글자 이상 입력해 주세요." })
-    .max(MAX_LENGTH, { message: invalidMessage }),
-});
 
 export default function UpdateUserJobPositionForm({
   user,
 }: {
   user: Pick<User, "jobPosition" | "id">;
 }) {
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<z.infer<typeof updateUserSchema>>({
+    resolver: zodResolver(updateUserSchema),
     defaultValues: {
-      jobPosition: user.jobPosition ?? undefined,
+      jobPosition: user.jobPosition ?? "",
     },
   });
   const router = useRouter();
@@ -68,9 +58,9 @@ export default function UpdateUserJobPositionForm({
             <FormItem>
               <FormLabel>직책</FormLabel>
               <FormControl>
-                <Input {...field} maxLength={MAX_LENGTH} />
+                <Input {...field} />
               </FormControl>
-              <FormDescription>{invalidMessage}</FormDescription>
+
               <FormMessage />
             </FormItem>
           )}

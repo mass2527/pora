@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { imageFileSchema, slugSchema } from "~/lib/validations/common";
+import { imageFileSchema } from "~/lib/validations/common";
 import CreateCategoryButton from "../../categories/create-category-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
@@ -33,11 +33,9 @@ import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { deleteFile, uploadFile } from "~/services/file";
 import { updateBlogArticle } from "~/services/blog/article";
+import { blogArticleSchema } from "~/lib/validations/article";
 
-const schema = z.object({
-  categoryId: z.string(),
-  slug: slugSchema,
-  description: z.string(),
+const schema = blogArticleSchema.extend({
   image: imageFileSchema.optional(),
 });
 
@@ -51,9 +49,9 @@ export default function UpdateArticleForm({
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      categoryId: article.categoryId ?? undefined,
+      categoryId: article.categoryId ?? "",
       slug: article.slug,
-      description: article.description ?? undefined,
+      description: article.description ?? "",
     },
   });
   const buttonRef = useRef<HTMLButtonElement>(null);

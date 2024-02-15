@@ -31,7 +31,7 @@ import {
 } from "~/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { categorySchema } from "~/lib/validations/category";
+
 import { ResponseError, handleError } from "~/lib/errors";
 import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
@@ -39,6 +39,7 @@ import {
   deleteBlogCategory,
   updateBlogCategory,
 } from "~/services/blog/category";
+import { updateBlogCategorySchema } from "~/lib/validations/category";
 
 export default function CategoryRowAction({
   category,
@@ -47,8 +48,8 @@ export default function CategoryRowAction({
 }) {
   const router = useRouter();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const form = useForm<z.infer<typeof categorySchema>>({
-    resolver: zodResolver(categorySchema),
+  const form = useForm<z.infer<typeof updateBlogCategorySchema>>({
+    resolver: zodResolver(updateBlogCategorySchema),
     defaultValues: {
       name: category.name,
       slug: category.slug,
@@ -117,7 +118,10 @@ export default function CategoryRowAction({
                   if (error instanceof ResponseError) {
                     if (error.response.status === 409) {
                       const json = (await error.response.json()) as {
-                        target: [string, keyof z.infer<typeof categorySchema>];
+                        target: [
+                          string,
+                          keyof z.infer<typeof updateBlogCategorySchema>
+                        ];
                       };
                       const [, name] = json.target;
 

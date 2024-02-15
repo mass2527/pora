@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { updateBlogCommonSchema } from "~/lib/validations/blog";
+import { updateBlogSchema } from "~/lib/validations/blog";
 import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
 import { handleError } from "~/lib/errors";
@@ -20,8 +20,8 @@ import { useRouter } from "next/navigation";
 import { updateBlog } from "~/services/blog";
 
 export default function UpdateBlogNameForm({ blog }: { blog: Blog }) {
-  const form = useForm<z.infer<typeof updateBlogCommonSchema>>({
-    resolver: zodResolver(updateBlogCommonSchema),
+  const form = useForm<z.infer<typeof updateBlogSchema>>({
+    resolver: zodResolver(updateBlogSchema),
     defaultValues: {
       name: blog.name,
     },

@@ -22,25 +22,25 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import { ResponseError, handleError } from "~/lib/errors";
-import {
-  BLOG_DESCRIPTION_MAX_LENGTH,
-  BLOG_NAME_MAX_LENGTH,
-  createBlogCommonSchema,
-} from "~/lib/validations/blog";
+import { blogSchema } from "~/lib/validations/blog";
 import {
   SLUG_STRING_REGEX_MESSAGE,
-  getMaxLengthMessage,
   imageFileSchema,
 } from "~/lib/validations/common";
 import { createBlog } from "~/services/blog";
 
-const createBlogSchema = createBlogCommonSchema.extend({
+const createBlogSchema = blogSchema.extend({
   image: imageFileSchema.optional(),
 });
 
 export default function CreateBlogForm() {
   const form = useForm<z.infer<typeof createBlogSchema>>({
     resolver: zodResolver(createBlogSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      slug: "",
+    },
   });
   const router = useRouter();
 
@@ -83,16 +83,8 @@ export default function CreateBlogForm() {
             <FormItem>
               <FormLabel>이름*</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="내 블로그"
-                  maxLength={BLOG_NAME_MAX_LENGTH}
-                  autoFocus
-                  {...field}
-                />
+                <Input placeholder="내 블로그" autoFocus {...field} />
               </FormControl>
-              <FormDescription>
-                {getMaxLengthMessage(BLOG_NAME_MAX_LENGTH)}
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -125,16 +117,8 @@ export default function CreateBlogForm() {
             <FormItem>
               <FormLabel>설명</FormLabel>
               <FormControl>
-                <Textarea
-                  maxLength={BLOG_DESCRIPTION_MAX_LENGTH}
-                  autoFocus
-                  className="resize-none"
-                  {...field}
-                />
+                <Textarea autoFocus className="resize-none" {...field} />
               </FormControl>
-              <FormDescription>
-                {getMaxLengthMessage(BLOG_DESCRIPTION_MAX_LENGTH)}
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

@@ -11,7 +11,6 @@ import FormSubmitButton from "~/components/form-submit-button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,17 +18,9 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { handleError } from "~/lib/errors";
+
+import { updateUserSchema } from "~/lib/validations/user";
 import { updateUser } from "~/services/user";
-
-const USER_NAME_MAX_LENGTH = 32;
-const userNameInvalidMessage = `최대 ${USER_NAME_MAX_LENGTH}글자 이하 입력해 주세요.`;
-
-const updateUserSchema = z.object({
-  name: z
-    .string()
-    .min(1, { message: "최소 1글자 이상 입력해 주세요." })
-    .max(USER_NAME_MAX_LENGTH, { message: userNameInvalidMessage }),
-});
 
 export default function UpdateUserNameForm({
   user,
@@ -39,7 +30,7 @@ export default function UpdateUserNameForm({
   const form = useForm<z.infer<typeof updateUserSchema>>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
-      name: user.name ?? undefined,
+      name: user.name ?? "",
     },
   });
   const router = useRouter();
@@ -69,9 +60,9 @@ export default function UpdateUserNameForm({
             <FormItem>
               <FormLabel>이름</FormLabel>
               <FormControl>
-                <Input {...field} maxLength={USER_NAME_MAX_LENGTH} />
+                <Input {...field} />
               </FormControl>
-              <FormDescription>{userNameInvalidMessage}</FormDescription>
+
               <FormMessage />
             </FormItem>
           )}

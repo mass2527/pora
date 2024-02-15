@@ -16,7 +16,9 @@ export const slugSchema = z
   .regex(/^[a-z0-9]+(?:(?:-)+[a-z0-9]+)*$/, SLUG_STRING_REGEX_MESSAGE);
 
 // String(Prisma) === VARCHAR(191)(MySQL)
-export const stringSchema = z.string().max(STRING_MAX_LENGTH);
+export const stringSchema = z
+  .string()
+  .max(STRING_MAX_LENGTH, getMaxLengthMessage(STRING_MAX_LENGTH));
 
 export function getMinLengthMessage(minLength: number) {
   return `최소 ${minLength}글자 이상 입력해 주세요.`;
