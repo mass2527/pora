@@ -28,7 +28,7 @@ import { createCategorySchema } from "~/lib/validations/category";
 import FormSubmitButton from "~/components/form-submit-button";
 import { createBlogCategory } from "~/services/blog/category";
 
-export default function CreateCategoryButton({
+export default function CreateBlogCategoryButton({
   blogId,
   trigger = <Button type="button">새 카테고리</Button>,
 }: {

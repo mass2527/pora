@@ -41,7 +41,7 @@ import {
 } from "~/services/blog/category";
 import { updateCategorySchema } from "~/lib/validations/category";
 
-export default function CategoryRowAction({
+export default function BlogCategoryRowAction({
   category,
 }: {
   category: Category;

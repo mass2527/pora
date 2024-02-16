@@ -5,7 +5,7 @@ import { Prisma } from "@prisma/client";
 import { buttonVariants } from "~/components/ui/button";
 import { List, ListItem } from "~/components/ui/list";
 import { cn } from "~/lib/utils";
-import CategoryRowAction from "./category-row-action";
+import BlogCategoryRowAction from "./blog-category-row-action";
 import Link from "next/link";
 import { handleError } from "~/lib/errors";
 import { useAtom } from "jotai";
@@ -66,7 +66,7 @@ export default function BlogCategoryList({
               <span className="text-xs text-zinc-500">{category.slug}</span>
             </div>
 
-            <CategoryRowAction category={category} />
+            <BlogCategoryRowAction category={category} />
           </ListItem>
         );
       })}

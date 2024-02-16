@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { imageFileSchema } from "~/lib/validations/common";
-import CreateCategoryButton from "../../categories/create-category-button";
+import CreateBlogCategoryButton from "../../categories/create-blog-category-button";
 import { ResponseError, handleError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 import FormSubmitButton from "~/components/form-submit-button";
@@ -59,7 +59,7 @@ export default function UpdateBlogArticleForm({
 
   return (
     <div>
-      <CreateCategoryButton
+      <CreateBlogCategoryButton
         blogId={article.blogId}
         trigger={
           <button ref={buttonRef} type="button" className="hidden">

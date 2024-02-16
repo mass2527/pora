@@ -2,7 +2,7 @@ import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 
 import { notFound } from "next/navigation";
-import CreateCategoryButton from "./create-category-button";
+import CreateBlogCategoryButton from "./create-blog-category-button";
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import BlogCategoryList from "./blog-category-list";
 import BlogOrderSaveStatus from "./blog-order-save-status";
@@ -37,7 +37,7 @@ export default async function CategoriesPage({
           <h1 className="text-2xl font-semibold tracking-tight">카테고리</h1>
           <BlogOrderSaveStatus />
         </div>
-        <CreateCategoryButton blogId={blog.id} />
+        <CreateBlogCategoryButton blogId={blog.id} />
       </div>
 
       {blog.categories.length > 0 ? (
@@ -46,7 +46,7 @@ export default async function CategoriesPage({
         <EmptyPlaceholder
           title="추가된 카테고리가 없어요."
           description="새로운 카테고리를 추가하고 글을 분류해 보세요."
-          action={<CreateCategoryButton blogId={blog.id} />}
+          action={<CreateBlogCategoryButton blogId={blog.id} />}
         />
       )}
     </div>
