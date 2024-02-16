@@ -3,7 +3,6 @@
 import { Blog } from "@prisma/client";
 import { Check, ChevronsUpDown, PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { useSelectedLayoutSegments } from "next/navigation";
 import React from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -15,14 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { cn } from "~/lib/utils";
+import useSelectedBlog from "./use-selected-blog";
 
 export default function BlogNav({ blogs }: { blogs: Blog[] }) {
-  const selectedLayoutSegments = useSelectedLayoutSegments();
-  const selectedBlogSlug =
-    selectedLayoutSegments[0] === "dashboard"
-      ? selectedLayoutSegments[1]
-      : null;
-  const selectedBlog = blogs.find((blog) => blog.slug === selectedBlogSlug);
+  const selectedBlog = useSelectedBlog(blogs);
   if (!selectedBlog) {
     return null;
   }
@@ -30,15 +25,15 @@ export default function BlogNav({ blogs }: { blogs: Blog[] }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
-          {selectedBlog?.name} <ChevronsUpDown className="w-4 h-4 ml-2" />{" "}
+        <Button variant="ghost" aria-label="블로그 메뉴 열기" className="px-2">
+          <ChevronsUpDown className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 text-sm">
         <DropdownMenuLabel>블로그</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {blogs.map((blog) => {
-          const isSelectedBlog = blog.slug === selectedBlogSlug;
+          const isSelectedBlog = blog.slug === selectedBlog.slug;
 
           return (
             <DropdownMenuItem key={blog.id} asChild>
