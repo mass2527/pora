@@ -7,7 +7,7 @@ import prisma from "~/lib/prisma";
 import BlogNav from "./dashboard/blog-nav";
 import RootNav from "./root-nav";
 import UserAccountMenu from "./dashboard/user-account-menu";
-import Image from "next/image";
+import PoraLogo from "~/components/pora-logo";
 
 export default async function ProtectedLayout({
   children,
@@ -30,10 +30,7 @@ export default async function ProtectedLayout({
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center gap-4 h-8">
           <Link href="/dashboard">
-            <div className="flex items-center gap-2">
-              <Image src="/pora.svg" alt="Pora Logo" width={24} height={24} />
-              <span className="text-xl font-semibold tracking-tight">Pora</span>
-            </div>
+            <PoraLogo />
           </Link>
           <BlogNav blogs={blogs} />
         </div>

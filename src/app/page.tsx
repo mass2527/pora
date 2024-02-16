@@ -1,15 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import PoraLogo from "~/components/pora-logo";
 import { buttonVariants } from "~/components/ui/button";
 
 export default function Home() {
   return (
     <div className="min-h-screen">
       <header className="flex justify-between items-center p-4">
-        <div className="flex items-center gap-2">
-          <Image src="/pora.svg" alt="Pora 로고" width={24} height={24} />
-          <span className="text-xl font-semibold tracking-tight">Pora</span>
-        </div>
+        <PoraLogo />
       </header>
 
       <div className="grid place-items-center h-[calc(100vh-60px)] p-4">
