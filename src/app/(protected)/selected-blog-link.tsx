@@ -14,7 +14,7 @@ export default function SelectedBlogLink({ blogs }: { blogs: Blog[] }) {
 
   return (
     <Link
-      href={`/${selectedBlog.slug}`}
+      href={`/blog/${selectedBlog.slug}`}
       target="_blank"
       className={buttonVariants({ variant: "link" })}
     >

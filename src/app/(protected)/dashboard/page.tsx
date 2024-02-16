@@ -37,7 +37,7 @@ export default async function DashboardPage() {
             return (
               <ListItem key={blog.id} className="flex flex-col">
                 <code className="text-xs text-zinc-500 truncate">
-                  /{blog.slug}
+                  /blog/{blog.slug}
                 </code>
                 <Link
                   href={`/dashboard/${blog.slug}`}

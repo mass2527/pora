@@ -23,7 +23,7 @@ export default async function BlogLayout({
     <div>
       <div className="p-4 border-b sticky top-0 bg-background">
         <Link
-          href={`/${params.blogSlug}`}
+          href={`/blog/${params.blogSlug}`}
           className="text-xl font-semibold tracking-tight"
         >
           {blog.name}

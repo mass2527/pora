@@ -25,18 +25,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const blogPages: MetadataRoute.Sitemap = blogs.map((blog) => ({
-    url: `${baseUrl}/${blog.slug}`,
+    url: `${baseUrl}/blog/${blog.slug}`,
     lastModified: blog.updatedAt,
   }));
   const blogCategoryPages: MetadataRoute.Sitemap = blogCategories.map(
     (category) => ({
-      url: `${baseUrl}/${category.blog.slug}/category/${category.slug}`,
+      url: `${baseUrl}/blog/${category.blog.slug}/category/${category.slug}`,
       lastModified: category.blog.updatedAt,
     })
   );
   const blogArticlePages: MetadataRoute.Sitemap = blogArticles.map(
     (article) => ({
-      url: `${baseUrl}/${article.blog.slug}/${article.slug}`,
+      url: `${baseUrl}/blog/${article.blog.slug}/${article.slug}`,
       lastModified: article.updatedAt,
     })
   );

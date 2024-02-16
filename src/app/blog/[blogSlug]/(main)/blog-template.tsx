@@ -24,7 +24,7 @@ export default function BlogTemplate({
 }) {
   const categories = [{ name: "모든 아티클", slug: "" }, ...blog.categories];
   const links = categories.map((category) => {
-    let href = `/${params.blogSlug}`;
+    let href = `/blog/${params.blogSlug}`;
     if (category.slug !== "") {
       href += `/category/${category.slug}`;
     }
@@ -45,7 +45,7 @@ export default function BlogTemplate({
           {blog.articles.map((article) => {
             return (
               <li key={article.id}>
-                <Link href={`/${blog.slug}/${article.slug}`}>
+                <Link href={`/blog/${blog.slug}/${article.slug}`}>
                   <div className="border rounded-md p-4 flex flex-col gap-2">
                     <h2 className="text-xl lg:text-2xl font-semibold tracking-tight">
                       {article.title}

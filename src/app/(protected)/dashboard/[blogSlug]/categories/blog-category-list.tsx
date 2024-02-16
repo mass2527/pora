@@ -56,7 +56,8 @@ export default function BlogCategoryList({
           >
             <div className="flex flex-col">
               <Link
-                href={`/${blog.slug}/category/${category.slug}`}
+                target="_blank"
+                href={`/blog/${blog.slug}/category/${category.slug}`}
                 className={cn(buttonVariants({ variant: "link" }), "p-0")}
               >
                 <h2 className="text-xl font-semibold tracking-tight">

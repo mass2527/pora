@@ -91,7 +91,7 @@ function BlogArticlesTable({
               <Link
                 target="_blank"
                 className={cn(buttonVariants({ variant: "link" }), "p-0")}
-                href={`/${blog.slug}/${article.slug}`}
+                href={`/blog/${blog.slug}/${article.slug}`}
               >
                 {article.title}
               </Link>

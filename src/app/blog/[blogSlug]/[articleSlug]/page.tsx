@@ -68,7 +68,7 @@ export default async function BlogArticlePage({
       <div className="p-6 pt-3">
         <div className="max-w-[1200px] mx-auto">
           <Link
-            href={`/${params.blogSlug}/category/${article.category?.slug}`}
+            href={`/blog/${params.blogSlug}/category/${article.category?.slug}`}
             className="flex items-center text-sm text-zinc-500"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> 블로그로 돌아가기
