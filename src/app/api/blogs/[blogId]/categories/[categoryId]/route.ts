@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { getUser } from "~/lib/auth";
 import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
-import { updateBlogCategorySchema } from "~/lib/validations/category";
+import { updateCategorySchema } from "~/lib/validations/category";
 
 export async function PATCH(
   req: Request,
@@ -16,7 +16,7 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const { name, slug } = updateBlogCategorySchema.parse(json);
+    const { name, slug } = updateCategorySchema.parse(json);
     const updatedCategory = await prisma.category.update({
       where: {
         id: params.categoryId,

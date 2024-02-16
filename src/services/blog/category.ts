@@ -3,14 +3,14 @@ import { z } from "zod";
 import { ResponseError } from "~/lib/errors";
 import { tsFetch } from "~/lib/ts-fetch";
 import {
-  createBlogCategorySchema,
-  updateBlogCategoriesSchema,
-  updateBlogCategorySchema,
+  createCategorySchema,
+  updateCategoriesSchema,
+  updateCategorySchema,
 } from "~/lib/validations/category";
 
 export async function updateBlogCategories(
   blogId: string,
-  values: z.infer<typeof updateBlogCategoriesSchema>
+  values: z.infer<typeof updateCategoriesSchema>
 ): Promise<Category[]> {
   const response = await tsFetch(`/api/blogs/${blogId}/categories`, {
     method: "PATCH",
@@ -28,7 +28,7 @@ export async function updateBlogCategories(
 
 export async function createBlogCategory(
   blogId: string,
-  values: z.infer<typeof createBlogCategorySchema>
+  values: z.infer<typeof createCategorySchema>
 ): Promise<Category> {
   const response = await tsFetch(`/api/blogs/${blogId}/categories`, {
     method: "POST",
@@ -47,7 +47,7 @@ export async function createBlogCategory(
 export async function updateBlogCategory(
   blogId: string,
   categoryId: string,
-  values: z.infer<typeof updateBlogCategorySchema>
+  values: z.infer<typeof updateCategorySchema>
 ): Promise<Category> {
   const response = await tsFetch(
     `/api/blogs/${blogId}/categories/${categoryId}`,

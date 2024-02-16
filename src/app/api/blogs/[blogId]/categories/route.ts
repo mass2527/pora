@@ -4,8 +4,8 @@ import { getUser } from "~/lib/auth";
 import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import {
-  createBlogCategorySchema,
-  updateBlogCategoriesSchema,
+  createCategorySchema,
+  updateCategoriesSchema,
 } from "~/lib/validations/category";
 
 export async function POST(
@@ -19,7 +19,7 @@ export async function POST(
     }
 
     const json = await req.json();
-    const { name, slug } = createBlogCategorySchema.parse(json);
+    const { name, slug } = createCategorySchema.parse(json);
     const categoryCount = await prisma.category.count({
       where: {
         blogId: params.blogId,
@@ -73,7 +73,7 @@ export async function PATCH(
     }
 
     const json = await req.json();
-    const categories = updateBlogCategoriesSchema.parse(json);
+    const categories = updateCategoriesSchema.parse(json);
     const updatedCategories = await prisma.$transaction(
       categories.map((category) => {
         return prisma.category.update({

@@ -24,7 +24,7 @@ import {
 } from "~/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createBlogCategorySchema } from "~/lib/validations/category";
+import { createCategorySchema } from "~/lib/validations/category";
 import FormSubmitButton from "~/components/form-submit-button";
 import { createBlogCategory } from "~/services/blog/category";
 
@@ -37,8 +37,8 @@ export default function CreateCategoryButton({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const form = useForm<z.infer<typeof createBlogCategorySchema>>({
-    resolver: zodResolver(createBlogCategorySchema),
+  const form = useForm<z.infer<typeof createCategorySchema>>({
+    resolver: zodResolver(createCategorySchema),
     defaultValues: {
       name: "",
       slug: "",
@@ -77,7 +77,7 @@ export default function CreateCategoryButton({
                     const json = (await error.response.json()) as {
                       target: [
                         string,
-                        keyof z.infer<typeof createBlogCategorySchema>
+                        keyof z.infer<typeof createCategorySchema>
                       ];
                     };
                     const [, name] = json.target;

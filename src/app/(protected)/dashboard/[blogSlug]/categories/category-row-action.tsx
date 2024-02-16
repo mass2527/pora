@@ -39,7 +39,7 @@ import {
   deleteBlogCategory,
   updateBlogCategory,
 } from "~/services/blog/category";
-import { updateBlogCategorySchema } from "~/lib/validations/category";
+import { updateCategorySchema } from "~/lib/validations/category";
 
 export default function CategoryRowAction({
   category,
@@ -48,8 +48,8 @@ export default function CategoryRowAction({
 }) {
   const router = useRouter();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const form = useForm<z.infer<typeof updateBlogCategorySchema>>({
-    resolver: zodResolver(updateBlogCategorySchema),
+  const form = useForm<z.infer<typeof updateCategorySchema>>({
+    resolver: zodResolver(updateCategorySchema),
     defaultValues: {
       name: category.name,
       slug: category.slug,
@@ -120,7 +120,7 @@ export default function CategoryRowAction({
                       const json = (await error.response.json()) as {
                         target: [
                           string,
-                          keyof z.infer<typeof updateBlogCategorySchema>
+                          keyof z.infer<typeof updateCategorySchema>
                         ];
                       };
                       const [, name] = json.target;

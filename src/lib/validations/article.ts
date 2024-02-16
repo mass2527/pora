@@ -2,7 +2,7 @@ import { ArticleStatus } from "@prisma/client";
 import { z } from "zod";
 import { slugSchema, stringSchema } from "./common";
 
-export const blogArticleSchema = z.object({
+export const articleSchema = z.object({
   categoryId: stringSchema.uuid().optional(),
   slug: slugSchema,
   title: stringSchema,
@@ -14,9 +14,9 @@ export const blogArticleSchema = z.object({
   status: z.nativeEnum(ArticleStatus),
 });
 
-export const createBlogArticleSchema = blogArticleSchema;
+export const createArticleSchema = articleSchema;
 
-export const updateBlogArticleSchema = blogArticleSchema
+export const updateArticleSchema = articleSchema
   .extend({
     image: z.string().nullish(),
   })
