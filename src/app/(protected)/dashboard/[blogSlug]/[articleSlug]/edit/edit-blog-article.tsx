@@ -7,27 +7,27 @@ import Editor from "~/components/editor";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { useDebounce } from "~/hooks/use-debounce";
 import { Badge } from "~/components/ui/badge";
-import UpdateArticleForm from "./update-article-form";
+import UpdateBlogArticleForm from "./update-blog-article-form";
 import { Button } from "~/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import Switch from "~/components/switch";
 import { useRouter } from "next/navigation";
 import { updateBlogArticle } from "~/services/blog/article";
 
-export default function EditArticle({
-  article,
+export default function EditBlogArticle({
+  blogArticle,
 }: {
-  article: Prisma.ArticleGetPayload<{
+  blogArticle: Prisma.ArticleGetPayload<{
     include: { blog: { include: { categories: true } } };
   }>;
 }) {
-  const [articleForm, setArticleForm] = useState({
-    title: article.draftTitle,
-    htmlContent: article.htmlContent,
-    jsonContent: article.draftJsonContent,
+  const [form, setForm] = useState({
+    title: blogArticle.draftTitle,
+    htmlContent: blogArticle.htmlContent,
+    jsonContent: blogArticle.draftJsonContent,
   });
-  const latestArticleFormRef = useRef(articleForm);
-  const debouncedArticleForm = useDebounce(articleForm, 3000);
+  const latestFormRef = useRef(form);
+  const debouncedForm = useDebounce(form, 3000);
   const [saveStatus, setSaveStatus] = useState<
     "임시 저장중..." | "임시 저장됨" | "임시 저장 실패" | ""
   >("");
@@ -38,30 +38,29 @@ export default function EditArticle({
 
   useEffect(() => {
     const isLatest =
-      latestArticleFormRef.current.title === debouncedArticleForm.title &&
-      latestArticleFormRef.current.jsonContent ===
-        debouncedArticleForm.jsonContent;
+      latestFormRef.current.title === debouncedForm.title &&
+      latestFormRef.current.jsonContent === debouncedForm.jsonContent;
     if (isLatest) {
       return;
     }
 
-    async function updateArticle() {
+    async function save() {
       try {
         setSaveStatus("임시 저장중...");
-        await updateBlogArticle(article.blogId, article.id, {
-          draftTitle: debouncedArticleForm.title,
-          draftJsonContent: debouncedArticleForm.jsonContent,
+        await updateBlogArticle(blogArticle.blogId, blogArticle.id, {
+          draftTitle: debouncedForm.title,
+          draftJsonContent: debouncedForm.jsonContent,
         });
         setSaveStatus("임시 저장됨");
-        latestArticleFormRef.current = debouncedArticleForm;
+        latestFormRef.current = debouncedForm;
         router.refresh();
       } catch (error) {
         setSaveStatus("임시 저장 실패");
         handleError(error);
       }
     }
-    updateArticle();
-  }, [article.blogId, article.id, debouncedArticleForm, router]);
+    save();
+  }, [blogArticle.blogId, blogArticle.id, debouncedForm, router]);
 
   return (
     <div>
@@ -76,23 +75,23 @@ export default function EditArticle({
                 </div>
 
                 <Input
-                  value={articleForm.title}
+                  value={form.title}
                   placeholder="핵심 내용을 요약해 보세요."
                   onChange={(event) => {
                     setSaveStatus("");
-                    setArticleForm({
-                      ...articleForm,
+                    setForm({
+                      ...form,
                       title: event.target.value,
                     });
                   }}
                 />
 
                 <Editor
-                  content={JSON.parse(articleForm.jsonContent)}
+                  content={JSON.parse(form.jsonContent)}
                   onUpdate={({ editor }) => {
                     setSaveStatus("");
-                    setArticleForm({
-                      ...articleForm,
+                    setForm({
+                      ...form,
                       htmlContent: editor.getHTML(),
                       jsonContent: JSON.stringify(editor.getJSON()),
                     });
@@ -103,7 +102,7 @@ export default function EditArticle({
                   onClick={() => setStep("메타 정보 입력")}
                   className="ml-auto"
                 >
-                  {article.status === "WRITING" ? "발행" : "저장 및 발행"}
+                  {blogArticle.status === "WRITING" ? "발행" : "저장 및 발행"}
                 </Button>
               </div>
             ),
@@ -118,10 +117,10 @@ export default function EditArticle({
                   <ArrowLeftIcon className="w-4 h-4 mr-2" /> 제목 및 내용 수정
                 </Button>
 
-                <UpdateArticleForm
+                <UpdateBlogArticleForm
                   article={{
-                    ...article,
-                    ...articleForm,
+                    ...blogArticle,
+                    ...form,
                   }}
                 />
               </>

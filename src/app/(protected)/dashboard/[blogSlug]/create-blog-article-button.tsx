@@ -6,14 +6,13 @@ import React, { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
 import { handleError } from "~/lib/errors";
-import { atom, useAtom } from "jotai";
+import { useAtom } from "jotai";
 import { createBlogArticle } from "~/services/blog/article";
+import { createBlogArticleLoadingAtom } from "./create-blog-article-loading-atom";
 
-const isLoadingAtom = atom(false);
-
-export default function CreateArticleButton({ blog }: { blog: Blog }) {
+export default function CreateBlogArticleButton({ blog }: { blog: Blog }) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useAtom(isLoadingAtom);
+  const [isLoading, setIsLoading] = useAtom(createBlogArticleLoadingAtom);
 
   useEffect(() => {
     return () => {

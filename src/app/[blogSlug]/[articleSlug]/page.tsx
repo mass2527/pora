@@ -37,7 +37,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ArticleDetailsPage({
+export default async function BlogArticleDetailsPage({
   params,
 }: {
   params: { blogSlug: string; articleSlug: string };

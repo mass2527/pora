@@ -39,7 +39,7 @@ const schema = updateArticleSchema.extend({
   image: imageFileSchema.optional(),
 });
 
-export default function UpdateArticleForm({
+export default function UpdateBlogArticleForm({
   article,
 }: {
   article: Prisma.ArticleGetPayload<{

@@ -15,7 +15,7 @@ import {
 import { handleError } from "~/lib/errors";
 import { deleteBlogArticle } from "~/services/blog/article";
 
-export default function ArticleRowAction({
+export default function BlogArticleRowAction({
   article,
 }: {
   article: Prisma.ArticleGetPayload<{ include: { blog: true } }>;

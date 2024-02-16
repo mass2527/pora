@@ -1,9 +1,9 @@
 import prisma from "~/lib/prisma";
 import { notFound } from "next/navigation";
-import EditArticle from "./edit-article";
+import EditBlogArticle from "./edit-blog-article";
 import { getUser } from "~/lib/auth";
 
-export default async function ArticleEditPage({
+export default async function BlogArticleEditPage({
   params,
 }: {
   params: { blogSlug: string; articleSlug: string };
@@ -36,7 +36,7 @@ export default async function ArticleEditPage({
   return (
     <div className="p-4">
       <div className="max-w-[720px] mx-auto">
-        <EditArticle article={article} />
+        <EditBlogArticle blogArticle={article} />
       </div>
     </div>
   );
