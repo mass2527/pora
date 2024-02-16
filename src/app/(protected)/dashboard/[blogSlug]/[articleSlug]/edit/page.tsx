@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import EditBlogArticle from "./edit-blog-article";
 import { getUser } from "~/lib/auth";
 
-export default async function BlogArticleEditPage({
+export default async function EditBlogArticlePage({
   params,
 }: {
   params: { blogSlug: string; articleSlug: string };

@@ -23,17 +23,15 @@ export default function BlogLayout({
   params: { blogSlug: string };
   children: ReactNode;
 }) {
+  const links = LINKS.map((link) => ({
+    ...link,
+    href: `/dashboard/${params.blogSlug}${link.href}`,
+  }));
+
   return (
     <div>
       <div className="border-b">
-        <Nav
-          links={LINKS.map((link) => {
-            return {
-              ...link,
-              href: `/dashboard/${params.blogSlug}${link.href}`,
-            };
-          })}
-        />
+        <Nav links={links} />
       </div>
       {children}
     </div>

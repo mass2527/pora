@@ -36,21 +36,21 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
       <form
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
-          let newImageUrl: string | undefined;
+          let imageUrl: string | undefined;
           const imageFile = values.image;
           if (imageFile) {
             const { url } = await uploadFile(imageFile);
-            newImageUrl = url;
+            imageUrl = url;
           }
 
           try {
             await updateBlog(blog.id, {
-              image: newImageUrl ?? (blog.image ? null : undefined),
+              image: imageUrl ?? (blog.image ? null : undefined),
             });
 
-            const hasDeleted = !newImageUrl && blog.image;
+            const hasDeleted = !imageUrl && blog.image;
             const hasUpdated =
-              newImageUrl && blog.image && newImageUrl !== blog.image;
+              imageUrl && blog.image && imageUrl !== blog.image;
             if ((hasDeleted || hasUpdated) && blog.image) {
               deleteFile(blog.image);
             }

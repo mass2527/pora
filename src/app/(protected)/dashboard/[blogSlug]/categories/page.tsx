@@ -7,7 +7,7 @@ import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import BlogCategoryList from "./blog-category-list";
 import BlogOrderSaveStatus from "./blog-order-save-status";
 
-export default async function CategoriesPage({
+export default async function BlogCategoriesPage({
   params,
 }: {
   params: { blogSlug: string };

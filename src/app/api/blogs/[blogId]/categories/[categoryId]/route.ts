@@ -6,7 +6,7 @@ import prisma from "~/lib/prisma";
 import { updateCategorySchema } from "~/lib/validations/category";
 
 export async function PATCH(
-  req: Request,
+  request: Request,
   { params }: { params: { blogId: string; categoryId: string } }
 ) {
   try {
@@ -15,9 +15,9 @@ export async function PATCH(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const json = await req.json();
-    const { name, slug } = updateCategorySchema.parse(json);
-    const updatedCategory = await prisma.category.update({
+    const body = await request.json();
+    const { name, slug } = updateCategorySchema.parse(body);
+    const category = await prisma.category.update({
       where: {
         id: params.categoryId,
         blog: {
@@ -29,7 +29,7 @@ export async function PATCH(
         slug,
       },
     });
-    return new Response(JSON.stringify(updatedCategory));
+    return new Response(JSON.stringify(category));
   } catch (error) {
     if (error instanceof ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
@@ -50,7 +50,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: { blogId: string; categoryId: string } }
 ) {
   try {
@@ -80,7 +80,7 @@ export async function DELETE(
       return new Response("Not found", { status: 404 });
     }
 
-    const deletedCategory = await prisma.$transaction(async (tx) => {
+    const category = await prisma.$transaction(async (tx) => {
       await tx.category.updateMany({
         where: {
           orderIndex: {
@@ -94,7 +94,7 @@ export async function DELETE(
         },
       });
 
-      const deletedCategory = await tx.category.delete({
+      const category = await tx.category.delete({
         where: {
           id: params.categoryId,
           blog: {
@@ -103,10 +103,10 @@ export async function DELETE(
         },
       });
 
-      return deletedCategory;
+      return category;
     });
 
-    return new Response(JSON.stringify(deletedCategory));
+    return new Response(JSON.stringify(category));
   } catch (error) {
     return new Response(null, { status: 500 });
   }

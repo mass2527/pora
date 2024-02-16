@@ -21,13 +21,13 @@ export default function EditBlogArticle({
     include: { blog: { include: { categories: true } } };
   }>;
 }) {
-  const [form, setForm] = useState({
+  const [values, setValues] = useState({
     title: blogArticle.draftTitle,
     htmlContent: blogArticle.htmlContent,
     jsonContent: blogArticle.draftJsonContent,
   });
-  const latestFormRef = useRef(form);
-  const debouncedForm = useDebounce(form, 3000);
+  const latestValuesRef = useRef(values);
+  const debouncedValues = useDebounce(values, 3000);
   const [saveStatus, setSaveStatus] = useState<
     "임시 저장중..." | "임시 저장됨" | "임시 저장 실패" | ""
   >("");
@@ -38,8 +38,8 @@ export default function EditBlogArticle({
 
   useEffect(() => {
     const isLatest =
-      latestFormRef.current.title === debouncedForm.title &&
-      latestFormRef.current.jsonContent === debouncedForm.jsonContent;
+      latestValuesRef.current.title === debouncedValues.title &&
+      latestValuesRef.current.jsonContent === debouncedValues.jsonContent;
     if (isLatest) {
       return;
     }
@@ -48,11 +48,11 @@ export default function EditBlogArticle({
       try {
         setSaveStatus("임시 저장중...");
         await updateBlogArticle(blogArticle.blogId, blogArticle.id, {
-          draftTitle: debouncedForm.title,
-          draftJsonContent: debouncedForm.jsonContent,
+          draftTitle: debouncedValues.title,
+          draftJsonContent: debouncedValues.jsonContent,
         });
         setSaveStatus("임시 저장됨");
-        latestFormRef.current = debouncedForm;
+        latestValuesRef.current = debouncedValues;
         router.refresh();
       } catch (error) {
         setSaveStatus("임시 저장 실패");
@@ -60,7 +60,7 @@ export default function EditBlogArticle({
       }
     }
     save();
-  }, [blogArticle.blogId, blogArticle.id, debouncedForm, router]);
+  }, [blogArticle.blogId, blogArticle.id, debouncedValues, router]);
 
   return (
     <div>
@@ -75,23 +75,23 @@ export default function EditBlogArticle({
                 </div>
 
                 <Input
-                  value={form.title}
+                  value={values.title}
                   placeholder="핵심 내용을 요약해 보세요."
                   onChange={(event) => {
                     setSaveStatus("");
-                    setForm({
-                      ...form,
+                    setValues({
+                      ...values,
                       title: event.target.value,
                     });
                   }}
                 />
 
                 <Editor
-                  content={JSON.parse(form.jsonContent)}
+                  content={JSON.parse(values.jsonContent)}
                   onUpdate={({ editor }) => {
                     setSaveStatus("");
-                    setForm({
-                      ...form,
+                    setValues({
+                      ...values,
                       htmlContent: editor.getHTML(),
                       jsonContent: JSON.stringify(editor.getJSON()),
                     });
@@ -120,7 +120,7 @@ export default function EditBlogArticle({
                 <UpdateBlogArticleForm
                   article={{
                     ...blogArticle,
-                    ...form,
+                    ...values,
                   }}
                 />
               </>

@@ -57,11 +57,11 @@ export default function CreateBlogForm() {
               imageUrl = url;
             }
 
-            const newBlog = await createBlog({
+            const blog = await createBlog({
               ...values,
               image: imageUrl,
             });
-            router.replace(`/dashboard/${newBlog.slug}`);
+            router.replace(`/dashboard/${blog.slug}`);
           } catch (error) {
             if (error instanceof ResponseError) {
               if (error.response.status === 409) {

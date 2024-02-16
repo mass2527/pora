@@ -7,7 +7,7 @@ import prisma from "~/lib/prisma";
 import { createArticleSchema } from "~/lib/validations/article";
 
 export async function POST(
-  req: Request,
+  request: Request,
   { params }: { params: { blogId: string } }
 ) {
   try {
@@ -16,7 +16,7 @@ export async function POST(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const json = await req.json();
+    const body = await request.json();
     const {
       categoryId,
       slug,
@@ -27,8 +27,8 @@ export async function POST(
       draftJsonContent,
       htmlContent,
       status,
-    } = createArticleSchema.parse(json);
-    const newArticle = await prisma.article.create({
+    } = createArticleSchema.parse(body);
+    const article = await prisma.article.create({
       data: {
         categoryId,
         slug,
@@ -43,7 +43,7 @@ export async function POST(
       },
     });
 
-    return new Response(JSON.stringify(newArticle));
+    return new Response(JSON.stringify(article));
   } catch (error) {
     if (error instanceof ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });

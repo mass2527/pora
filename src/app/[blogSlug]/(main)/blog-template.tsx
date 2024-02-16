@@ -5,7 +5,7 @@ import { formatDate } from "~/lib/utils";
 import UserAvatar from "~/components/user-avatar";
 import Nav from "~/components/nav";
 
-export default function BlogPageTemplate({
+export default function BlogTemplate({
   params,
   title,
   blog,
@@ -22,8 +22,8 @@ export default function BlogPageTemplate({
     };
   }>;
 }) {
-  const allCategories = [{ name: "모든 아티클", slug: "" }, ...blog.categories];
-  const links = allCategories.map((category) => {
+  const categories = [{ name: "모든 아티클", slug: "" }, ...blog.categories];
+  const links = categories.map((category) => {
     let href = `/${params.blogSlug}`;
     if (category.slug !== "") {
       href += `/category/${category.slug}`;

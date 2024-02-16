@@ -72,11 +72,11 @@ export default function UpdateBlogArticleForm({
           className="flex flex-col gap-2"
           onSubmit={form.handleSubmit(async (values) => {
             try {
-              let newImageUrl: string | undefined;
+              let imageUrl: string | undefined;
               const imageFile = values.image;
               if (imageFile) {
                 const { url } = await uploadFile(imageFile);
-                newImageUrl = url;
+                imageUrl = url;
               }
 
               await updateBlogArticle(article.blogId, article.id, {
@@ -87,12 +87,12 @@ export default function UpdateBlogArticleForm({
                 jsonContent: article.jsonContent,
                 draftJsonContent: article.jsonContent,
                 status: ArticleStatus.PUBLISHED,
-                image: newImageUrl ?? article.image ? null : undefined,
+                image: imageUrl ?? article.image ? null : undefined,
               });
 
-              const hasDeleted = !newImageUrl && article.image;
+              const hasDeleted = !imageUrl && article.image;
               const hasUpdated =
-                newImageUrl && article.image && newImageUrl !== article.image;
+                imageUrl && article.image && imageUrl !== article.image;
               if ((hasDeleted || hasUpdated) && article.image) {
                 deleteFile(article.image);
               }

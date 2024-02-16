@@ -6,7 +6,7 @@ import prisma from "~/lib/prisma";
 import { updateBlogSchema } from "~/lib/validations/blog";
 
 export async function PATCH(
-  req: Request,
+  request: Request,
   { params }: { params: { blogId: string } }
 ) {
   try {
@@ -15,19 +15,20 @@ export async function PATCH(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const json = await req.json();
-    const { name, description, image } = updateBlogSchema.parse(json);
-    const updatedBlog = await prisma.blog.update({
+    const body = await request.json();
+    const { name, description, slug, image } = updateBlogSchema.parse(body);
+    const blog = await prisma.blog.update({
       where: {
         id: params.blogId,
       },
       data: {
         name,
         description,
+        slug,
         image,
       },
     });
-    return new Response(JSON.stringify(updatedBlog));
+    return new Response(JSON.stringify(blog));
   } catch (error) {
     if (error instanceof ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
@@ -44,7 +45,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: { blogId: string } }
 ) {
   try {
@@ -53,12 +54,12 @@ export async function DELETE(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const deletedBlog = await prisma.blog.delete({
+    const blog = await prisma.blog.delete({
       where: {
         id: params.blogId,
       },
     });
-    return new Response(JSON.stringify(deletedBlog));
+    return new Response(JSON.stringify(blog));
   } catch (error) {
     return new Response(null, { status: 500 });
   }

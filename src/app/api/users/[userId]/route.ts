@@ -4,7 +4,7 @@ import prisma from "~/lib/prisma";
 import { updateUserSchema } from "~/lib/validations/user";
 
 export async function PATCH(
-  req: Request,
+  request: Request,
   { params }: { params: { userId: string } }
 ) {
   try {
@@ -13,8 +13,8 @@ export async function PATCH(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const json = await req.json();
-    const { name, image, jobPosition } = updateUserSchema.parse(json);
+    const body = await request.json();
+    const { name, image, jobPosition } = updateUserSchema.parse(body);
     const updatedUser = await prisma.user.update({
       where: {
         id: params.userId,

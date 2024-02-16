@@ -9,7 +9,7 @@ import {
 } from "~/lib/validations/category";
 
 export async function POST(
-  req: Request,
+  request: Request,
   { params }: { params: { blogId: string } }
 ) {
   try {
@@ -18,14 +18,14 @@ export async function POST(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const json = await req.json();
-    const { name, slug } = createCategorySchema.parse(json);
+    const body = await request.json();
+    const { name, slug } = createCategorySchema.parse(body);
     const categoryCount = await prisma.category.count({
       where: {
         blogId: params.blogId,
       },
     });
-    const newCategory = await prisma.category.create({
+    const category = await prisma.category.create({
       data: {
         name,
         slug,
@@ -34,7 +34,7 @@ export async function POST(
       },
     });
 
-    return new Response(JSON.stringify(newCategory));
+    return new Response(JSON.stringify(category));
   } catch (error) {
     if (error instanceof ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
@@ -51,7 +51,7 @@ export async function POST(
 }
 
 export async function PATCH(
-  req: Request,
+  request: Request,
   { params }: { params: { blogId: string } }
 ) {
   try {
@@ -72,8 +72,8 @@ export async function PATCH(
       return new Response("Not found", { status: 404 });
     }
 
-    const json = await req.json();
-    const categories = updateCategoriesSchema.parse(json);
+    const body = await request.json();
+    const categories = updateCategoriesSchema.parse(body);
     const updatedCategories = await prisma.$transaction(
       categories.map((category) => {
         return prisma.category.update({

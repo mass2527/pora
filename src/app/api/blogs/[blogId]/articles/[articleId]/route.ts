@@ -6,7 +6,7 @@ import prisma from "~/lib/prisma";
 import { updateArticleSchema } from "~/lib/validations/article";
 
 export async function PATCH(
-  req: Request,
+  request: Request,
   { params }: { params: { blogId: string; articleId: string } }
 ) {
   try {
@@ -15,7 +15,7 @@ export async function PATCH(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const json = await req.json();
+    const body = await request.json();
     const {
       categoryId,
       slug,
@@ -27,8 +27,8 @@ export async function PATCH(
       htmlContent,
       status,
       image,
-    } = updateArticleSchema.parse(json);
-    const updatedArticle = await prisma.article.update({
+    } = updateArticleSchema.parse(body);
+    const article = await prisma.article.update({
       where: {
         id: params.articleId,
         blog: {
@@ -48,7 +48,7 @@ export async function PATCH(
         image,
       },
     });
-    return new Response(JSON.stringify(updatedArticle));
+    return new Response(JSON.stringify(article));
   } catch (error) {
     if (error instanceof ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });
@@ -69,7 +69,7 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  req: Request,
+  request: Request,
   { params }: { params: { blogId: string; articleId: string } }
 ) {
   try {
@@ -78,7 +78,7 @@ export async function DELETE(
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const deletedArticle = await prisma.article.delete({
+    const article = await prisma.article.delete({
       where: {
         id: params.articleId,
         blog: {
@@ -86,7 +86,7 @@ export async function DELETE(
         },
       },
     });
-    return new Response(JSON.stringify(deletedArticle));
+    return new Response(JSON.stringify(article));
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === PRISMA_ERROR_CODES.DEPENDENT_RECORDS_NOT_FOUND) {

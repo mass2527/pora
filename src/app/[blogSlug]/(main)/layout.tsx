@@ -28,6 +28,6 @@ export async function generateMetadata({
   };
 }
 
-export default function BlogMainLayout({ children }: { children: ReactNode }) {
+export default function BlogLayout({ children }: { children: ReactNode }) {
   return children;
 }

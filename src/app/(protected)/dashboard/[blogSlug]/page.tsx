@@ -17,7 +17,7 @@ import BlogArticleRowAction from "./blog-article-row-action";
 import CreateBlogArticleButton from "./create-blog-article-button";
 import { getUser } from "~/lib/auth";
 
-export default async function BlogPage({
+export default async function BlogArticlesPage({
   params,
 }: {
   params: { blogSlug: string };

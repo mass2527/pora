@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import React from "react";
 import prisma from "~/lib/prisma";
-import BlogPageTemplate from "../(main)/blog-page-template";
+import BlogTemplate from "./blog-template";
 
 export default async function BlogPage({
   params,
@@ -30,5 +30,5 @@ export default async function BlogPage({
     notFound();
   }
 
-  return <BlogPageTemplate params={params} title="모든 아티클" blog={blog} />;
+  return <BlogTemplate params={params} title="모든 아티클" blog={blog} />;
 }

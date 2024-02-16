@@ -6,26 +6,26 @@ import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import { createBlogSchema } from "~/lib/validations/blog";
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
     const user = await getUser();
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const json = await req.json();
-    const { name, slug, description, image } = createBlogSchema.parse(json);
-    const newBlog = await prisma.blog.create({
+    const body = await request.json();
+    const { name, slug, description, image } = createBlogSchema.parse(body);
+    const blog = await prisma.blog.create({
       data: {
+        userId: user.id,
         name,
         slug,
         description,
-        userId: user.id,
         image,
       },
     });
 
-    return new Response(JSON.stringify(newBlog));
+    return new Response(JSON.stringify(blog));
   } catch (error) {
     if (error instanceof ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 });

@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import prisma from "~/lib/prisma";
-import BlogPageTemplate from "../../blog-page-template";
+import BlogTemplate from "../../blog-template";
 
-export default async function BlogInCategoryPage({
+export default async function BlogPage({
   params,
 }: {
   params: { blogSlug: string; categorySlug: string };
@@ -46,5 +46,5 @@ export default async function BlogInCategoryPage({
     notFound();
   }
 
-  return <BlogPageTemplate params={params} title={category.name} blog={blog} />;
+  return <BlogTemplate params={params} title={category.name} blog={blog} />;
 }

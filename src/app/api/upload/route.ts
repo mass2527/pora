@@ -1,7 +1,7 @@
 import { del, put } from "@vercel/blob";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return new Response(
       "Missing BLOB_READ_WRITE_TOKEN. Don't forget to add that to your .env file.",
@@ -11,9 +11,9 @@ export async function POST(req: Request) {
     );
   }
 
-  const file = req.body || "";
-  const filename = req.headers.get("x-vercel-filename") || "file.txt";
-  const contentType = req.headers.get("content-type") || "text/plain";
+  const file = request.body || "";
+  const filename = request.headers.get("x-vercel-filename") || "file.txt";
+  const contentType = request.headers.get("content-type") || "text/plain";
   const fileType = `.${contentType.split("/")[1]}`;
 
   // construct final filename based on content-type if not provided
