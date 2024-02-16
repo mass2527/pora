@@ -33,9 +33,9 @@ import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { deleteFile, uploadFile } from "~/services/file";
 import { updateBlogArticle } from "~/services/blog/article";
-import { blogArticleSchema } from "~/lib/validations/article";
+import { updateBlogArticleSchema } from "~/lib/validations/article";
 
-const schema = blogArticleSchema.extend({
+const schema = updateBlogArticleSchema.extend({
   image: imageFileSchema.optional(),
 });
 
