@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 
 import prisma from "~/lib/prisma";
-import BlogNav from "./blog-nav";
+import BlogMenu from "./blog-menu";
 import RootNav from "./root-nav";
 import UserAccountMenu from "./dashboard/user-account-menu";
 import PoraLogo from "~/components/pora-logo";
@@ -36,7 +36,7 @@ export default async function ProtectedLayout({
 
           <div className="flex items-center">
             <SelectedBlogLink blogs={blogs} />
-            <BlogNav blogs={blogs} />
+            <BlogMenu blogs={blogs} />
           </div>
         </div>
 

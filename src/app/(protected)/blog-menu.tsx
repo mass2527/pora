@@ -16,7 +16,7 @@ import {
 import { cn } from "~/lib/utils";
 import useSelectedBlog from "./use-selected-blog";
 
-export default function BlogNav({ blogs }: { blogs: Blog[] }) {
+export default function BlogMenu({ blogs }: { blogs: Blog[] }) {
   const selectedBlog = useSelectedBlog(blogs);
   if (!selectedBlog) {
     return null;
