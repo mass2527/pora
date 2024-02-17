@@ -34,6 +34,7 @@ import SingleImageUploader from "~/components/single-image-uploader";
 import { deleteFile, uploadFile } from "~/services/file";
 import { updateBlogArticle } from "~/services/blog/article";
 import { updateArticleSchema } from "~/lib/validations/article";
+import { tsFetch } from "~/lib/ts-fetch";
 
 const schema = updateArticleSchema.extend({
   image: imageFileSchema.optional(),
@@ -96,6 +97,20 @@ export default function UpdateBlogArticleForm({
               if ((hasDeleted || hasUpdated) && article.image) {
                 deleteFile(article.image);
               }
+
+              const res = await tsFetch("/api/google/indexing", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  url: `${process.env.NEXTAUTH_URL}/blog/${article.blog}/article/${article.slug}`,
+                  type: "URL_UPDATED",
+                }),
+              });
+
+              console.info(res);
+
               router.replace(`/dashboard/${article.blog.slug}`);
             } catch (error) {
               if (error instanceof ResponseError) {
