@@ -104,7 +104,7 @@ export default function UpdateBlogArticleForm({
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  url: `${process.env.NEXTAUTH_URL}/blog/${article.blog}/article/${article.slug}`,
+                  url: `https://${process.env.NEXT_PUBLIC_DOMAIN_NAME}/blog/${article.blog.slug}/article/${article.slug}`,
                   type: "URL_UPDATED",
                 }),
               });
