@@ -13,26 +13,47 @@ export async function generateMetadata({
   params,
 }: {
   params: { blogSlug: string; articleSlug: string };
-}): Promise<Metadata> {
+}): Promise<Metadata | undefined> {
   const article = await prisma.article.findFirst({
     where: {
-      blog: {
-        slug: params.blogSlug,
-      },
       slug: params.articleSlug,
+      blog: { slug: params.blogSlug },
+    },
+    include: {
+      blog: {
+        include: { user: true },
+      },
+      category: true,
     },
   });
   if (!article) {
-    notFound();
+    return;
   }
 
+  const { title, description, image, createdAt, updatedAt } = article;
+  const ogImage =
+    image ??
+    `${process.env.NEXTAUTH_URL}/og?blogSlug=${params.blogSlug}&articleSlug=${params.articleSlug}`;
+
   return {
-    title: article.title,
-    description: article.description,
+    title,
+    description,
     openGraph: {
-      title: article.title,
-      description: article.description ?? undefined,
-      images: article.image ?? undefined,
+      title,
+      description: description ?? undefined,
+      type: "article",
+      publishedTime: createdAt.toISOString(),
+      modifiedTime: updatedAt.toISOString(),
+      authors: article.blog.user.name ? [article.blog.user.name] : undefined,
+      section: article.category?.name,
+      url: `${process.env.NEXTAUTH_URL}/blog/${params.blogSlug}/article/${params.articleSlug}`,
+      images: [ogImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: description ?? undefined,
+      images: [ogImage],
     },
   };
 }
