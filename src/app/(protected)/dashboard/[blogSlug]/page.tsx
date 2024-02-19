@@ -16,6 +16,7 @@ import { cn, formatDate } from "~/lib/utils";
 import BlogArticleRowAction from "./blog-article-row-action";
 import CreateBlogArticleButton from "./create-blog-article-button";
 import { getUser } from "~/lib/auth";
+import { Badge } from "~/components/ui/badge";
 
 export default async function BlogArticlesPage({
   params,
@@ -109,7 +110,9 @@ function BlogArticlesTable({
                   ]
                 }
               </TableCell>
-              <TableCell>{article.category?.name}</TableCell>
+              <TableCell>
+                <Badge>{article.category?.name}</Badge>
+              </TableCell>
               <TableCell>{article.slug}</TableCell>
               <TableCell>{formatDate(article.createdAt)}</TableCell>
               <TableCell>
