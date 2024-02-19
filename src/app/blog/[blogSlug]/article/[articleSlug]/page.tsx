@@ -152,7 +152,7 @@ function WrittenBy({ user }: { user: User }) {
   return (
     <div className="flex flex-col gap-4">
       <span className="text-sm text-zinc-500">작성자</span>
-      <div className="flex gap-4">
+      <div className="flex gap-2 items-center">
         <UserAvatar user={user} className="w-8 h-8" />
         <div className="flex flex-col">
           <span className="text-sm text-foreground font-semibold">
