@@ -7,6 +7,7 @@ import { Toaster } from "~/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXTAUTH_URL!),
   title: "Pora",
   description: "블로그를 생성하고 생각과 경험을 공유하세요.",
   verification: {
