@@ -3,7 +3,7 @@
 import { Prisma } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -12,15 +12,15 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "~/components/ui/dropdown-menu";
-import { handleError } from "~/lib/errors";
-import { deleteBlogArticle } from "~/services/blog/article";
+import { handleError, throwServerError } from "~/lib/errors";
+import { deleteArticle } from "./actions";
 
 export default function BlogArticleRowAction({
   article,
 }: {
   article: Prisma.ArticleGetPayload<{ include: { blog: true } }>;
 }) {
-  const router = useRouter();
+  const path = usePathname();
 
   return (
     <DropdownMenu>
@@ -43,8 +43,10 @@ export default function BlogArticleRowAction({
         <DropdownMenuItem
           onClick={async () => {
             try {
-              await deleteBlogArticle(article.blogId, article.id);
-              router.refresh();
+              const response = await deleteArticle(article.id, path);
+              if (response.status === "failure") {
+                throwServerError(response);
+              }
             } catch (error) {
               handleError(error);
             }

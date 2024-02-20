@@ -22,17 +22,3 @@ export async function createBlogArticle(
 
   return response.json();
 }
-
-export async function deleteBlogArticle(
-  blogId: string,
-  articleId: string
-): Promise<Article> {
-  const response = await tsFetch(`/api/blogs/${blogId}/articles/${articleId}`, {
-    method: "DELETE",
-  });
-  if (!response.ok) {
-    throw new ResponseError("Bad fetch response", response);
-  }
-
-  return response.json();
-}
