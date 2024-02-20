@@ -6,8 +6,8 @@ import AlertDialog from "~/components/alert-dialog";
 
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
-import { handleError } from "~/lib/errors";
-import { deleteBlog } from "~/services/blog";
+import { handleError, throwServerError } from "~/lib/errors";
+import { deleteBlog } from "../actions";
 
 export default function DeleteBlogButton({ blogId }: { blogId: string }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +31,11 @@ export default function DeleteBlogButton({ blogId }: { blogId: string }) {
             event.preventDefault();
             try {
               setIsLoading(true);
-              await deleteBlog(blogId);
+              const response = await deleteBlog(blogId);
+              if (response.status === "failure") {
+                throwServerError(response);
+              }
+
               router.replace("/dashboard");
             } catch (error) {
               handleError(error);
