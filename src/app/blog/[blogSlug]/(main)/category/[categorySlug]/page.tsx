@@ -17,6 +17,9 @@ export default async function BlogPage({
           category: {
             slug: params.categorySlug,
           },
+          status: {
+            equals: "PUBLISHED",
+          },
         },
         orderBy: {
           createdAt: "desc",

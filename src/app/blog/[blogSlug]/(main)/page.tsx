@@ -23,6 +23,11 @@ export default async function BlogPage({
         orderBy: {
           createdAt: "desc",
         },
+        where: {
+          status: {
+            equals: "PUBLISHED",
+          },
+        },
       },
     },
   });
