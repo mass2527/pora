@@ -1,24 +1,24 @@
 "use client";
 
 import { User } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { deleteFile, uploadFile } from "~/services/file";
 import { Loading } from "~/components/ui/loading";
 import UserAvatar from "~/components/user-avatar";
-import { handleError } from "~/lib/errors";
+import { handleError, throwServerError } from "~/lib/errors";
 import { cn } from "~/lib/utils";
-import { updateUser } from "~/services/user";
+import { updateUser } from "./actions";
 
 export default function UpdateUserImage({
   user,
 }: {
   user: Pick<User, "image" | "id" | "name">;
 }) {
-  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div>
@@ -55,13 +55,20 @@ export default function UpdateUserImage({
 
           try {
             setIsLoading(true);
+            const prevUserImage = user.image;
             const { url } = await uploadFile(file);
-            await updateUser(user.id, { image: url });
-            if (user.image) {
-              deleteFile(user.image);
+            const response = await updateUser(
+              user.id,
+              { image: url },
+              pathname
+            );
+            if (response.status === "failure") {
+              throwServerError(response);
             }
 
-            router.refresh();
+            if (prevUserImage) {
+              deleteFile(prevUserImage);
+            }
             toast.success("이미지가 수정되었어요.");
           } catch (error) {
             handleError(error);

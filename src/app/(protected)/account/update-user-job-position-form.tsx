@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -17,9 +17,9 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { handleError } from "~/lib/errors";
+import { handleError, throwServerError } from "~/lib/errors";
 import { updateUserSchema } from "~/lib/validations/user";
-import { updateUser } from "~/services/user";
+import { updateUser } from "./actions";
 
 export default function UpdateUserJobPositionForm({
   user,
@@ -32,7 +32,7 @@ export default function UpdateUserJobPositionForm({
       jobPosition: user.jobPosition ?? "",
     },
   });
-  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <Form {...form}>
@@ -40,12 +40,12 @@ export default function UpdateUserJobPositionForm({
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
           try {
-            const updatedUser = await updateUser(user.id, values);
-            router.refresh();
+            const response = await updateUser(user.id, values, pathname);
+            if (response.status === "failure") {
+              throwServerError(response);
+            }
+
             toast.success("사용자 직책이 수정되었어요.");
-            form.reset({
-              jobPosition: updatedUser.jobPosition ?? "",
-            });
           } catch (error) {
             handleError(error);
           }
@@ -60,7 +60,6 @@ export default function UpdateUserJobPositionForm({
               <FormControl>
                 <Input {...field} />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}

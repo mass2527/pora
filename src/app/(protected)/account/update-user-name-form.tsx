@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -17,10 +17,10 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { handleError } from "~/lib/errors";
+import { handleError, throwServerError } from "~/lib/errors";
 
 import { updateUserSchema } from "~/lib/validations/user";
-import { updateUser } from "~/services/user";
+import { updateUser } from "./actions";
 
 export default function UpdateUserNameForm({
   user,
@@ -33,7 +33,7 @@ export default function UpdateUserNameForm({
       name: user.name ?? "",
     },
   });
-  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <Form {...form}>
@@ -41,13 +41,12 @@ export default function UpdateUserNameForm({
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
           try {
-            const updatedUser = await updateUser(user.id, values);
+            const response = await updateUser(user.id, values, pathname);
+            if (response.status === "failure") {
+              throwServerError(response);
+            }
 
-            router.refresh();
             toast.success("사용자 이름이 수정되었어요.");
-            form.reset({
-              name: updatedUser.name ?? "",
-            });
           } catch (error) {
             handleError(error);
           }

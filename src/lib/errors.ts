@@ -12,7 +12,7 @@ export class ResponseError extends Error {
 
 export function throwServerError(
   response: Extract<ServerActionResponse, { status: "failure" }>
-) {
+): never {
   throw new ServerError(response.error.message, {
     status: response.error.status,
     data: response.error.data,
