@@ -26,14 +26,14 @@ import {
 } from "~/components/ui/select";
 import { imageFileSchema } from "~/lib/validations/common";
 import CreateBlogCategoryButton from "../../categories/create-blog-category-button";
-import { ResponseError, handleError } from "~/lib/errors";
+import { ServerError, handleError, throwServerError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 import FormSubmitButton from "~/components/form-submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { deleteFile, uploadFile } from "~/services/file";
-import { updateBlogArticle } from "~/services/blog/article";
 import { updateArticleSchema } from "~/lib/validations/article";
+import { updateArticle } from "./actions";
 
 const schema = updateArticleSchema.extend({
   image: imageFileSchema.optional(),
@@ -79,7 +79,7 @@ export default function UpdateBlogArticleForm({
                 imageUrl = url;
               }
 
-              await updateBlogArticle(article.blogId, article.id, {
+              const response = await updateArticle(article.id, {
                 ...values,
                 title: article.title,
                 draftTitle: article.title,
@@ -89,6 +89,9 @@ export default function UpdateBlogArticleForm({
                 status: ArticleStatus.PUBLISHED,
                 image: imageUrl ?? article.image ? null : undefined,
               });
+              if (response.status === "failure") {
+                throwServerError(response);
+              }
 
               const hasDeleted = !imageUrl && article.image;
               const hasUpdated =
@@ -98,8 +101,8 @@ export default function UpdateBlogArticleForm({
               }
               router.replace(`/dashboard/${article.blog.slug}`);
             } catch (error) {
-              if (error instanceof ResponseError) {
-                if (error.response.status === 409) {
+              if (error instanceof ServerError) {
+                if (error.status === 409) {
                   form.setError("slug", {
                     message: `이미 존재하는 슬러그입니다.`,
                   });

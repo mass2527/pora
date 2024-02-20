@@ -1,7 +1,7 @@
 "use client";
 
 import { Prisma } from "@prisma/client";
-import { handleError } from "~/lib/errors";
+import { handleError, throwServerError } from "~/lib/errors";
 import { Input } from "~/components/ui/input";
 import Editor from "~/components/editor";
 import { ReactNode, useEffect, useRef, useState } from "react";
@@ -11,8 +11,7 @@ import UpdateBlogArticleForm from "./update-blog-article-form";
 import { Button } from "~/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import Switch from "~/components/switch";
-import { useRouter } from "next/navigation";
-import { updateBlogArticle } from "~/services/blog/article";
+import { updateArticle } from "./actions";
 
 export default function EditBlogArticle({
   blogArticle,
@@ -34,7 +33,6 @@ export default function EditBlogArticle({
   const [step, setStep] = useState<"제목 및 내용 입력" | "메타 정보 입력">(
     "제목 및 내용 입력"
   );
-  const router = useRouter();
 
   useEffect(() => {
     const isLatest =
@@ -44,23 +42,26 @@ export default function EditBlogArticle({
       return;
     }
 
-    async function save() {
+    async function saveDraft() {
       try {
         setSaveStatus("임시 저장중...");
-        await updateBlogArticle(blogArticle.blogId, blogArticle.id, {
+        const response = await updateArticle(blogArticle.id, {
           draftTitle: debouncedValues.title,
           draftJsonContent: debouncedValues.jsonContent,
         });
+        if (response.status === "failure") {
+          throwServerError(response);
+        }
+
         setSaveStatus("임시 저장됨");
         latestValuesRef.current = debouncedValues;
-        router.refresh();
       } catch (error) {
         setSaveStatus("임시 저장 실패");
         handleError(error);
       }
     }
-    save();
-  }, [blogArticle.blogId, blogArticle.id, debouncedValues, router]);
+    saveDraft();
+  }, [blogArticle.id, debouncedValues]);
 
   return (
     <div>

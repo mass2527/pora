@@ -39,7 +39,6 @@ export async function updateUser(
       data: updatedUser,
     };
   } catch (error) {
-    console.error(error);
     return {
       status: "failure",
       error: {
