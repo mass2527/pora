@@ -1,7 +1,6 @@
 import { ArticleStatus, Prisma } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import { buttonVariants } from "~/components/ui/button";
 import {
   Table,
@@ -18,6 +17,7 @@ import CreateBlogArticleButton from "./create-blog-article-button";
 import { getUser } from "~/lib/auth";
 import { Badge } from "~/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { EmptyPlaceholder } from "~/components/empty-placeholder";
 
 const articleStatuses = {
   PUBLISHED: "발행됨",
@@ -43,8 +43,8 @@ export default async function BlogArticlesPage({
     include: {
       articles: {
         include: {
-          category: true,
           blog: true,
+          category: true,
         },
       },
     },
@@ -53,6 +53,14 @@ export default async function BlogArticlesPage({
     notFound();
   }
 
+  const articles = blog.articles;
+  const writingArticles = blog.articles.filter(
+    (article) => article.status === "WRITING"
+  );
+  const publishedArticles = blog.articles.filter(
+    (article) => article.status === "PUBLISHED"
+  );
+
   return (
     <div className="min-h-screen p-4 flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -60,45 +68,46 @@ export default async function BlogArticlesPage({
         <CreateBlogArticleButton blog={blog} />
       </div>
 
-      <Tabs defaultValue={ArticleStatus.WRITING} className="w-[400px]">
-        <TabsList>
-          <TabsTrigger value={ArticleStatus.WRITING}>
-            {articleStatuses[ArticleStatus.WRITING]}
-          </TabsTrigger>
-          <TabsTrigger value={ArticleStatus.PUBLISHED}>
-            {articleStatuses[ArticleStatus.PUBLISHED]}
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value={ArticleStatus.WRITING}></TabsContent>
-        <TabsContent value={ArticleStatus.PUBLISHED}></TabsContent>
-      </Tabs>
-
-      {blog.articles.length > 0 ? (
-        <BlogArticlesTable blog={blog} />
-      ) : (
+      {articles.length === 0 ? (
         <EmptyPlaceholder
           title="아직 아무 글도 쓰지 않았어요."
           description="생각과 경험을 공유하고 블로그를 더 풍부하게 만들어보세요."
           action={<CreateBlogArticleButton blog={blog} />}
         />
+      ) : (
+        <Tabs defaultValue={ArticleStatus.WRITING}>
+          <TabsList>
+            <TabsTrigger value={ArticleStatus.WRITING}>
+              {articleStatuses[ArticleStatus.WRITING]}
+            </TabsTrigger>
+            <TabsTrigger value={ArticleStatus.PUBLISHED}>
+              {articleStatuses[ArticleStatus.PUBLISHED]}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value={ArticleStatus.WRITING}>
+            <BlogArticlesTable articles={writingArticles} />
+          </TabsContent>
+          <TabsContent value={ArticleStatus.PUBLISHED}>
+            <BlogArticlesTable articles={publishedArticles} />
+          </TabsContent>
+        </Tabs>
       )}
     </div>
   );
 }
 
 function BlogArticlesTable({
-  blog,
+  articles,
 }: {
-  blog: Prisma.BlogGetPayload<{
-    include: { articles: { include: { category: true; blog: true } } };
-  }>;
+  articles: Prisma.ArticleGetPayload<{
+    include: { blog: true; category: true };
+  }>[];
 }) {
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead>제목</TableHead>
-          <TableHead>상태</TableHead>
           <TableHead>카테고리</TableHead>
           <TableHead>슬러그</TableHead>
           <TableHead>작성일</TableHead>
@@ -106,13 +115,13 @@ function BlogArticlesTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {blog.articles.map((article) => {
+        {articles.map((article) => {
           const title =
             article.status === "PUBLISHED" ? (
               <Link
                 target="_blank"
                 className={cn(buttonVariants({ variant: "link" }), "p-0")}
-                href={`/blog/${blog.slug}/article/${article.slug}`}
+                href={`/blog/${article.blog.slug}/article/${article.slug}`}
               >
                 {article.title}
               </Link>
@@ -123,7 +132,6 @@ function BlogArticlesTable({
           return (
             <TableRow key={article.id}>
               <TableCell>{title}</TableCell>
-              <TableCell>{articleStatuses[article.status]}</TableCell>
               <TableCell>
                 {article.category?.name && (
                   <Badge>{article.category?.name}</Badge>
