@@ -2,7 +2,7 @@
 
 import { Category } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -32,14 +32,17 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { ResponseError, handleError } from "~/lib/errors";
+import {
+  ResponseError,
+  ServerError,
+  handleError,
+  throwServerError,
+} from "~/lib/errors";
 import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
-import {
-  deleteBlogCategory,
-  updateBlogCategory,
-} from "~/services/blog/category";
+import { updateBlogCategory } from "~/services/blog/category";
 import { updateCategorySchema } from "~/lib/validations/category";
+import { deleteCategory } from "./actions";
 
 export default function BlogCategoryRowAction({
   category,
@@ -55,6 +58,7 @@ export default function BlogCategoryRowAction({
       slug: category.slug,
     },
   });
+  const pathname = usePathname();
 
   return (
     <>
@@ -80,11 +84,13 @@ export default function BlogCategoryRowAction({
           <DropdownMenuItem
             onClick={async () => {
               try {
-                await deleteBlogCategory(category.blogId, category.id);
-                router.refresh();
+                const response = await deleteCategory(category.id, pathname);
+                if (response.status === "failure") {
+                  throwServerError(response);
+                }
               } catch (error) {
-                if (error instanceof ResponseError) {
-                  if (error.response.status === 409) {
+                if (error instanceof ServerError) {
+                  if (error.status === 409) {
                     toast.error(
                       "해당 카테고리에 연관된 아티클이 있어 카테고리를 삭제할 수 없어요."
                     );

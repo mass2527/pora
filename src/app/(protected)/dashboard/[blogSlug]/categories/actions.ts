@@ -83,3 +83,89 @@ export async function createBlogCategory(
     };
   }
 }
+
+export async function deleteCategory(
+  categoryId: string,
+  path: string
+): Promise<ServerActionResponse<Category>> {
+  try {
+    const user = await getUser();
+    if (!user) {
+      return {
+        status: "failure",
+        error: {
+          message: "Unauthorized",
+          status: 401,
+        },
+      };
+    }
+
+    const articleCount = await prisma.article.count({
+      where: {
+        categoryId: categoryId,
+      },
+    });
+    if (articleCount > 0) {
+      return {
+        status: "failure",
+        error: {
+          message: "Conflict",
+          status: 409,
+        },
+      };
+    }
+
+    const categoryToDelete = await prisma.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+    if (!categoryToDelete) {
+      return {
+        status: "failure",
+        error: {
+          message: "Not found",
+          status: 404,
+        },
+      };
+    }
+
+    const category = await prisma.$transaction(async (tx) => {
+      await tx.category.updateMany({
+        where: {
+          orderIndex: {
+            gt: categoryToDelete.orderIndex,
+          },
+        },
+        data: {
+          orderIndex: {
+            decrement: 1,
+          },
+        },
+      });
+
+      const category = await tx.category.delete({
+        where: {
+          id: categoryId,
+        },
+      });
+
+      return category;
+    });
+
+    revalidatePath(path);
+
+    return {
+      status: "success",
+      data: category,
+    };
+  } catch (error) {
+    return {
+      status: "failure",
+      error: {
+        message: "Unknown",
+        status: 500,
+      },
+    };
+  }
+}

@@ -46,20 +46,3 @@ export async function updateBlogCategory(
 
   return response.json();
 }
-
-export async function deleteBlogCategory(
-  blogId: string,
-  categoryId: string
-): Promise<Category> {
-  const response = await tsFetch(
-    `/api/blogs/${blogId}/categories/${categoryId}`,
-    {
-      method: "DELETE",
-    }
-  );
-  if (!response.ok) {
-    throw new ResponseError("Bad fetch response", response);
-  }
-
-  return response.json();
-}
