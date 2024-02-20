@@ -8,7 +8,10 @@ import { z } from "zod";
 import { getUser } from "~/lib/auth";
 import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
-import { createCategorySchema } from "~/lib/validations/category";
+import {
+  createCategorySchema,
+  updateCategorySchema,
+} from "~/lib/validations/category";
 
 export type ServerActionResponse<T = unknown> =
   | {
@@ -160,6 +163,60 @@ export async function deleteCategory(
       data: category,
     };
   } catch (error) {
+    return {
+      status: "failure",
+      error: {
+        message: "Unknown",
+        status: 500,
+      },
+    };
+  }
+}
+
+export async function updateCategory(
+  categoryId: string,
+  values: z.infer<typeof updateCategorySchema>,
+  path: string
+): Promise<ServerActionResponse<Category>> {
+  try {
+    const user = await getUser();
+    if (!user) {
+      return {
+        status: "failure",
+        error: {
+          message: "Unauthorized",
+          status: 401,
+        },
+      };
+    }
+
+    const category = await prisma.category.update({
+      where: {
+        id: categoryId,
+      },
+      data: values,
+    });
+    revalidatePath(path);
+
+    return {
+      status: "success",
+      data: category,
+    };
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      // name or slug conflict
+      if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED) {
+        return {
+          status: "failure",
+          error: {
+            message: "Unique constraint failed",
+            data: error.meta,
+            status: 409,
+          },
+        };
+      }
+    }
+
     return {
       status: "failure",
       error: {

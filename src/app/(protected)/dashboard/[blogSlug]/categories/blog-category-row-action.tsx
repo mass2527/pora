@@ -2,7 +2,7 @@
 
 import { Category } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -32,24 +32,17 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import {
-  ResponseError,
-  ServerError,
-  handleError,
-  throwServerError,
-} from "~/lib/errors";
+import { ServerError, handleError, throwServerError } from "~/lib/errors";
 import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
-import { updateBlogCategory } from "~/services/blog/category";
 import { updateCategorySchema } from "~/lib/validations/category";
-import { deleteCategory } from "./actions";
+import { deleteCategory, updateCategory } from "./actions";
 
 export default function BlogCategoryRowAction({
   category,
 }: {
   category: Category;
 }) {
-  const router = useRouter();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const form = useForm<z.infer<typeof updateCategorySchema>>({
     resolver: zodResolver(updateCategorySchema),
@@ -117,28 +110,20 @@ export default function BlogCategoryRowAction({
               className="flex flex-col gap-2"
               onSubmit={form.handleSubmit(async (values) => {
                 try {
-                  updateBlogCategory(category.blogId, category.id, values);
-                  setIsEditDialogOpen(false);
-                  router.refresh();
-                } catch (error) {
-                  if (error instanceof ResponseError) {
-                    if (error.response.status === 409) {
-                      const json = (await error.response.json()) as {
-                        target: [
-                          string,
-                          keyof z.infer<typeof updateCategorySchema>
-                        ];
-                      };
-                      const [, name] = json.target;
+                  const response = await updateCategory(
+                    category.id,
+                    values,
+                    pathname
+                  );
+                  if (response.status === "failure") {
+                    throwServerError(response);
+                  }
 
-                      form.setError(name, {
-                        message: `이미 존재하는 ${
-                          {
-                            name: "이름",
-                            slug: "슬러그",
-                          }[name]
-                        }입니다.`,
-                      });
+                  setIsEditDialogOpen(false);
+                } catch (error) {
+                  if (error instanceof ServerError) {
+                    if (error.status === 409) {
+                      toast.error("이름 또는 슬러그가 이미 존재해요.");
                       return;
                     }
                   }

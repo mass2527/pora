@@ -2,10 +2,7 @@ import { Category } from "@prisma/client";
 import { z } from "zod";
 import { ResponseError } from "~/lib/errors";
 import { tsFetch } from "~/lib/ts-fetch";
-import {
-  updateCategoriesSchema,
-  updateCategorySchema,
-} from "~/lib/validations/category";
+import { updateCategoriesSchema } from "~/lib/validations/category";
 
 export async function updateBlogCategories(
   blogId: string,
@@ -20,28 +17,6 @@ export async function updateBlogCategories(
   });
   if (!response.ok) {
     throw new ResponseError("Bad fetch request", response);
-  }
-
-  return response.json();
-}
-
-export async function updateBlogCategory(
-  blogId: string,
-  categoryId: string,
-  values: z.infer<typeof updateCategorySchema>
-): Promise<Category> {
-  const response = await tsFetch(
-    `/api/blogs/${blogId}/categories/${categoryId}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    }
-  );
-  if (!response.ok) {
-    throw new ResponseError("Bad fetch response", response);
   }
 
   return response.json();
