@@ -14,12 +14,12 @@ import {
 
 import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
-import { handleError } from "~/lib/errors";
-import { useRouter } from "next/navigation";
+import { handleError, throwServerError } from "~/lib/errors";
+import { usePathname } from "next/navigation";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { imageFileSchema } from "~/lib/validations/common";
 import { deleteFile, uploadFile } from "~/services/file";
-import { updateBlog } from "~/services/blog";
+import { updateBlog } from "./actions";
 
 const schema = z.object({
   image: imageFileSchema.optional(),
@@ -29,7 +29,7 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
-  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <Form {...form}>
@@ -44,9 +44,16 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
           }
 
           try {
-            await updateBlog(blog.id, {
-              image: imageUrl ?? (blog.image ? null : undefined),
-            });
+            const response = await updateBlog(
+              blog.id,
+              {
+                image: imageUrl ?? (blog.image ? null : undefined),
+              },
+              pathname
+            );
+            if (response.status === "failure") {
+              throwServerError(response);
+            }
 
             const hasDeleted = !imageUrl && blog.image;
             const hasUpdated =
@@ -55,7 +62,6 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
               deleteFile(blog.image);
             }
 
-            router.refresh();
             toast.success("이미지가 수정되었어요.");
           } catch (error) {
             handleError(error);

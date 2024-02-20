@@ -15,9 +15,9 @@ import { Input } from "~/components/ui/input";
 import { updateBlogSchema } from "~/lib/validations/blog";
 import { toast } from "sonner";
 import FormSubmitButton from "~/components/form-submit-button";
-import { handleError } from "~/lib/errors";
-import { useRouter } from "next/navigation";
-import { updateBlog } from "~/services/blog";
+import { handleError, throwServerError } from "~/lib/errors";
+import { usePathname } from "next/navigation";
+import { updateBlog } from "./actions";
 
 export default function UpdateBlogDescriptionForm({ blog }: { blog: Blog }) {
   const form = useForm<z.infer<typeof updateBlogSchema>>({
@@ -26,7 +26,7 @@ export default function UpdateBlogDescriptionForm({ blog }: { blog: Blog }) {
       description: blog.description ?? "",
     },
   });
-  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <Form {...form}>
@@ -34,8 +34,11 @@ export default function UpdateBlogDescriptionForm({ blog }: { blog: Blog }) {
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
           try {
-            await updateBlog(blog.id, values);
-            router.refresh();
+            const response = await updateBlog(blog.id, values, pathname);
+            if (response.status === "failure") {
+              throwServerError(response);
+            }
+
             toast.success("설명이 수정되었어요.");
           } catch (error) {
             handleError(error);
