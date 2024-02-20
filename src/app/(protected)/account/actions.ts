@@ -1,7 +1,7 @@
 "use server";
 
 import { User } from "@prisma/client";
-import { ServerActionResponse } from "../dashboard/[blogSlug]/categories/actions";
+import { ServerActionResponse } from "~/types";
 import { getUser } from "~/lib/auth";
 import { updateUserSchema } from "~/lib/validations/user";
 import { z } from "zod";

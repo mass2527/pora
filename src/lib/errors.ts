@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { ServerActionResponse } from "~/app/(protected)/dashboard/[blogSlug]/categories/actions";
+import { ServerActionResponse } from "~/types";
 
 export function throwServerError(
   response: Extract<ServerActionResponse, { status: "failure" }>

@@ -4,7 +4,7 @@ import { Blog } from "@prisma/client";
 import { z } from "zod";
 import { getUser } from "~/lib/auth";
 import { updateBlogSchema } from "~/lib/validations/blog";
-import { ServerActionResponse } from "../categories/actions";
+import { ServerActionResponse } from "~/types";
 import prisma from "~/lib/prisma";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { PRISMA_ERROR_CODES } from "~/lib/constants";

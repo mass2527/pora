@@ -1,7 +1,7 @@
 "use server";
 
 import { Blog } from "@prisma/client";
-import { ServerActionResponse } from "../[blogSlug]/categories/actions";
+import { ServerActionResponse } from "~/types";
 import { createBlogSchema } from "~/lib/validations/blog";
 import { z } from "zod";
 import prisma from "~/lib/prisma";

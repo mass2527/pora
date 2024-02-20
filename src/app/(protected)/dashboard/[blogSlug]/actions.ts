@@ -1,7 +1,7 @@
 "use server";
 
 import { Article, Blog } from "@prisma/client";
-import { ServerActionResponse } from "./categories/actions";
+import { ServerActionResponse } from "~/types";
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { revalidatePath } from "next/cache";

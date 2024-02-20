@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { ArticleStatus, Prisma } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
@@ -17,6 +17,13 @@ import BlogArticleRowAction from "./blog-article-row-action";
 import CreateBlogArticleButton from "./create-blog-article-button";
 import { getUser } from "~/lib/auth";
 import { Badge } from "~/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+
+const articleStatuses = {
+  PUBLISHED: "발행됨",
+  WRITING: "작성중",
+  HIDDEN: "숨겨짐",
+};
 
 export default async function BlogArticlesPage({
   params,
@@ -52,6 +59,19 @@ export default async function BlogArticlesPage({
         <h1 className="text-2xl font-semibold tracking-tight">아티클</h1>
         <CreateBlogArticleButton blog={blog} />
       </div>
+
+      <Tabs defaultValue={ArticleStatus.WRITING} className="w-[400px]">
+        <TabsList>
+          <TabsTrigger value={ArticleStatus.WRITING}>
+            {articleStatuses[ArticleStatus.WRITING]}
+          </TabsTrigger>
+          <TabsTrigger value={ArticleStatus.PUBLISHED}>
+            {articleStatuses[ArticleStatus.PUBLISHED]}
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value={ArticleStatus.WRITING}></TabsContent>
+        <TabsContent value={ArticleStatus.PUBLISHED}></TabsContent>
+      </Tabs>
 
       {blog.articles.length > 0 ? (
         <BlogArticlesTable blog={blog} />
@@ -103,15 +123,11 @@ function BlogArticlesTable({
           return (
             <TableRow key={article.id}>
               <TableCell>{title}</TableCell>
+              <TableCell>{articleStatuses[article.status]}</TableCell>
               <TableCell>
-                {
-                  { PUBLISHED: "발행됨", WRITING: "작성중", HIDDEN: "숨겨짐" }[
-                    article.status
-                  ]
-                }
-              </TableCell>
-              <TableCell>
-                <Badge>{article.category?.name}</Badge>
+                {article.category?.name && (
+                  <Badge>{article.category?.name}</Badge>
+                )}
               </TableCell>
               <TableCell>{article.slug}</TableCell>
               <TableCell>{formatDate(article.createdAt)}</TableCell>

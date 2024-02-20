@@ -13,20 +13,7 @@ import {
   updateCategoriesSchema,
   updateCategorySchema,
 } from "~/lib/validations/category";
-
-export type ServerActionResponse<T = unknown> =
-  | {
-      status: "success";
-      data: T;
-    }
-  | {
-      status: "failure";
-      error: {
-        message: string;
-        status: number;
-        data?: unknown;
-      };
-    };
+import { ServerActionResponse } from "~/types";
 
 export async function createBlogCategory(
   blogId: string,
