@@ -9,11 +9,9 @@ import {
   DialogContent,
   DialogTitle,
 } from "~/components/ui/dialog";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
 import { Input } from "~/components/ui/input";
-import { ResponseError, handleError } from "~/lib/errors";
 import {
   Form,
   FormControl,
@@ -26,7 +24,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCategorySchema } from "~/lib/validations/category";
 import FormSubmitButton from "~/components/form-submit-button";
-import { createBlogCategory } from "~/services/blog/category";
+import { createBlogCategory } from "./actions";
+import { toast } from "sonner";
+import { ServerError, handleError, throwServerError } from "~/lib/errors";
+import { usePathname } from "next/navigation";
 
 export default function CreateBlogCategoryButton({
   blogId,
@@ -36,7 +37,6 @@ export default function CreateBlogCategoryButton({
   trigger?: ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
   const form = useForm<z.infer<typeof createCategorySchema>>({
     resolver: zodResolver(createCategorySchema),
     defaultValues: {
@@ -44,16 +44,7 @@ export default function CreateBlogCategoryButton({
       slug: "",
     },
   });
-
-  const {
-    reset,
-    formState: { isSubmitSuccessful },
-  } = form;
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
-    }
-  }, [isSubmitSuccessful, reset]);
+  const pathname = usePathname();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -68,28 +59,21 @@ export default function CreateBlogCategoryButton({
             className="flex flex-col gap-2"
             onSubmit={form.handleSubmit(async (values) => {
               try {
-                await createBlogCategory(blogId, values);
-                router.refresh();
+                const response = await createBlogCategory(
+                  blogId,
+                  values,
+                  pathname
+                );
+                if (response.status === "failure") {
+                  throwServerError(response);
+                }
+
+                form.reset();
                 setIsOpen(false);
               } catch (error) {
-                if (error instanceof ResponseError) {
-                  if (error.response.status === 409) {
-                    const json = (await error.response.json()) as {
-                      target: [
-                        string,
-                        keyof z.infer<typeof createCategorySchema>
-                      ];
-                    };
-                    const [, name] = json.target;
-
-                    form.setError(name, {
-                      message: `이미 존재하는 ${
-                        {
-                          name: "이름",
-                          slug: "슬러그",
-                        }[name]
-                      }입니다.`,
-                    });
+                if (error instanceof ServerError) {
+                  if (error.status === 409) {
+                    toast.error("이름 또는 슬러그가 이미 존재해요.");
                     return;
                   }
                 }

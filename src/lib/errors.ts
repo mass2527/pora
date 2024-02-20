@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { ServerActionResponse } from "~/app/(protected)/dashboard/[blogSlug]/categories/actions";
 
 export class ResponseError extends Error {
   response: Response;
@@ -9,11 +10,31 @@ export class ResponseError extends Error {
   }
 }
 
+export function throwServerError(
+  response: Extract<ServerActionResponse, { status: "failure" }>
+) {
+  throw new ServerError(response.error.message, {
+    status: response.error.status,
+    data: response.error.data,
+  });
+}
+
+export class ServerError<T> extends Error {
+  status: number;
+  data?: T;
+
+  constructor(message: string, { status, data }: { status: number; data?: T }) {
+    super(message);
+    this.status = status;
+    this.data = data;
+  }
+}
+
 export function handleError(error: unknown) {
   console.error(error);
 
-  if (error instanceof ResponseError) {
-    switch (error.response.status) {
+  if (error instanceof ServerError) {
+    switch (error.status) {
       case 401: {
         toast.error("로그인 후 다시 시도해 주세요.");
         return;

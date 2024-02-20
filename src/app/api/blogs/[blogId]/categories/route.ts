@@ -1,54 +1,7 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { ZodError } from "zod";
 import { getUser } from "~/lib/auth";
-import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
-import {
-  createCategorySchema,
-  updateCategoriesSchema,
-} from "~/lib/validations/category";
-
-export async function POST(
-  request: Request,
-  { params }: { params: { blogId: string } }
-) {
-  try {
-    const user = await getUser();
-    if (!user) {
-      return new Response("Unauthorized", { status: 401 });
-    }
-
-    const body = await request.json();
-    const { name, slug } = createCategorySchema.parse(body);
-    const categoryCount = await prisma.category.count({
-      where: {
-        blogId: params.blogId,
-      },
-    });
-    const category = await prisma.category.create({
-      data: {
-        name,
-        slug,
-        blogId: params.blogId,
-        orderIndex: categoryCount,
-      },
-    });
-
-    return new Response(JSON.stringify(category));
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return new Response(JSON.stringify(error.issues), { status: 422 });
-    }
-
-    if (error instanceof PrismaClientKnownRequestError) {
-      if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED) {
-        return new Response(JSON.stringify(error.meta), { status: 409 });
-      }
-    }
-
-    return new Response(null, { status: 500 });
-  }
-}
+import { updateCategoriesSchema } from "~/lib/validations/category";
 
 export async function PATCH(
   request: Request,
