@@ -10,6 +10,7 @@ import { PRISMA_ERROR_CODES } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import {
   createCategorySchema,
+  updateCategoriesSchema,
   updateCategorySchema,
 } from "~/lib/validations/category";
 
@@ -216,6 +217,52 @@ export async function updateCategory(
         };
       }
     }
+
+    return {
+      status: "failure",
+      error: {
+        message: "Unknown",
+        status: 500,
+      },
+    };
+  }
+}
+
+export async function updateCategories(
+  values: z.infer<typeof updateCategoriesSchema>,
+  path: string
+): Promise<ServerActionResponse<Category[]>> {
+  try {
+    const user = await getUser();
+    if (!user) {
+      return {
+        status: "failure",
+        error: {
+          message: "Unauthorized",
+          status: 401,
+        },
+      };
+    }
+
+    const updatedCategories = await prisma.$transaction(
+      values.map((category, index) => {
+        return prisma.category.update({
+          where: {
+            id: category.id,
+          },
+          data: {
+            orderIndex: index,
+          },
+        });
+      })
+    );
+
+    return {
+      status: "success",
+      data: updatedCategories,
+    };
+  } catch (error) {
+    revalidatePath(path);
 
     return {
       status: "failure",

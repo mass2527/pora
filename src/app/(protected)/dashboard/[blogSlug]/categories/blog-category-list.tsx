@@ -7,12 +7,13 @@ import { List, ListItem } from "~/components/ui/list";
 import { cn } from "~/lib/utils";
 import BlogCategoryRowAction from "./blog-category-row-action";
 import Link from "next/link";
-import { handleError } from "~/lib/errors";
+import { handleError, throwServerError } from "~/lib/errors";
 import { useAtom } from "jotai";
 import { blogOrderSaveStatusAtom } from "./blog-order-save-status-atom";
 import { useSortableList } from "~/hooks/use-sortable-list";
 import { useEffect } from "react";
-import { updateBlogCategories } from "~/services/blog/category";
+import { updateCategories } from "./actions";
+import { usePathname } from "next/navigation";
 
 export default function BlogCategoryList({
   blog,
@@ -22,6 +23,7 @@ export default function BlogCategoryList({
   }>;
 }) {
   const [saveStatus, setSaveStatus] = useAtom(blogOrderSaveStatusAtom);
+  const pathname = usePathname();
   const {
     sortableList: sortableCategories,
     setSortableList,
@@ -32,7 +34,11 @@ export default function BlogCategoryList({
     onSorted: async (sortedCategories) => {
       try {
         setSaveStatus("순서 변경중...");
-        await updateBlogCategories(blog.id, sortedCategories);
+        const response = await updateCategories(sortedCategories, pathname);
+        if (response.status === "failure") {
+          throwServerError(response);
+        }
+
         setSaveStatus("순서 변경됨");
       } catch (error) {
         setSaveStatus("순서 변경 실패");
