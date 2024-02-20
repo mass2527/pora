@@ -21,13 +21,13 @@ import {
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
-import { ResponseError, handleError } from "~/lib/errors";
+import { ServerError, handleError, throwServerError } from "~/lib/errors";
 import { blogSchema } from "~/lib/validations/blog";
 import {
   SLUG_STRING_REGEX_MESSAGE,
   imageFileSchema,
 } from "~/lib/validations/common";
-import { createBlog } from "~/services/blog";
+import { createBlog } from "./actions";
 
 const createBlogSchema = blogSchema.extend({
   image: imageFileSchema.optional(),
@@ -57,16 +57,21 @@ export default function CreateBlogForm() {
               imageUrl = url;
             }
 
-            const blog = await createBlog({
+            const response = await createBlog({
               ...values,
               image: imageUrl,
             });
+            if (response.status === "failure") {
+              throwServerError(response);
+            }
+
+            const blog = response.data;
             router.replace(`/dashboard/${blog.slug}`);
           } catch (error) {
-            if (error instanceof ResponseError) {
-              if (error.response.status === 409) {
+            if (error instanceof ServerError) {
+              if (error.status === 409) {
                 form.setError("slug", {
-                  message: "이미 존재하는 주소입니다.",
+                  message: "이미 존재하는 슬러그입니다.",
                 });
                 return;
               }
