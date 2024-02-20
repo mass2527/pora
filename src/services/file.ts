@@ -1,5 +1,5 @@
 import { PutBlobResult } from "@vercel/blob";
-import { ResponseError } from "~/lib/errors";
+import { ServerError } from "~/lib/errors";
 import { tsFetch } from "~/lib/ts-fetch";
 
 export async function uploadFile(file: File): Promise<PutBlobResult> {
@@ -13,13 +13,17 @@ export async function uploadFile(file: File): Promise<PutBlobResult> {
   });
   if (!response.ok) {
     if (response.status === 401) {
-      throw new ResponseError(
+      throw new ServerError(
         "`BLOB_READ_WRITE_TOKEN` environment variable not found.",
-        response
+        {
+          status: 401,
+        }
       );
     }
 
-    throw new ResponseError("Failed to upload file", response);
+    throw new ServerError("Failed to upload file", {
+      status: 500,
+    });
   }
 
   return response.json();

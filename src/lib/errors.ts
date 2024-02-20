@@ -1,15 +1,6 @@
 import { toast } from "sonner";
 import { ServerActionResponse } from "~/app/(protected)/dashboard/[blogSlug]/categories/actions";
 
-export class ResponseError extends Error {
-  response: Response;
-
-  constructor(message: string, response: Response) {
-    super(message);
-    this.response = response;
-  }
-}
-
 export function throwServerError(
   response: Extract<ServerActionResponse, { status: "failure" }>
 ): never {
