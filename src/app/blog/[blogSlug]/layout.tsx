@@ -50,7 +50,7 @@ export default async function BlogLayout({
 
   return (
     <div>
-      <div className="p-4 border-b sticky top-0 bg-background">
+      <div className="p-4 border-b sticky top-0 bg-background z-10">
         <Link
           href={`/blog/${params.blogSlug}`}
           className="text-xl font-semibold tracking-tight"
