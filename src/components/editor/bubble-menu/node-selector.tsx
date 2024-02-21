@@ -28,7 +28,7 @@ export const NodeSelector: FC<NodeSelectorProps> = ({
 }) => {
   const items: BubbleMenuItem[] = [
     {
-      name: "Text",
+      name: "텍스트",
       icon: TextIcon,
       command: () =>
         editor.chain().focus().toggleNode("paragraph", "paragraph").run(),
