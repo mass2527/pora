@@ -17,7 +17,7 @@ export function invariant(
 export function formatDate(
   date: Date,
   {
-    locales,
+    locales = "ko-KR",
     options,
   }: { locales?: string | string[]; options?: Intl.DateTimeFormatOptions } = {}
 ) {
