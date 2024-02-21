@@ -49,7 +49,8 @@ export async function deleteArticle(
 }
 
 export async function deleteBlog(
-  blogId: string
+  blogId: string,
+  path: string
 ): Promise<ServerActionResponse<Blog>> {
   try {
     const user = await getUser();
@@ -68,6 +69,7 @@ export async function deleteBlog(
         id: blogId,
       },
     });
+    revalidatePath(path);
 
     return {
       status: "success",

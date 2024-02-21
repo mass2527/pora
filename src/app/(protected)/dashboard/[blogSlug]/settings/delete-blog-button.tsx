@@ -31,7 +31,7 @@ export default function DeleteBlogButton({ blogId }: { blogId: string }) {
             event.preventDefault();
             try {
               setIsLoading(true);
-              const response = await deleteBlog(blogId);
+              const response = await deleteBlog(blogId, "/dashboard");
               if (response.status === "failure") {
                 throwServerError(response);
               }
