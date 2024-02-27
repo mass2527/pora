@@ -102,7 +102,7 @@ export default function CreateBlogForm() {
             <FormItem>
               <FormLabel>슬러그*</FormLabel>
               <div className="flex items-center gap-1">
-                <span className="text-sm text-zinc-500">
+                <span className="text-sm text-zinc-500 whitespace-nowrap">
                   {process.env.NEXT_PUBLIC_DOMAIN_NAME}/
                 </span>
                 <FormControl>
