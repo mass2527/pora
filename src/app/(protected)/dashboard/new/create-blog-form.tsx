@@ -106,7 +106,7 @@ export default function CreateBlogForm() {
                   {process.env.NEXT_PUBLIC_DOMAIN_NAME}/
                 </span>
                 <FormControl>
-                  <Input placeholder="your-blog-slug" {...field} />
+                  <Input placeholder="my-blog-slug" {...field} />
                 </FormControl>
               </div>
               <FormDescription>{SLUG_STRING_REGEX_MESSAGE}</FormDescription>
