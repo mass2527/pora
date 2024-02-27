@@ -1,7 +1,7 @@
 "use server";
 
 import { Blog } from "@prisma/client";
-import { z } from "zod";
+import { ZodError, z } from "zod";
 import { getUser } from "~/lib/auth";
 import { updateBlogSchema } from "~/lib/validations/blog";
 import { ServerActionResponse } from "~/types";
@@ -31,12 +31,23 @@ export async function updateBlog(
       where: {
         id: blogId,
       },
-      data: values,
+      data: updateBlogSchema.parse(values),
     });
     revalidatePath(path);
 
     return { status: "success", data: blog };
   } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        status: "failure",
+        error: {
+          message: "Invalid data",
+          status: 422,
+          data: error.issues,
+        },
+      };
+    }
+
     if (error instanceof PrismaClientKnownRequestError) {
       // slug conflicts
       if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED) {

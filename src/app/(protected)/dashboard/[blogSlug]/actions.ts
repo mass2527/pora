@@ -6,7 +6,7 @@ import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { createArticleSchema } from "~/lib/validations/article";
-import { z } from "zod";
+import { ZodError, z } from "zod";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { PRISMA_ERROR_CODES } from "~/lib/constants";
 
@@ -105,7 +105,7 @@ export async function createArticle(
 
     const article = await prisma.article.create({
       data: {
-        ...values,
+        ...createArticleSchema.parse(values),
         blogId,
       },
     });
@@ -116,6 +116,17 @@ export async function createArticle(
       data: article,
     };
   } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        status: "failure",
+        error: {
+          message: "Invalid data",
+          status: 422,
+          data: error.issues,
+        },
+      };
+    }
+
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED) {
         return {

@@ -3,7 +3,7 @@
 import { Blog } from "@prisma/client";
 import { ServerActionResponse } from "~/types";
 import { createBlogSchema } from "~/lib/validations/blog";
-import { z } from "zod";
+import { ZodError, z } from "zod";
 import prisma from "~/lib/prisma";
 import { getUser } from "~/lib/auth";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -27,12 +27,23 @@ export async function createBlog(
     const blog = await prisma.blog.create({
       data: {
         userId: user.id,
-        ...values,
+        ...createBlogSchema.parse(values),
       },
     });
 
     return { status: "success", data: blog };
   } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        status: "failure",
+        error: {
+          message: "Invalid data",
+          status: 422,
+          data: error.issues,
+        },
+      };
+    }
+
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED) {
         return {

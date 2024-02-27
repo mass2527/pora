@@ -3,7 +3,7 @@
 import { Category } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
+import { ZodError, z } from "zod";
 
 import { getUser } from "~/lib/auth";
 import { PRISMA_ERROR_CODES } from "~/lib/constants";
@@ -39,7 +39,7 @@ export async function createBlogCategory(
     });
     const category = await prisma.category.create({
       data: {
-        ...values,
+        ...createCategorySchema.parse(values),
         blogId,
         orderIndex: categoryCount,
       },
@@ -52,6 +52,17 @@ export async function createBlogCategory(
       data: category,
     };
   } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        status: "failure",
+        error: {
+          message: "Invalid data",
+          status: 422,
+          data: error.issues,
+        },
+      };
+    }
+
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED) {
         return {

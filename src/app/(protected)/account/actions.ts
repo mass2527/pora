@@ -4,7 +4,7 @@ import { User } from "@prisma/client";
 import { ServerActionResponse } from "~/types";
 import { getUser } from "~/lib/auth";
 import { updateUserSchema } from "~/lib/validations/user";
-import { z } from "zod";
+import { ZodError, z } from "zod";
 import prisma from "~/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -29,7 +29,7 @@ export async function updateUser(
       where: {
         id: userId,
       },
-      data: values,
+      data: updateUserSchema.parse(values),
     });
 
     revalidatePath(path);
@@ -39,6 +39,17 @@ export async function updateUser(
       data: updatedUser,
     };
   } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        status: "failure",
+        error: {
+          message: "Invalid data",
+          status: 422,
+          data: error.issues,
+        },
+      };
+    }
+
     return {
       status: "failure",
       error: {

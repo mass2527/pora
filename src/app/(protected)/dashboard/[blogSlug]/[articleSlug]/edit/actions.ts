@@ -1,6 +1,6 @@
 "use server";
 
-import { z } from "zod";
+import { ZodError, z } from "zod";
 import { getUser } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { updateArticleSchema } from "~/lib/validations/article";
@@ -29,13 +29,24 @@ export async function updateArticle(
       where: {
         id: articleId,
       },
-      data: values,
+      data: updateArticleSchema.parse(values),
     });
     return {
       status: "success",
       data: article,
     };
   } catch (error) {
+    if (error instanceof ZodError) {
+      return {
+        status: "failure",
+        error: {
+          message: "Invalid data",
+          status: 422,
+          data: error.issues,
+        },
+      };
+    }
+
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === PRISMA_ERROR_CODES.UNIQUE_CONSTRAINT_FAILED) {
         return {
