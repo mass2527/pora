@@ -122,7 +122,7 @@ export default function CreateBlogForm() {
             <FormItem>
               <FormLabel>설명</FormLabel>
               <FormControl>
-                <Textarea autoFocus className="resize-none" {...field} />
+                <Textarea className="resize-none" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
