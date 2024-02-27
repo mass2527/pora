@@ -3,21 +3,17 @@ import { ArrowLeft } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import React from "react";
+import React, { cache } from "react";
 import { Badge } from "~/components/ui/badge";
 import UserAvatar from "~/components/user-avatar";
 import prisma from "~/lib/prisma";
 import { formatDate } from "~/lib/utils";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { blogSlug: string; articleSlug: string };
-}): Promise<Metadata | undefined> {
+const getArticle = cache(async (blogSlug: string, articleSlug: string) => {
   const article = await prisma.article.findFirst({
     where: {
-      slug: params.articleSlug,
-      blog: { slug: params.blogSlug },
+      slug: articleSlug,
+      blog: { slug: blogSlug },
     },
     include: {
       blog: {
@@ -26,6 +22,15 @@ export async function generateMetadata({
       category: true,
     },
   });
+  return article;
+});
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { blogSlug: string; articleSlug: string };
+}): Promise<Metadata | undefined> {
+  const article = await getArticle(params.blogSlug, params.articleSlug);
   if (!article) {
     return;
   }
@@ -63,22 +68,7 @@ export default async function BlogArticlePage({
 }: {
   params: { blogSlug: string; articleSlug: string };
 }) {
-  const article = await prisma.article.findFirst({
-    where: {
-      blog: {
-        slug: params.blogSlug,
-      },
-      slug: params.articleSlug,
-    },
-    include: {
-      category: true,
-      blog: {
-        include: {
-          user: true,
-        },
-      },
-    },
-  });
+  const article = await getArticle(params.blogSlug, params.articleSlug);
 
   if (!article || article.status !== "PUBLISHED") {
     notFound();

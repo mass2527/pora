@@ -1,19 +1,24 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import React, { ReactNode } from "react";
+import React, { ReactNode, cache } from "react";
 import prisma from "~/lib/prisma";
+
+const getBlog = cache(async (blogSlug: string) => {
+  const blog = await prisma.blog.findUnique({
+    where: {
+      slug: blogSlug,
+    },
+  });
+  return blog;
+});
 
 export async function generateMetadata({
   params,
 }: {
   params: { blogSlug: string };
 }): Promise<Metadata> {
-  const blog = await prisma.blog.findUnique({
-    where: {
-      slug: params.blogSlug,
-    },
-  });
+  const blog = await getBlog(params.blogSlug);
   if (!blog) {
     notFound();
   }
@@ -39,11 +44,7 @@ export default async function BlogLayout({
   params: { blogSlug: string };
   children: ReactNode;
 }) {
-  const blog = await prisma.blog.findUnique({
-    where: {
-      slug: params.blogSlug,
-    },
-  });
+  const blog = await getBlog(params.blogSlug);
   if (!blog) {
     notFound();
   }
