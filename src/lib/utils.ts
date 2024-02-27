@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import { notFound } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -46,4 +47,19 @@ export function getUrlFromString(str: string) {
   } catch (e) {
     return null;
   }
+}
+export async function ifNullable<T>(
+  promise: Promise<T>,
+  onNullable: () => never
+) {
+  const data = await promise;
+  if (!data) {
+    onNullable();
+  }
+
+  return data;
+}
+
+export function renderNotFoundIfNullable<T>(promise: Promise<T>) {
+  return ifNullable(promise, () => notFound());
 }

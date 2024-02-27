@@ -1,6 +1,6 @@
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import BlogCategoryList from "./blog-category-list";
-import { getBlog } from "./get-blog";
+import { getBlogOrRenderNotFoundPage } from "./get-blog";
 import CreateBlogCategoryButton from "./create-blog-category-button";
 
 export async function BlogCategories({
@@ -10,7 +10,7 @@ export async function BlogCategories({
   userId: string;
   blogSlug: string;
 }) {
-  const blog = await getBlog(userId, blogSlug);
+  const blog = await getBlogOrRenderNotFoundPage(userId, blogSlug);
 
   return blog.categories.length > 0 ? (
     <BlogCategoryList blog={blog} />

@@ -7,8 +7,9 @@ import { assertAuthenticated } from "~/lib/asserts";
 import { Suspense } from "react";
 import Await from "~/components/await";
 import { Button } from "~/components/ui/button";
-import { getBlog } from "./get-blog";
+
 import { BlogCategories } from "./blog-categories";
+import { getBlogOrRenderNotFoundPage } from "./get-blog";
 
 export default async function BlogCategoriesPage({
   params,
@@ -26,7 +27,9 @@ export default async function BlogCategoriesPage({
           <BlogOrderSaveStatus />
         </div>
         <Suspense fallback={<Button disabled>새 카테고리</Button>}>
-          <Await promise={getBlog(user.id, params.blogSlug)}>
+          <Await
+            promise={getBlogOrRenderNotFoundPage(user.id, params.blogSlug)}
+          >
             {(blog) => <CreateBlogCategoryButton blogId={blog.id} />}
           </Await>
         </Suspense>
