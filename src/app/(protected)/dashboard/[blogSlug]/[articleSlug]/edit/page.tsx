@@ -1,8 +1,11 @@
 import prisma from "~/lib/prisma";
-import { notFound } from "next/navigation";
-import EditBlogArticle from "./edit-blog-article";
 import { getUser } from "~/lib/auth";
 import { assertAuthenticated } from "~/lib/asserts";
+import EditBlogArticle from "./edit-blog-article";
+import Await from "~/components/await";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export default async function EditBlogArticlePage({
   params,
@@ -12,7 +15,7 @@ export default async function EditBlogArticlePage({
   const user = await getUser();
   assertAuthenticated(user);
 
-  const article = await prisma.article.findFirst({
+  const articlePromise = prisma.article.findFirst({
     where: {
       slug: params.articleSlug,
       blog: {
@@ -28,14 +31,21 @@ export default async function EditBlogArticlePage({
       },
     },
   });
-  if (!article) {
-    notFound();
-  }
 
   return (
     <div className="p-4">
       <div className="max-w-[720px] mx-auto">
-        <EditBlogArticle blogArticle={article} />
+        <Suspense fallback={<Skeleton className="h-[652px]" />}>
+          <Await promise={articlePromise}>
+            {(article) => {
+              if (!article) {
+                notFound();
+              }
+
+              return <EditBlogArticle blogArticle={article} />;
+            }}
+          </Await>
+        </Suspense>
       </div>
     </div>
   );

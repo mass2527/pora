@@ -3,8 +3,7 @@
 import { Prisma } from "@prisma/client";
 import { handleError, throwServerError } from "~/lib/errors";
 import { Input } from "~/components/ui/input";
-import Editor from "~/components/editor";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, Suspense, lazy, useEffect, useRef, useState } from "react";
 import { useDebounce } from "~/hooks/use-debounce";
 import { Badge } from "~/components/ui/badge";
 import UpdateBlogArticleForm from "./update-blog-article-form";
@@ -12,6 +11,9 @@ import { Button } from "~/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import Switch from "~/components/switch";
 import { updateArticle } from "./actions";
+import { Skeleton } from "~/components/ui/skeleton";
+
+const Editor = lazy(() => import("~/components/editor"));
 
 export default function EditBlogArticle({
   blogArticle,
@@ -87,17 +89,19 @@ export default function EditBlogArticle({
                   }}
                 />
 
-                <Editor
-                  content={JSON.parse(values.jsonContent)}
-                  onUpdate={({ editor }) => {
-                    setSaveStatus("");
-                    setValues({
-                      ...values,
-                      htmlContent: editor.getHTML(),
-                      jsonContent: JSON.stringify(editor.getJSON()),
-                    });
-                  }}
-                />
+                <Suspense fallback={<Skeleton className="h-[500px]" />}>
+                  <Editor
+                    content={JSON.parse(values.jsonContent)}
+                    onUpdate={({ editor }) => {
+                      setSaveStatus("");
+                      setValues({
+                        ...values,
+                        htmlContent: editor.getHTML(),
+                        jsonContent: JSON.stringify(editor.getJSON()),
+                      });
+                    }}
+                  />
+                </Suspense>
 
                 <Button
                   onClick={() => setStep("메타 정보 입력")}
