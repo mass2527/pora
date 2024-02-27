@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "./prisma";
+import { cache } from "react";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -55,14 +56,8 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export async function getSession() {
+export const getUser = cache(async () => {
   const session = await getServerSession(authOptions);
 
-  return session;
-}
-
-export async function getUser() {
-  const session = await getSession();
-
   return session?.user;
-}
+});
