@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import { buttonVariants } from "~/components/ui/button";
 import { List, ListItem } from "~/components/ui/list";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -52,5 +53,15 @@ export default async function BlogList({ userId }: { userId: string }) {
         );
       })}
     </List>
-  ) : null;
+  ) : (
+    <EmptyPlaceholder
+      title="생성된 블로그가 없어요."
+      description="새로운 블로그를 생성하고 아티클을 작성해 보세요."
+      action={
+        <Link href="/dashboard/new" className={buttonVariants()}>
+          블로그 생성
+        </Link>
+      }
+    />
+  );
 }
