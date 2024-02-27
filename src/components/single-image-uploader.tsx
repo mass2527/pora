@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import { ChangeEvent, useRef, useState } from "react";
 import { ACCEPTED_IMAGE_TYPES } from "~/lib/constants";
-import { invariant } from "~/lib/utils";
+import { assert } from "~/lib/utils";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import Image from "next/image";
@@ -73,7 +73,7 @@ export default function SingleImageUploader({
           variant="secondary"
           onClick={() => {
             const inputElement = inputRef.current;
-            invariant(inputElement);
+            assert(inputElement);
 
             inputElement.click();
           }}

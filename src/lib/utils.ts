@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function invariant(
+export function assert(
   condition: unknown,
   message?: string
 ): asserts condition {

@@ -1,12 +1,12 @@
 import { MetadataRoute } from "next";
 import prisma from "~/lib/prisma";
-import { invariant } from "~/lib/utils";
+import { assert } from "~/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXTAUTH_URL;
-  invariant(baseUrl);
+  assert(baseUrl);
 
   const [blogs, blogCategories, blogArticles] = await Promise.all([
     prisma.blog.findMany({

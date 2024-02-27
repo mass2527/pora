@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { invariant } from "~/lib/utils";
+import { assert } from "~/lib/utils";
 
 export function useSortableList<T, U extends HTMLElement>({
   initialSortableList,
@@ -34,7 +34,7 @@ export function useSortableList<T, U extends HTMLElement>({
             1
           )[0];
           dragStartIndexRef.current = -1;
-          invariant(targetCategory);
+          assert(targetCategory);
           sortableList.splice(index, 0, targetCategory);
           setSortableList([...sortableList]);
           onSorted([...sortableList]);

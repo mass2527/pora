@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet, EditorView } from "@tiptap/pm/view";
-import { invariant } from "~/lib/utils";
+import { assert } from "~/lib/utils";
 import { handleError } from "~/lib/errors";
 import { uploadFile } from "~/services/file";
 
@@ -107,7 +107,7 @@ export function startImageUpload(file: File, view: EditorView, pos: number) {
       // When BLOB_READ_WRITE_TOKEN is not valid or unavailable, read
       // the image locally
       const imageSrc = typeof src === "object" ? reader.result : src;
-      invariant(schema.nodes.image);
+      assert(schema.nodes.image);
       const node = schema.nodes.image.create({ src: imageSrc });
       const transaction = view.state.tr
         .replaceWith(pos, pos, node)
