@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, Suspense } from "react";
 import { getUser } from "~/lib/auth";
 import Link from "next/link";
 
@@ -9,6 +9,7 @@ import UserAccountMenu from "./dashboard/user-account-menu";
 import PoraLogo from "~/components/pora-logo";
 import SelectedBlogLink from "./selected-blog-link";
 import { assertAuthenticated } from "~/lib/asserts";
+import Await from "~/components/await";
 
 export default async function ProtectedLayout({
   children,
@@ -18,7 +19,7 @@ export default async function ProtectedLayout({
   const user = await getUser();
   assertAuthenticated(user);
 
-  const blogs = await prisma.blog.findMany({
+  const blogsPromise = prisma.blog.findMany({
     where: {
       userId: user.id,
     },
@@ -33,8 +34,18 @@ export default async function ProtectedLayout({
           </Link>
 
           <div className="flex items-center">
-            <SelectedBlogLink blogs={blogs} />
-            <BlogMenu blogs={blogs} />
+            <Suspense>
+              <Await promise={blogsPromise}>
+                {(blogs) => {
+                  return (
+                    <>
+                      <SelectedBlogLink blogs={blogs} />
+                      <BlogMenu blogs={blogs} />
+                    </>
+                  );
+                }}
+              </Await>
+            </Suspense>
           </div>
         </div>
 
