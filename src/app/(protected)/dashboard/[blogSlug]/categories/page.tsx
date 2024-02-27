@@ -6,6 +6,7 @@ import CreateBlogCategoryButton from "./create-blog-category-button";
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import BlogCategoryList from "./blog-category-list";
 import BlogOrderSaveStatus from "./blog-order-save-status";
+import { assertAuthenticated } from "~/lib/asserts";
 
 export default async function BlogCategoriesPage({
   params,
@@ -13,9 +14,7 @@ export default async function BlogCategoriesPage({
   params: { blogSlug: string };
 }) {
   const user = await getUser();
-  if (!user) {
-    notFound();
-  }
+  assertAuthenticated(user);
 
   const blog = await prisma.blog.findUnique({
     where: {

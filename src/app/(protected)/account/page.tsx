@@ -1,16 +1,14 @@
-import { notFound } from "next/navigation";
 import React from "react";
 import Card from "~/components/card";
 import { getUser } from "~/lib/auth";
 import UpdateUserNameForm from "./update-user-name-form";
 import UpdateUserJobPositionForm from "./update-user-job-position-form";
 import UpdateUserImage from "./update-user-image";
+import { assertAuthenticated } from "~/lib/asserts";
 
 export default async function AccountPage() {
   const user = await getUser();
-  if (!user) {
-    notFound();
-  }
+  assertAuthenticated(user);
 
   return (
     <div className="p-4 flex flex-col gap-4 min-h-screen">

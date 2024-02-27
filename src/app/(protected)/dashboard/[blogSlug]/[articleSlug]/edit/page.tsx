@@ -2,6 +2,7 @@ import prisma from "~/lib/prisma";
 import { notFound } from "next/navigation";
 import EditBlogArticle from "./edit-blog-article";
 import { getUser } from "~/lib/auth";
+import { assertAuthenticated } from "~/lib/asserts";
 
 export default async function EditBlogArticlePage({
   params,
@@ -9,9 +10,7 @@ export default async function EditBlogArticlePage({
   params: { blogSlug: string; articleSlug: string };
 }) {
   const user = await getUser();
-  if (!user) {
-    notFound();
-  }
+  assertAuthenticated(user);
 
   const article = await prisma.article.findFirst({
     where: {

@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import { getUser } from "~/lib/auth";
-import { notFound } from "next/navigation";
 import Link from "next/link";
 
 import prisma from "~/lib/prisma";
@@ -9,6 +8,7 @@ import RootNav from "./root-nav";
 import UserAccountMenu from "./dashboard/user-account-menu";
 import PoraLogo from "~/components/pora-logo";
 import SelectedBlogLink from "./selected-blog-link";
+import { assertAuthenticated } from "~/lib/asserts";
 
 export default async function ProtectedLayout({
   children,
@@ -16,9 +16,7 @@ export default async function ProtectedLayout({
   children: ReactNode;
 }) {
   const user = await getUser();
-  if (!user) {
-    notFound();
-  }
+  assertAuthenticated(user);
 
   const blogs = await prisma.blog.findMany({
     where: {

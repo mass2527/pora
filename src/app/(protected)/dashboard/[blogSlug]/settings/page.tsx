@@ -7,6 +7,7 @@ import UpdateBlogNameForm from "./update-blog-name-form";
 import Card from "~/components/card";
 import UpdateBlogDescriptionForm from "./update-blog-description-form";
 import UpdateBlogImageForm from "./update-blog-image-form";
+import { assertAuthenticated } from "~/lib/asserts";
 
 export default async function BlogSettingsPage({
   params,
@@ -14,9 +15,7 @@ export default async function BlogSettingsPage({
   params: { blogSlug: string };
 }) {
   const user = await getUser();
-  if (!user) {
-    notFound();
-  }
+  assertAuthenticated(user);
 
   const blog = await prisma.blog.findUnique({
     where: {

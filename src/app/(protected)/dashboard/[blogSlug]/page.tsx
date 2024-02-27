@@ -10,6 +10,7 @@ import Await from "~/components/await";
 import { Skeleton } from "~/components/ui/skeleton";
 import { BlogArticlesTable } from "./blog-articles-table";
 import { ifNullable } from "~/lib/promise";
+import { assertAuthenticated } from "~/lib/asserts";
 
 const articleStatuses = {
   PUBLISHED: "발행됨",
@@ -46,9 +47,7 @@ export default async function BlogArticlesPage({
   params: { blogSlug: string };
 }) {
   const user = await getUser();
-  if (!user) {
-    notFound();
-  }
+  assertAuthenticated(user);
 
   return (
     <div className="min-h-screen p-4 flex flex-col gap-4">
