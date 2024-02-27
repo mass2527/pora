@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 import { buttonVariants } from "~/components/ui/button";
 import { getUser } from "~/lib/auth";
-import BlogList, { EmptyBlogListPlaceholder } from "./blog-list";
+import BlogList, { BlogListPlaceholder } from "./blog-list";
 
 export default async function DashboardPage() {
   const user = await getUser();
@@ -19,7 +19,7 @@ export default async function DashboardPage() {
           블로그 생성
         </Link>
       </div>
-      <Suspense fallback={<EmptyBlogListPlaceholder />}>
+      <Suspense fallback={<BlogListPlaceholder />}>
         <BlogList userId={user.id} />
       </Suspense>
     </div>

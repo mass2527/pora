@@ -6,7 +6,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import prisma from "~/lib/prisma";
 import { cn } from "~/lib/utils";
 
-export function EmptyBlogListPlaceholder() {
+export function BlogListPlaceholder() {
   return (
     <List>
       <Skeleton className="h-[110px]" />
