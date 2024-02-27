@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 export async function ifNullable<T>(
   promise: Promise<T>,
   onNullable: () => never
@@ -8,4 +10,8 @@ export async function ifNullable<T>(
   }
 
   return data;
+}
+
+export function renderNotFoundIfNullable<T>(promise: Promise<T>) {
+  return ifNullable(promise, () => notFound());
 }
