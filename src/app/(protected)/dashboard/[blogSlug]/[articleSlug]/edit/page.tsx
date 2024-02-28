@@ -1,6 +1,5 @@
 import prisma from "~/lib/prisma";
-import { getUser } from "~/lib/auth";
-import { assertAuthenticated } from "~/lib/asserts";
+import { getAuthenticatedUserId } from "~/lib/auth";
 import EditBlogArticle from "./edit-blog-article";
 import Await from "~/components/await";
 import { notFound } from "next/navigation";
@@ -12,15 +11,13 @@ export default async function EditBlogArticlePage({
 }: {
   params: { blogSlug: string; articleSlug: string };
 }) {
-  const user = await getUser();
-  assertAuthenticated(user);
-
+  const userId = await getAuthenticatedUserId();
   const articlePromise = prisma.article.findFirst({
     where: {
       slug: params.articleSlug,
       blog: {
         slug: params.blogSlug,
-        userId: user.id,
+        userId,
       },
     },
     include: {

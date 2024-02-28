@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -21,12 +20,10 @@ import { handleError, throwServerError } from "~/lib/errors";
 
 import { updateUserSchema } from "~/lib/validations/user";
 import { updateUser } from "./actions";
+import { useAuthenticatedUser } from "~/lib/auth";
 
-export default function UpdateUserNameForm({
-  user,
-}: {
-  user: Pick<User, "name" | "id">;
-}) {
+export default function UpdateUserNameForm() {
+  const user = useAuthenticatedUser();
   const form = useForm<z.infer<typeof updateUserSchema>>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
@@ -41,7 +38,7 @@ export default function UpdateUserNameForm({
         className="flex flex-col gap-2"
         onSubmit={form.handleSubmit(async (values) => {
           try {
-            const response = await updateUser(user.id, values, pathname);
+            const response = await updateUser(values, pathname);
             if (response.status === "failure") {
               throwServerError(response);
             }

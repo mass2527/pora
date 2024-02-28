@@ -6,6 +6,7 @@ import UpdateBlogNameForm from "./update-blog-name-form";
 import UpdateBlogDescriptionForm from "./update-blog-description-form";
 import UpdateBlogImageForm from "./update-blog-image-form";
 import DeleteBlogButton from "./delete-blog-button";
+import { getAuthenticatedUserId } from "~/lib/auth";
 
 export function BlogFormsPlaceholder() {
   return (
@@ -17,13 +18,8 @@ export function BlogFormsPlaceholder() {
   );
 }
 
-export default async function BlogForms({
-  userId,
-  blogSlug,
-}: {
-  userId: string;
-  blogSlug: string;
-}) {
+export default async function BlogForms({ blogSlug }: { blogSlug: string }) {
+  const userId = await getAuthenticatedUserId();
   const blog = await prisma.blog.findUnique({
     where: {
       userId,

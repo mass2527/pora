@@ -1,6 +1,5 @@
 "use client";
 
-import { User } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -10,12 +9,10 @@ import UserAvatar from "~/components/user-avatar";
 import { handleError, throwServerError } from "~/lib/errors";
 import { cn } from "~/lib/utils";
 import { updateUser } from "./actions";
+import { useAuthenticatedUser } from "~/lib/auth";
 
-export default function UpdateUserImage({
-  user,
-}: {
-  user: Pick<User, "image" | "id" | "name">;
-}) {
+export default function UpdateUserImage() {
+  const user = useAuthenticatedUser();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
@@ -32,7 +29,7 @@ export default function UpdateUserImage({
         aria-label="사용자 이미지 변경"
       >
         <UserAvatar
-          user={user}
+          user={{ name: user.name ?? null, image: user.image ?? null }}
           className={cn("w-20 h-20", {
             "opacity-50": isLoading,
           })}
@@ -57,11 +54,7 @@ export default function UpdateUserImage({
             setIsLoading(true);
             const prevUserImage = user.image;
             const { url } = await uploadFile(file);
-            const response = await updateUser(
-              user.id,
-              { image: url },
-              pathname
-            );
+            const response = await updateUser({ image: url }, pathname);
             if (response.status === "failure") {
               throwServerError(response);
             }

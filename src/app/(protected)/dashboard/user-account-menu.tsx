@@ -1,6 +1,5 @@
 "use client";
 
-import { User } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
@@ -13,24 +12,26 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import UserAvatar from "~/components/user-avatar";
+import { useAuthenticatedUser } from "~/lib/auth";
 
-export default function UserAccountMenu({
-  user,
-}: {
-  user: Pick<User, "name" | "image" | "email">;
-}) {
+export default function UserAccountMenu() {
+  const user = useAuthenticatedUser();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button type="button" aria-label="메뉴 열기">
-          <UserAvatar user={user} className="w-8 h-8" />
+          <UserAvatar
+            user={{ name: user.name ?? null, image: user.image ?? null }}
+            className="w-8 h-8"
+          />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>
           <div className="flex flex-col font-normal">
             <span className="text-sm">{user.name}</span>
-            <span className="text-sm text-zinc-500">{user?.email}</span>
+            <span className="text-sm text-zinc-500">{user.email}</span>
           </div>
         </DropdownMenuLabel>{" "}
         <DropdownMenuSeparator />

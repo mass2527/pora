@@ -3,6 +3,7 @@ import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import { buttonVariants } from "~/components/ui/button";
 import { List, ListItem } from "~/components/ui/list";
 import { Skeleton } from "~/components/ui/skeleton";
+import { getAuthenticatedUserId } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { cn } from "~/lib/utils";
 
@@ -16,7 +17,8 @@ export function BlogListPlaceholder() {
   );
 }
 
-export default async function BlogList({ userId }: { userId: string }) {
+export default async function BlogList() {
+  const userId = await getAuthenticatedUserId();
   const blogs = await prisma.blog.findMany({
     where: {
       userId,

@@ -9,7 +9,6 @@ import prisma from "~/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export async function updateUser(
-  userId: string,
   values: z.infer<typeof updateUserSchema>,
   path: string
 ): Promise<ServerActionResponse<User>> {
@@ -27,7 +26,7 @@ export async function updateUser(
 
     const updatedUser = await prisma.user.update({
       where: {
-        id: userId,
+        id: user.id,
       },
       data: updateUserSchema.parse(values),
     });

@@ -1,12 +1,14 @@
+import { notFound } from "next/navigation";
 import { cache } from "react";
+import { getAuthenticatedUserId } from "~/lib/auth";
 import prisma from "~/lib/prisma";
-import { renderNotFoundIfNullable } from "~/lib/utils";
 
-const getBlog = cache(async (userId: string, blogSlug: string) => {
+export const getBlog = cache(async (blogSlug: string) => {
+  const userId = await getAuthenticatedUserId();
   const blog = await prisma.blog.findUnique({
     where: {
       slug: blogSlug,
-      userId: userId,
+      userId,
     },
     include: {
       articles: {
@@ -17,10 +19,9 @@ const getBlog = cache(async (userId: string, blogSlug: string) => {
       },
     },
   });
+  if (!blog) {
+    notFound();
+  }
 
   return blog;
 });
-
-export function getBlogOrRenderNotFoundPage(userId: string, blogSlug: string) {
-  return renderNotFoundIfNullable(getBlog(userId, blogSlug));
-}
