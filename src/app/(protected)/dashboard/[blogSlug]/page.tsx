@@ -40,7 +40,7 @@ export default async function BlogArticlesPage({
           </TabsTrigger>
         </TabsList>
         <TabsContent value={ArticleStatus.WRITING}>
-          <Suspense fallback={<BlogArticlesPlaceholder />}>
+          <Suspense fallback={<Skeleton className="h-16" />}>
             <Await promise={getBlog(params.blogSlug)}>
               {(blog) => {
                 const writingArticles = blog.articles.filter(
@@ -52,7 +52,7 @@ export default async function BlogArticlesPage({
           </Suspense>
         </TabsContent>
         <TabsContent value={ArticleStatus.PUBLISHED}>
-          <Suspense fallback={<BlogArticlesPlaceholder />}>
+          <Suspense fallback={<Skeleton className="h-16" />}>
             <Await promise={getBlog(params.blogSlug)}>
               {(blog) => {
                 const publishedArticles = blog.articles.filter(
@@ -66,8 +66,4 @@ export default async function BlogArticlesPage({
       </Tabs>
     </div>
   );
-}
-
-function BlogArticlesPlaceholder() {
-  return <Skeleton className="h-16" />;
 }

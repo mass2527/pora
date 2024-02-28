@@ -1,5 +1,4 @@
 import CreateBlogCategoryButton from "./create-blog-category-button";
-import { BlogCategoryListPlaceholder } from "./blog-category-list";
 import BlogOrderSaveStatus from "./blog-order-save-status";
 import { Suspense } from "react";
 import Await from "~/components/await";
@@ -7,6 +6,8 @@ import { Button } from "~/components/ui/button";
 
 import { BlogCategories } from "./blog-categories";
 import { getBlog } from "./get-blog";
+import { List } from "~/components/ui/list";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export default async function BlogCategoriesPage({
   params,
@@ -27,7 +28,13 @@ export default async function BlogCategoriesPage({
         </Suspense>
       </div>
 
-      <Suspense fallback={<BlogCategoryListPlaceholder />}>
+      <Suspense
+        fallback={
+          <List>
+            <Skeleton className="h-[90px]" />
+          </List>
+        }
+      >
         <BlogCategories blogSlug={params.blogSlug} />
       </Suspense>
     </div>

@@ -2,20 +2,9 @@ import Link from "next/link";
 import { EmptyPlaceholder } from "~/components/empty-placeholder";
 import { buttonVariants } from "~/components/ui/button";
 import { List, ListItem } from "~/components/ui/list";
-import { Skeleton } from "~/components/ui/skeleton";
 import { getAuthenticatedUserId } from "~/lib/auth";
 import prisma from "~/lib/prisma";
 import { cn } from "~/lib/utils";
-
-export function BlogListPlaceholder() {
-  return (
-    <List>
-      <Skeleton className="h-[110px]" />
-      <Skeleton className="h-[110px]" />
-      <Skeleton className="h-[110px]" />
-    </List>
-  );
-}
 
 export default async function BlogList() {
   const userId = await getAuthenticatedUserId();

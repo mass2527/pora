@@ -14,17 +14,6 @@ import { useSortableList } from "~/hooks/use-sortable-list";
 import { useEffect } from "react";
 import { updateCategories } from "./actions";
 import { usePathname } from "next/navigation";
-import { Skeleton } from "~/components/ui/skeleton";
-
-export function BlogCategoryListPlaceholder() {
-  return (
-    <List>
-      <Skeleton className="h-[90px]" />
-      <Skeleton className="h-[90px]" />
-      <Skeleton className="h-[90px]" />
-    </List>
-  );
-}
 
 export default function BlogCategoryList({
   blog,

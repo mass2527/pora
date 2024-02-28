@@ -13,11 +13,6 @@ import { cn, formatDate } from "~/lib/utils";
 import BlogArticleRowAction from "./blog-article-row-action";
 import Link from "next/link";
 import { Badge } from "~/components/ui/badge";
-import { Skeleton } from "~/components/ui/skeleton";
-
-export function BlogArticlesTablePlaceholder() {
-  return <Skeleton className="h-16" />;
-}
 
 export function BlogArticlesTable({
   articles,

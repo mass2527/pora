@@ -1,22 +1,11 @@
 import { notFound } from "next/navigation";
 import Card from "~/components/card";
-import { Skeleton } from "~/components/ui/skeleton";
 import prisma from "~/lib/prisma";
 import UpdateBlogNameForm from "./update-blog-name-form";
 import UpdateBlogDescriptionForm from "./update-blog-description-form";
 import UpdateBlogImageForm from "./update-blog-image-form";
 import DeleteBlogButton from "./delete-blog-button";
 import { getAuthenticatedUserId } from "~/lib/auth";
-
-export function BlogFormsPlaceholder() {
-  return (
-    <>
-      <Skeleton className="h-52" />
-      <Skeleton className="h-52" />
-      <Skeleton className="h-52" />
-    </>
-  );
-}
 
 export default async function BlogForms({ blogSlug }: { blogSlug: string }) {
   const userId = await getAuthenticatedUserId();

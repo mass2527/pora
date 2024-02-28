@@ -1,7 +1,9 @@
 import Link from "next/link";
 import React, { Suspense } from "react";
 import { buttonVariants } from "~/components/ui/button";
-import BlogList, { BlogListPlaceholder } from "./blog-list";
+import BlogList from "./blog-list";
+import { List } from "~/components/ui/list";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export default async function DashboardPage() {
   return (
@@ -12,7 +14,13 @@ export default async function DashboardPage() {
           블로그 생성
         </Link>
       </div>
-      <Suspense fallback={<BlogListPlaceholder />}>
+      <Suspense
+        fallback={
+          <List>
+            <Skeleton className="h-[110px]" />
+          </List>
+        }
+      >
         <BlogList />
       </Suspense>
     </div>
