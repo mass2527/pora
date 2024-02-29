@@ -11,11 +11,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Skeleton } from "~/components/ui/skeleton";
 import UserAvatar from "~/components/user-avatar";
-import { useAuthenticatedUser } from "~/lib/auth";
+import { useUser } from "~/lib/auth";
 
 export default function UserAccountMenu() {
-  const user = useAuthenticatedUser();
+  const user = useUser();
+  if (!user) {
+    return <Skeleton className="w-8 h-8 rounded-full" />;
+  }
 
   return (
     <DropdownMenu>

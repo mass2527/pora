@@ -79,12 +79,9 @@ export const getAuthenticatedUserId = cache(async () => {
   return user.id;
 });
 
-export function useAuthenticatedUser() {
+export function useUser() {
   const session = useSession();
   const user = session.data?.user;
-  if (!user) {
-    redirect("/login");
-  }
 
   return user;
 }
