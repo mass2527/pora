@@ -12,7 +12,7 @@ export default function GoogleLoginButton() {
         signIn("google");
       }}
     >
-      구글로 로그인
+      구글 로그인
     </Button>
   );
 }
