@@ -3,7 +3,7 @@ import { z } from "zod";
 import { slugSchema, stringSchema } from "./common";
 
 export const articleSchema = z.object({
-  categoryId: stringSchema.uuid().optional(),
+  categoryId: stringSchema.uuid("카테고리를 선택해 주세요.").optional(),
   slug: slugSchema,
   title: stringSchema,
   draftTitle: stringSchema,
