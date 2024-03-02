@@ -5,12 +5,12 @@ h4,
 h5,
 h6 {
   &:hover {
-    a {
+    a svg {
       @apply inline-block;
     }
   }
 
-  a {
+  a svg {
     @apply hidden ml-1;
   }
 }
