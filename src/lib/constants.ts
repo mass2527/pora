@@ -5,4 +5,4 @@ export const PRISMA_ERROR_CODES = {
   DEPENDENT_RECORDS_NOT_FOUND: "P2025",
 } as const satisfies Record<string, `P${number}${number}${number}${number}`>;
 export const className =
-  "prose prose-zinc prose-a:text-blue-500 prose-a:no-underline hover:prose-a:text-blue-500 hover:prose-a:underline";
+  "prose prose-zinc prose-a:text-blue-500 prose-a:no-underline hover:prose-a:text-blue-500 hover:prose-a:underline before:prose-code:content-none after:prose-code:content-none prose-code:bg-zinc-100";
