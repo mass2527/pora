@@ -7,8 +7,6 @@ import { ImageResizer } from "./extensions/image-resizer";
 
 import "./styles/index.css";
 import "./styles/prosemirror.css";
-import { cn } from "~/lib/utils";
-import { className } from "~/lib/constants";
 
 // https://github.com/steven-tey/novel
 export default function Editor(options: Partial<EditorOptions>) {
@@ -17,10 +15,8 @@ export default function Editor(options: Partial<EditorOptions>) {
     extensions: defaultExtensions,
     editorProps: {
       attributes: {
-        class: cn(
-          className,
-          `w-full max-w-none border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[500px]`
-        ),
+        class:
+          "pora-prose w-full max-w-none border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[500px]",
       },
       handleDOMEvents: {
         keydown: (_view, event) => {

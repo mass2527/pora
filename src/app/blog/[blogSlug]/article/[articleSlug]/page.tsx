@@ -6,7 +6,6 @@ import { notFound } from "next/navigation";
 import React, { cache } from "react";
 import { Badge } from "~/components/ui/badge";
 import UserAvatar from "~/components/user-avatar";
-import { className } from "~/lib/constants";
 import prisma from "~/lib/prisma";
 import { formatDate } from "~/lib/utils";
 
@@ -122,7 +121,7 @@ export default async function BlogArticlePage({
         <div className="p-6 lg:p-0">
           <div className="lg:pr-20 lg:pb-20 lg:border-r">
             <div
-              className={className}
+              className="pora-prose"
               dangerouslySetInnerHTML={{
                 __html: article.htmlContent,
               }}
