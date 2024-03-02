@@ -26,14 +26,17 @@ import {
 } from "~/components/ui/select";
 import { imageFileSchema } from "~/lib/validations/common";
 import CreateBlogCategoryButton from "../../categories/create-blog-category-button";
-import { ServerError, handleError, throwServerError } from "~/lib/errors";
 import { useRouter } from "next/navigation";
 import FormSubmitButton from "~/components/form-submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import SingleImageUploader from "~/components/single-image-uploader";
-import { deleteFile, uploadFile } from "~/services/file";
 import { updateArticleSchema } from "~/lib/validations/article";
+import { rehype } from "rehype";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeSlug from "rehype-slug";
+import { deleteFile, uploadFile } from "~/services/file";
 import { updateArticle } from "./actions";
+import { ServerError, handleError, throwServerError } from "~/lib/errors";
 
 const schema = updateArticleSchema.extend({
   image: imageFileSchema.optional(),
@@ -79,11 +82,16 @@ export default function UpdateBlogArticleForm({
                 imageUrl = url;
               }
 
+              const file = await rehype()
+                .data("settings", { fragment: true })
+                .use(rehypeSlug)
+                .use(rehypeAutolinkHeadings, { behavior: "wrap" })
+                .process(article.htmlContent);
               const response = await updateArticle(article.id, {
                 ...values,
                 title: article.title,
                 draftTitle: article.title,
-                htmlContent: article.htmlContent,
+                htmlContent: file.value as string,
                 jsonContent: article.jsonContent,
                 draftJsonContent: article.jsonContent,
                 status: ArticleStatus.PUBLISHED,
