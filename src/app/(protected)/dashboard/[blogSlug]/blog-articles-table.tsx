@@ -52,7 +52,9 @@ export function BlogArticlesTable({
               <TableCell>{title}</TableCell>
               <TableCell>
                 {article.category?.name && (
-                  <Badge>{article.category?.name}</Badge>
+                  <Badge className="whitespace-nowrap">
+                    {article.category?.name}
+                  </Badge>
                 )}
               </TableCell>
               <TableCell>{article.slug}</TableCell>
