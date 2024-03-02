@@ -9,6 +9,8 @@ import UserAvatar from "~/components/user-avatar";
 import prisma from "~/lib/prisma";
 import { formatDate } from "~/lib/utils";
 
+import ExtendedProse from "~/components/prose/extended-prose";
+
 const getArticle = cache(async (blogSlug: string, articleSlug: string) => {
   const article = await prisma.article.findFirst({
     where: {
@@ -120,12 +122,7 @@ export default async function BlogArticlePage({
       >
         <div className="p-6 lg:p-0">
           <div className="lg:pr-20 lg:pb-20 lg:border-r">
-            <div
-              className="pora-prose"
-              dangerouslySetInnerHTML={{
-                __html: article.htmlContent,
-              }}
-            />
+            <ExtendedProse html={article.htmlContent} />
           </div>
         </div>
         <div className="hidden lg:block">

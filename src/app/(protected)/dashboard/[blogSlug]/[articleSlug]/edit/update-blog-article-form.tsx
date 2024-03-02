@@ -31,9 +31,6 @@ import FormSubmitButton from "~/components/form-submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { updateArticleSchema } from "~/lib/validations/article";
-import { rehype } from "rehype";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeSlug from "rehype-slug";
 import { deleteFile, uploadFile } from "~/services/file";
 import { updateArticle } from "./actions";
 import { ServerError, handleError, throwServerError } from "~/lib/errors";
@@ -82,16 +79,11 @@ export default function UpdateBlogArticleForm({
                 imageUrl = url;
               }
 
-              const file = await rehype()
-                .data("settings", { fragment: true })
-                .use(rehypeSlug)
-                .use(rehypeAutolinkHeadings, { behavior: "wrap" })
-                .process(article.htmlContent);
               const response = await updateArticle(article.id, {
                 ...values,
                 title: article.title,
                 draftTitle: article.title,
-                htmlContent: file.value as string,
+                htmlContent: article.htmlContent,
                 jsonContent: article.jsonContent,
                 draftJsonContent: article.jsonContent,
                 status: ArticleStatus.PUBLISHED,
