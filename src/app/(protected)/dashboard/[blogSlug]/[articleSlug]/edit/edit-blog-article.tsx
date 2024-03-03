@@ -2,7 +2,6 @@
 
 import { Prisma } from "@prisma/client";
 import { handleError, throwServerError } from "~/lib/errors";
-import { Input } from "~/components/ui/input";
 import { ReactNode, Suspense, lazy, useEffect, useRef, useState } from "react";
 import { useDebounce } from "~/hooks/use-debounce";
 import { Badge } from "~/components/ui/badge";
@@ -72,14 +71,15 @@ export default function EditBlogArticle({
         cases={
           {
             "제목 및 내용 입력": (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col">
                 <div className="min-h-6 flex justify-end items-center">
                   {saveStatus && <Badge>{saveStatus}</Badge>}
                 </div>
 
-                <Input
+                <input
+                  className="h-14 px-8 outline-none text-3xl lg:text-5xl font-bold tracking-tighter"
                   value={values.title}
-                  placeholder="핵심 내용을 요약해 보세요."
+                  placeholder="제목 없음"
                   onChange={(event) => {
                     setSaveStatus("");
                     setValues({

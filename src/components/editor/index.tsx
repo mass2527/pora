@@ -15,8 +15,7 @@ export default function Editor(options: Partial<EditorOptions>) {
     extensions: defaultExtensions,
     editorProps: {
       attributes: {
-        class:
-          "pora-prose w-full max-w-none border border-input rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[500px]",
+        class: "pora-prose w-full focus:outline-none max-w-none min-h-[500px]",
       },
       handleDOMEvents: {
         keydown: (_view, event) => {

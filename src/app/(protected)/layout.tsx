@@ -13,7 +13,7 @@ export default async function ProtectedLayout({
 }) {
   return (
     <div>
-      <div className="flex justify-between items-center p-4">
+      <div className="flex justify-between items-center p-4 sticky top-0 bg-background z-10">
         <div className="flex items-center gap-4 h-8">
           <Link href="/dashboard">
             <PoraLogo />

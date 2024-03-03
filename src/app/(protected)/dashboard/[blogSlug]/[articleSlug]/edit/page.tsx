@@ -31,7 +31,7 @@ export default async function EditBlogArticlePage({
 
   return (
     <div className="p-4">
-      <div className="max-w-[720px] mx-auto">
+      <div className="mx-auto">
         <Suspense fallback={<Skeleton className="h-[652px]" />}>
           <Await promise={articlePromise}>
             {(article) => {
