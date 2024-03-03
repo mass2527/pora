@@ -35,7 +35,10 @@ export default function BlogArticleRowAction({
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link href={`/dashboard/${article.blog.slug}/${article.slug}/edit`}>
+          <Link
+            target="_blank"
+            href={`/dashboard/${article.blog.slug}/${article.slug}/edit`}
+          >
             수정
           </Link>
         </DropdownMenuItem>

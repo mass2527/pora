@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { imageFileSchema } from "~/lib/validations/common";
-import CreateBlogCategoryButton from "../../categories/create-blog-category-button";
+import CreateBlogCategoryButton from "../../../../../(protected)/dashboard/[blogSlug]/categories/create-blog-category-button";
 import { useRouter } from "next/navigation";
 import FormSubmitButton from "~/components/form-submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";

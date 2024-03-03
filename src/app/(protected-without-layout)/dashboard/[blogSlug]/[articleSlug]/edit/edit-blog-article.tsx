@@ -4,13 +4,13 @@ import { Prisma } from "@prisma/client";
 import { handleError, throwServerError } from "~/lib/errors";
 import { ReactNode, Suspense, lazy, useEffect, useRef, useState } from "react";
 import { useDebounce } from "~/hooks/use-debounce";
-import { Badge } from "~/components/ui/badge";
 import UpdateBlogArticleForm from "./update-blog-article-form";
 import { Button } from "~/components/ui/button";
 import { ArrowLeftIcon } from "lucide-react";
 import Switch from "~/components/switch";
 import { updateArticle } from "./actions";
 import { Skeleton } from "~/components/ui/skeleton";
+import { sleep } from "~/lib/utils";
 
 const Editor = lazy(() => import("~/components/editor"));
 
@@ -50,6 +50,7 @@ export default function EditBlogArticle({
           draftTitle: debouncedValues.title,
           draftJsonContent: debouncedValues.jsonContent,
         });
+        await sleep(300);
         if (response.status === "failure") {
           throwServerError(response);
         }
@@ -72,47 +73,55 @@ export default function EditBlogArticle({
           {
             "제목 및 내용 입력": (
               <div className="flex flex-col">
-                <div className="min-h-6 flex justify-end items-center">
-                  {saveStatus && <Badge>{saveStatus}</Badge>}
+                <div className="flex justify-between items-center sticky top-0 bg-background z-10 p-4">
+                  <div className="min-h-6 flex justify-end items-center">
+                    {saveStatus && (
+                      <span className="text-sm text-zinc-500">
+                        {saveStatus}
+                      </span>
+                    )}
+                  </div>
+
+                  <Button
+                    onClick={() => setStep("메타 정보 입력")}
+                    className="ml-auto"
+                  >
+                    {blogArticle.status === "WRITING" ? "발행" : "저장 및 발행"}
+                  </Button>
                 </div>
 
-                <input
-                  className="h-14 px-8 outline-none text-3xl lg:text-5xl font-bold tracking-tighter"
-                  value={values.title}
-                  placeholder="제목 없음"
-                  onChange={(event) => {
-                    setSaveStatus("");
-                    setValues({
-                      ...values,
-                      title: event.target.value,
-                    });
-                  }}
-                />
-
-                <Suspense fallback={<Skeleton className="h-[500px]" />}>
-                  <Editor
-                    content={JSON.parse(values.jsonContent)}
-                    onUpdate={({ editor }) => {
+                <div className="p-4">
+                  <input
+                    className="h-14 px-8 outline-none text-3xl lg:text-5xl font-bold tracking-tighter"
+                    value={values.title}
+                    placeholder="제목 없음"
+                    onChange={(event) => {
                       setSaveStatus("");
                       setValues({
                         ...values,
-                        htmlContent: editor.getHTML(),
-                        jsonContent: JSON.stringify(editor.getJSON()),
+                        title: event.target.value,
                       });
                     }}
                   />
-                </Suspense>
 
-                <Button
-                  onClick={() => setStep("메타 정보 입력")}
-                  className="ml-auto"
-                >
-                  {blogArticle.status === "WRITING" ? "발행" : "저장 및 발행"}
-                </Button>
+                  <Suspense fallback={<Skeleton className="h-[500px]" />}>
+                    <Editor
+                      content={JSON.parse(values.jsonContent)}
+                      onUpdate={({ editor }) => {
+                        setSaveStatus("");
+                        setValues({
+                          ...values,
+                          htmlContent: editor.getHTML(),
+                          jsonContent: JSON.stringify(editor.getJSON()),
+                        });
+                      }}
+                    />
+                  </Suspense>
+                </div>
               </div>
             ),
             "메타 정보 입력": (
-              <>
+              <div className="p-4">
                 <Button
                   className="mb-4 p-0"
                   type="button"
@@ -128,7 +137,7 @@ export default function EditBlogArticle({
                     ...values,
                   }}
                 />
-              </>
+              </div>
             ),
           } satisfies Record<typeof step, ReactNode>
         }

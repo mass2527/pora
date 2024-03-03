@@ -1,8 +1,8 @@
 "use client";
 
 import { ArticleStatus, Blog } from "@prisma/client";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import React from "react";
 import { Button } from "~/components/ui/button";
 import { Loading } from "~/components/ui/loading";
 import { handleError, throwServerError } from "~/lib/errors";
@@ -12,15 +12,8 @@ import { createBlogArticleLoadingAtom } from "./create-blog-article-loading-atom
 import { createArticle } from "./actions";
 
 export default function CreateBlogArticleButton({ blog }: { blog: Blog }) {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useAtom(createBlogArticleLoadingAtom);
   const pathname = usePathname();
-
-  useEffect(() => {
-    return () => {
-      setIsLoading(false);
-    };
-  }, [setIsLoading]);
 
   return (
     <Button
@@ -47,10 +40,15 @@ export default function CreateBlogArticleButton({ blog }: { blog: Blog }) {
           }
 
           const article = response.data;
-          router.push(`/dashboard/${blog.slug}/${article.slug}/edit`);
+          window.open(
+            `/dashboard/${blog.slug}/${article.slug}/edit`,
+            "_blank",
+            "noopener"
+          );
         } catch (error) {
-          setIsLoading(false);
           handleError(error);
+        } finally {
+          setIsLoading(false);
         }
       }}
       disabled={isLoading}
