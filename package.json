@@ -10,7 +10,8 @@
     "db:push": "prisma db push",
     "db:update": "pnpm db:push && prisma generate",
     "db:studio": "prisma studio",
-    "type-check": "tsc --watch"
+    "type-check": "tsc",
+    "type-check:watch": "pnpm type-check --watch"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -73,6 +74,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "eslint-plugin-unused-imports": "^3.1.0",
+    "husky": "^9.0.11",
     "postcss": "^8",
     "prisma": "^5.8.1",
     "tailwindcss": "^3.3.0",
