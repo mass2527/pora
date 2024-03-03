@@ -18,8 +18,9 @@ import { handleError, throwServerError } from "~/lib/errors";
 import { usePathname } from "next/navigation";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { imageFileSchema } from "~/lib/validations/common";
-import { deleteFile, uploadFile } from "~/services/file";
+import { uploadFileToS3 } from "~/services/file";
 import { updateBlog } from "./actions";
+import { deleteFileFromS3 } from "~/actions/file";
 
 const schema = z.object({
   image: imageFileSchema.optional(),
@@ -39,8 +40,8 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
           let imageUrl: string | undefined;
           const imageFile = values.image;
           if (imageFile) {
-            const { url } = await uploadFile(imageFile);
-            imageUrl = url;
+            const objectUrl = await uploadFileToS3(imageFile);
+            imageUrl = objectUrl;
           }
 
           try {
@@ -59,7 +60,7 @@ export default function UpdateBlogImageForm({ blog }: { blog: Blog }) {
             const hasUpdated =
               imageUrl && blog.image && imageUrl !== blog.image;
             if ((hasDeleted || hasUpdated) && blog.image) {
-              deleteFile(blog.image);
+              deleteFileFromS3(blog.image);
             }
 
             toast.success("이미지가 수정되었어요.");

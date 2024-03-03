@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { uploadFile } from "~/services/file";
+import { uploadFileToS3 } from "~/services/file";
 import SingleImageUploader from "~/components/single-image-uploader";
 import FormSubmitButton from "~/components/form-submit-button";
 import { buttonVariants } from "~/components/ui/button";
@@ -53,8 +53,8 @@ export default function CreateBlogForm() {
             let imageUrl: string | undefined;
             const imageFile = values.image;
             if (imageFile) {
-              const { url } = await uploadFile(imageFile);
-              imageUrl = url;
+              const objectUrl = await uploadFileToS3(imageFile);
+              imageUrl = objectUrl;
             }
 
             const response = await createBlog({

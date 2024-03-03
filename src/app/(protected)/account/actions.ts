@@ -30,7 +30,6 @@ export async function updateUser(
       },
       data: updateUserSchema.parse(values),
     });
-
     revalidatePath(path);
 
     return {

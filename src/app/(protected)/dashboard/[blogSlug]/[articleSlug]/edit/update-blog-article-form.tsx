@@ -31,9 +31,10 @@ import FormSubmitButton from "~/components/form-submit-button";
 import { MAX_IMAGE_SIZE_IN_MEGA_BYTES } from "~/lib/constants";
 import SingleImageUploader from "~/components/single-image-uploader";
 import { updateArticleSchema } from "~/lib/validations/article";
-import { deleteFile, uploadFile } from "~/services/file";
+import { uploadFileToS3 } from "~/services/file";
 import { updateArticle } from "./actions";
 import { ServerError, handleError, throwServerError } from "~/lib/errors";
+import { deleteFileFromS3 } from "~/actions/file";
 
 const schema = updateArticleSchema.extend({
   image: imageFileSchema.optional(),
@@ -75,8 +76,8 @@ export default function UpdateBlogArticleForm({
               let imageUrl: string | undefined;
               const imageFile = values.image;
               if (imageFile) {
-                const { url } = await uploadFile(imageFile);
-                imageUrl = url;
+                const objectUrl = await uploadFileToS3(imageFile);
+                imageUrl = objectUrl;
               }
 
               const response = await updateArticle(article.id, {
@@ -87,7 +88,7 @@ export default function UpdateBlogArticleForm({
                 jsonContent: article.jsonContent,
                 draftJsonContent: article.jsonContent,
                 status: ArticleStatus.PUBLISHED,
-                image: imageUrl ?? article.image ? null : undefined,
+                image: imageUrl ?? (article.image ? null : undefined),
               });
               if (response.status === "failure") {
                 throwServerError(response);
@@ -97,7 +98,7 @@ export default function UpdateBlogArticleForm({
               const hasUpdated =
                 imageUrl && article.image && imageUrl !== article.image;
               if ((hasDeleted || hasUpdated) && article.image) {
-                deleteFile(article.image);
+                deleteFileFromS3(article.image);
               }
               router.replace(`/dashboard/${article.blog.slug}`);
             } catch (error) {

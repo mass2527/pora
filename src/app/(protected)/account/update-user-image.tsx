@@ -2,19 +2,21 @@
 
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
-import { toast } from "sonner";
-import { deleteFile, uploadFile } from "~/services/file";
 import { Loading } from "~/components/ui/loading";
 import UserAvatar from "~/components/user-avatar";
-import { handleError, throwServerError } from "~/lib/errors";
 import { cn } from "~/lib/utils";
-import { updateUser } from "./actions";
-import { useUser } from "~/lib/auth";
 import { Skeleton } from "~/components/ui/skeleton";
 import Card from "~/components/card";
+import { deleteFileFromS3 } from "~/actions/file";
+import { updateUser } from "./actions";
+import { handleError, throwServerError } from "~/lib/errors";
+import { toast } from "sonner";
+import { uploadFileToS3 } from "~/services/file";
+import { useSession } from "next-auth/react";
 
 export default function UpdateUserImage() {
-  const user = useUser();
+  const session = useSession();
+  const user = session.data?.user;
   const inputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const pathname = usePathname();
@@ -63,16 +65,22 @@ export default function UpdateUserImage() {
               try {
                 setIsLoading(true);
                 const prevUserImage = user.image;
-                const { url } = await uploadFile(file);
-                const response = await updateUser({ image: url }, pathname);
+                const objectUrl = await uploadFileToS3(file);
+                const response = await updateUser(
+                  {
+                    image: objectUrl,
+                  },
+                  pathname
+                );
                 if (response.status === "failure") {
                   throwServerError(response);
                 }
+                await session.update();
+                toast.success("이미지가 수정되었어요.");
 
                 if (prevUserImage) {
-                  deleteFile(prevUserImage);
+                  deleteFileFromS3(prevUserImage);
                 }
-                toast.success("이미지가 수정되었어요.");
               } catch (error) {
                 handleError(error);
               } finally {

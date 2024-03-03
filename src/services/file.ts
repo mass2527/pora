@@ -1,36 +1,28 @@
-import { PutBlobResult } from "@vercel/blob";
+import { getSignedURL } from "~/actions/file";
 import { ServerError } from "~/lib/errors";
 import { tsFetch } from "~/lib/ts-fetch";
+import { v4 as uuidv4 } from "uuid";
 
-export async function uploadFile(file: File): Promise<PutBlobResult> {
-  const response = await tsFetch("/api/upload", {
-    method: "POST",
+export async function uploadFileToS3(file: File) {
+  const key = uuidv4();
+  const result = await getSignedURL(key);
+  if (result.status === "failure") {
+    throw new ServerError("failed to get signed url", { status: 500 });
+  }
+
+  const signedURL = result.data;
+  const response = await tsFetch(signedURL, {
+    method: "PUT",
     headers: {
-      "content-type": file.type,
-      "x-vercel-filename": encodeURIComponent(file.name),
+      "Content-Type": file.type,
     },
     body: file,
   });
   if (!response.ok) {
-    if (response.status === 401) {
-      throw new ServerError(
-        "`BLOB_READ_WRITE_TOKEN` environment variable not found.",
-        {
-          status: 401,
-        }
-      );
-    }
-
-    throw new ServerError("Failed to upload file", {
+    throw new ServerError("Failed to upload file to s3", {
       status: 500,
     });
   }
 
-  return response.json();
-}
-
-export function deleteFile(url: string) {
-  tsFetch(`/api/upload?url=${url}`, {
-    method: "DELETE",
-  });
+  return `${process.env.NEXT_PUBLIC_AWS_S3_BASE_URL}/${key}`;
 }

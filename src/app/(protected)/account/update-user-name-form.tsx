@@ -20,12 +20,13 @@ import { handleError, throwServerError } from "~/lib/errors";
 
 import { updateUserSchema } from "~/lib/validations/user";
 import { updateUser } from "./actions";
-import { useUser } from "~/lib/auth";
 import { Skeleton } from "~/components/ui/skeleton";
 import Card from "~/components/card";
+import { useSession } from "next-auth/react";
 
 export default function UpdateUserNameForm() {
-  const user = useUser();
+  const session = useSession();
+  const user = session.data?.user;
   const form = useForm<z.infer<typeof updateUserSchema>>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
@@ -52,7 +53,7 @@ export default function UpdateUserNameForm() {
                 if (response.status === "failure") {
                   throwServerError(response);
                 }
-
+                await session.update();
                 toast.success("사용자 이름이 수정되었어요.");
               } catch (error) {
                 handleError(error);

@@ -3,7 +3,7 @@ import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet, EditorView } from "@tiptap/pm/view";
 import { assert } from "~/lib/utils";
 import { handleError } from "~/lib/errors";
-import { uploadFile } from "~/services/file";
+import { uploadFileToS3 } from "~/services/file";
 
 const uploadKey = new PluginKey("upload-image");
 
@@ -128,9 +128,9 @@ export const handleImageUpload = (file: File) => {
   // upload to Vercel Blob
   return new Promise((resolve, reject) => {
     toast.promise(
-      uploadFile(file).then(async (result) => {
+      uploadFileToS3(file).then(async (result) => {
         // Successfully uploaded image
-        const { url } = result;
+        const url = result;
 
         // preload the image
         let image = new Image();
