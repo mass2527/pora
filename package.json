@@ -45,7 +45,6 @@
     "@tiptap/react": "^2.2.1",
     "@tiptap/starter-kit": "^2.2.1",
     "@tiptap/suggestion": "^2.2.1",
-    "@vercel/blob": "^0.20.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "hast-util-from-html-isomorphic": "^2.0.0",

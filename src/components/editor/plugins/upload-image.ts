@@ -125,7 +125,7 @@ export function startImageUpload(file: File, view: EditorView, pos: number) {
 }
 
 export const handleImageUpload = (file: File) => {
-  // upload to Vercel Blob
+  // upload to aws s3
   return new Promise((resolve, reject) => {
     toast.promise(
       uploadFileToS3(file).then(async (result) => {
