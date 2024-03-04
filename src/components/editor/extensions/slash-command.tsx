@@ -22,7 +22,10 @@ import {
   Text,
   TextQuote,
 } from "lucide-react";
-import { startImageUpload } from "../plugins/upload-image";
+import {
+  startImageUpload,
+  startLocalImageUpload,
+} from "../plugins/upload-image";
 
 type CommandItemProps = {
   title: string;
@@ -189,7 +192,12 @@ const getSuggestionItems = ({ query }: { query: string }) => {
           const file = input.files?.[0];
           if (file) {
             const pos = editor.view.state.selection.from;
-            startImageUpload(file, editor.view, pos);
+            const isDemoPage = window.location.pathname.startsWith("/demo");
+            if (isDemoPage) {
+              startLocalImageUpload(file, editor.view, pos);
+            } else {
+              startImageUpload(file, editor.view, pos);
+            }
           }
         };
         input.click();

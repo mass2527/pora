@@ -153,3 +153,30 @@ export const handleImageUpload = (file: File) => {
     );
   });
 };
+
+export function startLocalImageUpload(
+  file: File,
+  view: EditorView,
+  pos: number
+) {
+  // check if the file is an image
+  if (!file.type.includes("image/")) {
+    toast.error("File type not supported.");
+    return;
+
+    // check if the file size is less than 4.5MB
+  } else if (file.size / 1024 / 1024 > 4.5) {
+    toast.error("File size too big (max 4.5MB).");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = async () => {
+    const { schema } = view.state;
+    assert(schema.nodes.image);
+    const node = schema.nodes.image.create({ src: reader.result });
+    const transaction = view.state.tr.replaceWith(pos, pos, node);
+    view.dispatch(transaction);
+  };
+}

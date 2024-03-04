@@ -37,12 +37,12 @@ export default function LandingPage() {
                   <Link className={buttonVariants()} href="/dashboard">
                     시작하기
                   </Link>
-                  <Link
+                  <NewTabLink
                     className={buttonVariants({ variant: "outline" })}
                     href="/demo"
                   >
                     데모
-                  </Link>
+                  </NewTabLink>
                 </div>
               </div>
               <div className="grid place-items-center">
