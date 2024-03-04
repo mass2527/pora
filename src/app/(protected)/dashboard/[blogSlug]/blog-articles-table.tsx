@@ -11,8 +11,8 @@ import {
 } from "~/components/ui/table";
 import { cn, formatDate } from "~/lib/utils";
 import BlogArticleRowAction from "./blog-article-row-action";
-import Link from "next/link";
 import { Badge } from "~/components/ui/badge";
+import NewTabLink from "~/components/new-tab-link";
 
 export function BlogArticlesTable({
   articles,
@@ -36,13 +36,12 @@ export function BlogArticlesTable({
         {articles.map((article) => {
           const title =
             article.status === "PUBLISHED" ? (
-              <Link
-                target="_blank"
+              <NewTabLink
                 className={cn(buttonVariants({ variant: "link" }), "p-0")}
                 href={`/blog/${article.blog.slug}/article/${article.slug}`}
               >
                 {article.title}
-              </Link>
+              </NewTabLink>
             ) : (
               article.title
             );

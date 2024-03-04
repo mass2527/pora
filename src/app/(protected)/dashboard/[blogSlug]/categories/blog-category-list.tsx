@@ -6,7 +6,6 @@ import { buttonVariants } from "~/components/ui/button";
 import { List, ListItem } from "~/components/ui/list";
 import { cn } from "~/lib/utils";
 import BlogCategoryRowAction from "./blog-category-row-action";
-import Link from "next/link";
 import { handleError, throwServerError } from "~/lib/errors";
 import { useAtom } from "jotai";
 import { blogOrderSaveStatusAtom } from "./blog-order-save-status-atom";
@@ -14,6 +13,7 @@ import { useSortableList } from "~/hooks/use-sortable-list";
 import { useEffect } from "react";
 import { updateCategories } from "./actions";
 import { usePathname } from "next/navigation";
+import NewTabLink from "~/components/new-tab-link";
 
 export default function BlogCategoryList({
   blog,
@@ -61,15 +61,14 @@ export default function BlogCategoryList({
             {...getSortableListItemProps(index)}
           >
             <div className="flex flex-col">
-              <Link
-                target="_blank"
+              <NewTabLink
                 href={`/blog/${blog.slug}/category/${category.slug}`}
                 className={cn(buttonVariants({ variant: "link" }), "p-0")}
               >
                 <h2 className="text-xl font-semibold tracking-tight">
                   {category.name}
                 </h2>
-              </Link>
+              </NewTabLink>
               <span className="text-xs text-zinc-500">{category.slug}</span>
             </div>
 

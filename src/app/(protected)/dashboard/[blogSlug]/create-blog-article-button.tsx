@@ -10,6 +10,7 @@ import { useAtom } from "jotai";
 
 import { createBlogArticleLoadingAtom } from "./create-blog-article-loading-atom";
 import { createArticle } from "./actions";
+import { openNewTab } from "~/lib/utils";
 
 export default function CreateBlogArticleButton({ blog }: { blog: Blog }) {
   const [isLoading, setIsLoading] = useAtom(createBlogArticleLoadingAtom);
@@ -40,11 +41,7 @@ export default function CreateBlogArticleButton({ blog }: { blog: Blog }) {
           }
 
           const article = response.data;
-          window.open(
-            `/dashboard/${blog.slug}/${article.slug}/edit`,
-            "_blank",
-            "noopener"
-          );
+          openNewTab(`/dashboard/${blog.slug}/${article.slug}/edit`);
         } catch (error) {
           handleError(error);
         } finally {

@@ -63,3 +63,7 @@ export async function ifNullable<T>(
 export function renderNotFoundIfNullable<T>(promise: Promise<T>) {
   return ifNullable(promise, () => notFound());
 }
+
+export function openNewTab(url: string) {
+  window.open(url, "_blank", "noopener noreferrer");
+}

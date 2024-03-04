@@ -3,8 +3,8 @@
 import { Blog } from "@prisma/client";
 import React from "react";
 import useSelectedBlog from "./use-selected-blog";
-import Link from "next/link";
 import { buttonVariants } from "~/components/ui/button";
+import NewTabLink from "~/components/new-tab-link";
 
 export default function SelectedBlogLink({ blogs }: { blogs: Blog[] }) {
   const selectedBlog = useSelectedBlog(blogs);
@@ -13,12 +13,11 @@ export default function SelectedBlogLink({ blogs }: { blogs: Blog[] }) {
   }
 
   return (
-    <Link
+    <NewTabLink
       href={`/blog/${selectedBlog.slug}`}
-      target="_blank"
       className={buttonVariants({ variant: "link" })}
     >
       {selectedBlog.name}
-    </Link>
+    </NewTabLink>
   );
 }

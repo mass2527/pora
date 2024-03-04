@@ -2,7 +2,6 @@
 
 import { Prisma } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,6 +13,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { handleError, throwServerError } from "~/lib/errors";
 import { deleteArticle } from "./actions";
+import NewTabLink from "~/components/new-tab-link";
 
 export default function BlogArticleRowAction({
   article,
@@ -35,12 +35,11 @@ export default function BlogArticleRowAction({
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link
-            target="_blank"
+          <NewTabLink
             href={`/dashboard/${article.blog.slug}/${article.slug}/edit`}
           >
             수정
-          </Link>
+          </NewTabLink>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
