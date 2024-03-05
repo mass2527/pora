@@ -1,5 +1,8 @@
-import React from "react";
-import Editor from "~/components/editor";
+"use client";
+
+import React, { lazy } from "react";
+
+const Editor = lazy(() => import("~/components/editor"));
 
 export default function DemoPage() {
   return (
