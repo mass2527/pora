@@ -15,15 +15,6 @@ import { common, createStarryNight } from "@wooorm/starry-night";
 import { toString } from "hast-util-to-string";
 import { visit } from "unist-util-visit";
 
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
-
-// Needed to include the vendored `onig.wasm` file.
-// This code should have no effect in production.
-if (false) {
-  fs.access(path.join(process.cwd(), "vendor/vscode-oniguruma/onig.wasm"));
-}
-
 // https://github.com/wooorm/starry-night?tab=readme-ov-file#example-integrate-with-unified-remark-and-rehype
 /**
  * Highlight code with `starry-night`.
