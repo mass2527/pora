@@ -51,5 +51,9 @@
     :not(pre) > code {
       @apply before:content-none after:content-none bg-zinc-100 border border-zinc-200;
     }
+
+    pre {
+      @apply bg-white border dark:bg-black text-black dark:text-white;
+    }
   }
 }
