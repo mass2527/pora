@@ -40,14 +40,12 @@
       @apply scroll-mt-16;
     }
 
-    :not(h1, h2, h3, h4, h5, h6) {
-      a {
-        @apply text-blue-500 hover:text-blue-500;
-      }
-    }
-
     a {
-      @apply no-underline hover:underline;
+      @apply text-blue-500 hover:text-blue-500 no-underline hover:underline;
+
+      svg {
+        @apply text-foreground;
+      }
     }
 
     :not(pre) > code {
