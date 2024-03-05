@@ -67,6 +67,7 @@
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "^0.8.9",
     "unist-util-visit": "^5.0.0",
+    "vscode-oniguruma": "^2.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
