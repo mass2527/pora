@@ -53,7 +53,7 @@
     }
 
     pre {
-      @apply bg-white border dark:bg-black text-black dark:text-white;
+      @apply bg-white border text-black;
     }
   }
 }

@@ -1,6 +1,6 @@
 import { NodeViewContent, NodeViewWrapper } from "@tiptap/react";
 import React from "react";
-import "@wooorm/starry-night/style/both";
+import "@wooorm/starry-night/style/light";
 import { StarryNight } from "./code-block-starry-night";
 import {
   Select,

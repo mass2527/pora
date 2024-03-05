@@ -7,7 +7,7 @@ import "./extended-prose.css";
 import Prose from ".";
 import rehypeStarryNight from "./rehype-starry-night";
 
-import "@wooorm/starry-night/style/both";
+import "@wooorm/starry-night/style/light";
 
 export default async function ExtendedProse({ html }: { html: string }) {
   const file = await rehype()
