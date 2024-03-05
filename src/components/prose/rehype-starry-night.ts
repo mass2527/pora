@@ -15,6 +15,15 @@ import { common, createStarryNight } from "@wooorm/starry-night";
 import { toString } from "hast-util-to-string";
 import { visit } from "unist-util-visit";
 
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+
+// Needed to include the vendored `onig.wasm` file.
+// This code should have no effect in production.
+if (false) {
+  fs.access(path.join(process.cwd(), "vendor/vscode-oniguruma/onig.wasm"));
+}
+
 // https://github.com/wooorm/starry-night?tab=readme-ov-file#example-integrate-with-unified-remark-and-rehype
 /**
  * Highlight code with `starry-night`.
@@ -27,7 +36,14 @@ import { visit } from "unist-util-visit";
 export default function rehypeStarryNight(options?: any) {
   const settings = options || {};
   const grammars = settings.grammars || common;
-  const starryNightPromise = createStarryNight(grammars);
+  const starryNightPromise = createStarryNight(grammars, {
+    getOnigurumaUrlFs: () => {
+      return new URL(
+        "./vendor/vscode-oniguruma/onig.wasm",
+        `file://${process.cwd()}/`
+      );
+    },
+  });
   const prefix = "language-";
 
   /**

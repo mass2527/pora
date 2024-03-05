@@ -1,10 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    outputFileTracingIncludes: {
-      "/blog/*/article/*": "node_modules/vscode-oniguruma/release/onig.wasm",
-    },
-  },
   images: {
     remotePatterns: [
       {
