@@ -5,6 +5,9 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { fromHtmlIsomorphic } from "hast-util-from-html-isomorphic";
 import "./extended-prose.css";
 import Prose from ".";
+import rehypeStarryNight from "./rehype-starry-night";
+
+import "@wooorm/starry-night/style/both";
 
 export default async function ExtendedProse({ html }: { html: string }) {
   const file = await rehype()
@@ -22,6 +25,7 @@ export default async function ExtendedProse({ html }: { html: string }) {
         ).children,
       }
     )
+    .use(rehypeStarryNight)
     .process(html);
 
   return <Prose html={file.value as string} />;

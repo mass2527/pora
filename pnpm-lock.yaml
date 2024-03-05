@@ -113,6 +113,9 @@ dependencies:
   hast-util-from-html-isomorphic:
     specifier: ^2.0.0
     version: 2.0.0
+  hast-util-to-string:
+    specifier: ^3.0.0
+    version: 3.0.0
   jotai:
     specifier: ^2.6.4
     version: 2.6.4(@types/react@18.2.48)(react@18.2.0)
@@ -158,6 +161,9 @@ dependencies:
   tiptap-markdown:
     specifier: ^0.8.9
     version: 0.8.9(@tiptap/core@2.2.1)
+  unist-util-visit:
+    specifier: ^5.0.0
+    version: 5.0.0
   zod:
     specifier: ^3.22.4
     version: 3.22.4
