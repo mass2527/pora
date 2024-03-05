@@ -92,7 +92,7 @@ export default function EditBlogArticle({
 
                 <div className="p-4">
                   <input
-                    className="h-14 px-8 outline-none text-3xl lg:text-5xl font-bold tracking-tighter"
+                    className="h-14 px-8 outline-none text-3xl lg:text-5xl font-bold tracking-tighter w-full"
                     value={values.title}
                     placeholder="제목 없음"
                     onChange={(event) => {
