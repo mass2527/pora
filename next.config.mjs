@@ -2,8 +2,7 @@
 const nextConfig = {
   experimental: {
     outputFileTracingIncludes: {
-      "/blog/*/article/*":
-        "node_modules/.pnpm/node_modules/vscode-oniguruma/release/onig.wasm",
+      "/blog/*/article/*": "node_modules/vscode-oniguruma/release/onig.wasm",
     },
   },
   images: {
