@@ -11,10 +11,9 @@
  *   Grammars to support (default: `common`).
  */
 
-import { common } from "@wooorm/starry-night";
+import { common, createStarryNight } from "@wooorm/starry-night";
 import { toString } from "hast-util-to-string";
 import { visit } from "unist-util-visit";
-import { createStarryNightWithLocal } from "~/lib/starry-night";
 
 // https://github.com/wooorm/starry-night?tab=readme-ov-file#example-integrate-with-unified-remark-and-rehype
 /**
@@ -28,7 +27,7 @@ import { createStarryNightWithLocal } from "~/lib/starry-night";
 export default function rehypeStarryNight(options?: any) {
   const settings = options || {};
   const grammars = settings.grammars || common;
-  const starryNightPromise = createStarryNightWithLocal(grammars);
+  const starryNightPromise = createStarryNight(grammars);
   const prefix = "language-";
 
   /**

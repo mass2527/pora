@@ -22,8 +22,7 @@ import { ReactNodeViewRenderer } from "@tiptap/react";
 
 import CodeBlock from "./code-block";
 import { CodeBlockStarryNight } from "./code-block-starry-night";
-import { common } from "@wooorm/starry-night";
-import { createStarryNightWithLocal } from "~/lib/starry-night";
+import { common, createStarryNight } from "@wooorm/starry-night";
 
 export const defaultExtensions = [
   StarterKit.configure({
@@ -148,7 +147,7 @@ export const defaultExtensions = [
       return ReactNodeViewRenderer(CodeBlock);
     },
   }).configure({
-    starryNight: await createStarryNightWithLocal(common),
+    starryNight: await createStarryNight(common),
     defaultLanguage: "md",
   }),
 ];
