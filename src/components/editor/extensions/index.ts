@@ -18,6 +18,11 @@ import DragAndDrop from "./drag-and-drop";
 import UploadImagesPlugin from "../plugins/upload-image";
 import UpdatedImage from "./updated-image";
 import Typography from "@tiptap/extension-typography";
+import { ReactNodeViewRenderer } from "@tiptap/react";
+
+import CodeBlock from "./code-block";
+import { CodeBlockStarryNight } from "./code-block-starry-night";
+import { common, createStarryNight } from "@wooorm/starry-night";
 
 export const defaultExtensions = [
   StarterKit.configure({
@@ -39,11 +44,6 @@ export const defaultExtensions = [
     blockquote: {
       HTMLAttributes: {
         class: "border-l-4 border-zinc-700",
-      },
-    },
-    codeBlock: {
-      HTMLAttributes: {
-        class: "rounded-sm bg-zinc-100 p-5 font-mono font-medium text-zinc-800",
       },
     },
     code: {
@@ -142,4 +142,12 @@ export const defaultExtensions = [
   CustomKeymap,
   DragAndDrop,
   Typography,
+  CodeBlockStarryNight.extend({
+    addNodeView() {
+      return ReactNodeViewRenderer(CodeBlock);
+    },
+  }).configure({
+    starryNight: await createStarryNight(common),
+    defaultLanguage: "md",
+  }),
 ];

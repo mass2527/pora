@@ -53,6 +53,9 @@ dependencies:
   '@tiptap/core':
     specifier: ^2.2.1
     version: 2.2.1(@tiptap/pm@2.2.1)
+  '@tiptap/extension-code-block':
+    specifier: ^2.2.4
+    version: 2.2.4(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
   '@tiptap/extension-color':
     specifier: ^2.2.1
     version: 2.2.1(@tiptap/core@2.2.1)(@tiptap/extension-text-style@2.2.1)
@@ -98,6 +101,9 @@ dependencies:
   '@tiptap/suggestion':
     specifier: ^2.2.1
     version: 2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
+  '@wooorm/starry-night':
+    specifier: ^3.2.0
+    version: 3.2.0
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -2530,8 +2536,8 @@ packages:
       '@tiptap/core': 2.2.1(@tiptap/pm@2.2.1)
     dev: false
 
-  /@tiptap/extension-code-block@2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1):
-    resolution: {integrity: sha512-8Urq8OvdBXDs8cX7Tgw71uyHQknqOeEgU0w4PvhFlOnDKUyehiUGys86k/NUJwP2P9O+YGToM3sVJF0ONdlNGQ==}
+  /@tiptap/extension-code-block@2.2.4(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1):
+    resolution: {integrity: sha512-h6WV9TmaBEZmvqe1ezMR83DhCPUap6P2mSR5pwVk0WVq6rvZjfgU0iF3EetBJOeDgPlz7cNe2NMDfVb1nGTM/g==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
       '@tiptap/pm': ^2.0.0
@@ -2807,7 +2813,7 @@ packages:
       '@tiptap/extension-bold': 2.2.1(@tiptap/core@2.2.1)
       '@tiptap/extension-bullet-list': 2.2.1(@tiptap/core@2.2.1)
       '@tiptap/extension-code': 2.2.1(@tiptap/core@2.2.1)
-      '@tiptap/extension-code-block': 2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
+      '@tiptap/extension-code-block': 2.2.4(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
       '@tiptap/extension-document': 2.2.2(@tiptap/core@2.2.1)
       '@tiptap/extension-dropcursor': 2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
       '@tiptap/extension-gapcursor': 2.2.1(@tiptap/core@2.2.1)(@tiptap/pm@2.2.1)
@@ -2976,6 +2982,15 @@ packages:
 
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
+
+  /@wooorm/starry-night@3.2.0:
+    resolution: {integrity: sha512-SDIMYfhmfJXUzfXfG/0b8WuPLVmPVmx18sE3Q+Udm8M1yCm2rnAEN5OafFmAb7rwOf4W3SDR8fEFHzrE9AyYkA==}
+    dependencies:
+      '@types/hast': 3.0.4
+      import-meta-resolve: 4.0.0
+      vscode-oniguruma: 2.0.1
+      vscode-textmate: 9.0.0
+    dev: false
 
   /acorn-jsx@5.3.2(acorn@8.11.3):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -4329,6 +4344,10 @@ packages:
       parent-module: 1.0.1
       resolve-from: 4.0.0
     dev: true
+
+  /import-meta-resolve@4.0.0:
+    resolution: {integrity: sha512-okYUR7ZQPH+efeuMJGlq4f8ubUgO50kByRPyt/Cy1Io4PSRsPjxME+YlVaCOx+NIToW7hCsZNFJyTPFFKepRSA==}
+    dev: false
 
   /imurmurhash@0.1.4:
     resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
@@ -6321,6 +6340,14 @@ packages:
       '@types/unist': 3.0.2
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
+    dev: false
+
+  /vscode-oniguruma@2.0.1:
+    resolution: {integrity: sha512-poJU8iHIWnC3vgphJnrLZyI3YdqRlR27xzqDmpPXYzA93R4Gk8z7T6oqDzDoHjoikA2aS82crdXFkjELCdJsjQ==}
+    dev: false
+
+  /vscode-textmate@9.0.0:
+    resolution: {integrity: sha512-Cl65diFGxz7gpwbav10HqiY/eVYTO1sjQpmRmV991Bj7wAoOAjGQ97PpQcXorDE2Uc4hnGWLY17xme+5t6MlSg==}
     dev: false
 
   /w3c-keyname@2.2.8:

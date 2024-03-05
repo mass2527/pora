@@ -50,10 +50,8 @@
       @apply no-underline hover:underline;
     }
 
-    :not(pre) {
-      code {
-        @apply before:content-none after:content-none bg-zinc-100 border border-zinc-200;
-      }
+    :not(pre) > code {
+      @apply before:content-none after:content-none bg-zinc-100 border border-zinc-200;
     }
   }
 }
