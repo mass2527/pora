@@ -36,7 +36,7 @@ export default async function BlogForms({ blogSlug }: { blogSlug: string }) {
       />
       <Card
         title="이미지"
-        description="블로그를 소개하기 위해 사용됩니다."
+        description="블로그 링크를 공유할 때 나오는 이미지입니다."
         content={<UpdateBlogImageForm blog={blog} />}
       />
       <Card
