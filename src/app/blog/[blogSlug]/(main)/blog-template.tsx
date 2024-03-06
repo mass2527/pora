@@ -36,7 +36,7 @@ export default function BlogTemplate({
     <div className="min-h-screen p-4">
       <Nav links={links} />
 
-      <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight my-10">
+      <h1 className="text-xl lg:text-2xl font-semibold tracking-tight my-10">
         {title}
       </h1>
 
@@ -46,8 +46,8 @@ export default function BlogTemplate({
             return (
               <li key={article.id}>
                 <Link href={`/blog/${blog.slug}/article/${article.slug}`}>
-                  <div className="border rounded-md p-4 flex flex-col gap-2">
-                    <h2 className="text-xl lg:text-2xl font-semibold tracking-tight">
+                  <div className="border rounded-lg p-4 flex flex-col gap-2">
+                    <h2 className="text-lg lg:text-xl font-semibold tracking-tight truncate">
                       {article.title}
                     </h2>
 
