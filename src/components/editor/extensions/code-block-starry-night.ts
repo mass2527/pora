@@ -2,6 +2,7 @@ import CodeBlock, { CodeBlockOptions } from "@tiptap/extension-code-block";
 
 import { StarryNightPlugin } from "../plugins/starry-night-plugin";
 import { createStarryNight } from "@wooorm/starry-night";
+import { textblockTypeInputRule } from "@tiptap/core";
 
 export type StarryNight = Awaited<ReturnType<typeof createStarryNight>>;
 
@@ -13,6 +14,18 @@ interface CodeBlockStarryNightOptions extends CodeBlockOptions {
 
 export const CodeBlockStarryNight =
   CodeBlock.extend<CodeBlockStarryNightOptions>({
+    addInputRules() {
+      return [
+        textblockTypeInputRule({
+          find: /^```$/,
+          type: this.type,
+          getAttributes: () => ({
+            language: "markdown",
+          }),
+        }),
+      ];
+    },
+
     addProseMirrorPlugins() {
       const { starryNight, defaultLanguage } = this.options;
       if (typeof starryNight === "undefined") {
