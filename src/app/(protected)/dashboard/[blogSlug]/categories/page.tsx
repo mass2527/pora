@@ -19,6 +19,9 @@ export default async function BlogCategoriesPage({
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-semibold tracking-tight">카테고리</h1>
+          <p className="text-sm text-zinc-500">
+            순서를 변경하려면 드래그 앤 드롭하세요.
+          </p>
           <BlogOrderSaveStatus />
         </div>
         <Suspense fallback={<Button disabled>새 카테고리</Button>}>
