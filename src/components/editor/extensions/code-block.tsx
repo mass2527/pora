@@ -1,14 +1,25 @@
+"use client";
+
 import { NodeViewContent, NodeViewWrapper } from "@tiptap/react";
 import React from "react";
 import "@wooorm/starry-night/style/light";
 import { StarryNight } from "./code-block-starry-night";
+
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import { Button } from "~/components/ui/button";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { assert, cn } from "~/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "~/components/ui/command";
 
 interface CodeBlockProps {
   node: {
@@ -33,40 +44,73 @@ export default function CodeBlock({
   updateAttributes,
   extension,
 }: CodeBlockProps) {
-  const grammars = extension.options.starryNight.scopes();
+  const [isOpen, setIsOpen] = React.useState(false);
+  const grammarScopes = extension.options.starryNight.scopes();
+  const currentLanguageName = language ?? extension.options.defaultLanguage;
+  const currentLanguage = LANGUAGES.find(
+    (language) => language.name === currentLanguageName
+  );
 
   return (
     <NodeViewWrapper className="relative">
       <div className="absolute top-3 left-4">
-        <Select
-          onValueChange={(value) => updateAttributes({ language: value })}
-          defaultValue={language ?? extension.options.defaultLanguage}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-[200px] justify-between"
+              onClick={(event) => event.stopPropagation()}
+            >
+              {currentLanguage?.label}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="언어를 검색하세요" />
+              <CommandEmpty>결과 없음</CommandEmpty>
+              <CommandGroup className="overflow-scroll max-h-80">
+                {grammarScopes.map((grammarScope) => {
+                  const isSupportedLanguage = LANGUAGES.some(
+                    (language) => language.scope === grammarScope
+                  );
+                  if (!isSupportedLanguage) {
+                    return null;
+                  }
 
-          <SelectContent>
-            {grammars.map((grammar) => {
-              if (!(grammar in GRAMMARS)) {
-                throw new Error(
-                  `Unregistered grammar: ${grammar}. Please add grammar to \`GRAMMARS\``
-                );
-              }
+                  const language = LANGUAGES.find(
+                    (language) => language.scope === grammarScope
+                  );
+                  assert(language);
+                  const { label, name } = language;
 
-              const { label, name } = GRAMMARS[grammar as CommonGrammar];
-              if (!label) {
-                return null;
-              }
-
-              return (
-                <SelectItem key={grammar} value={name}>
-                  {label}
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
+                  return (
+                    <CommandItem
+                      key={grammarScope}
+                      value={label}
+                      onSelect={() => {
+                        updateAttributes({
+                          language: name,
+                        });
+                        setIsOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          currentLanguageName === name
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                      {label}
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
       </div>
       <pre className="pt-16">
         <NodeViewContent as="code" />
@@ -75,153 +119,183 @@ export default function CodeBlock({
   );
 }
 
-type CommonGrammar = keyof typeof GRAMMARS;
-
 // https://github.com/wooorm/starry-night?tab=readme-ov-file#languages
 // https://github.com/wooorm/starry-night?tab=readme-ov-file#common
 // https://github.com/wooorm/starry-night?tab=readme-ov-file#starrynightflagtoscopeflag
-const COMMON_GRAMMARS = {
-  "source.c": {
+const LANGUAGES = [
+  {
+    scope: "source.c",
     name: "c",
     label: "C",
   },
-  "source.c++": {
+  {
+    scope: "source.c++",
     name: "c++",
     label: "C++",
   },
-  "source.c.platform": {
-    name: undefined,
-    label: undefined,
-  },
-  "source.cs": {
+  // {
+  //   scope:"source.c.platform",
+  //   name: undefined,
+  //   label: undefined,
+  // },
+  {
+    scope: "source.cs",
     name: "c#",
     label: "C#",
   },
-  "source.css": {
+  {
+    scope: "source.css",
     name: "css",
     label: "CSS",
   },
-  "source.css.less": {
+  {
+    scope: "source.css.less",
     name: "less",
     label: "Less",
   },
-  "source.css.scss": {
+  {
+    scope: "source.css.scss",
     name: "scss",
     label: "Scss",
   },
-  "source.diff": {
+  {
+    scope: "source.diff",
     name: "diff",
     label: "Diff",
   },
-  "source.go": {
+  {
+    scope: "source.go",
     name: "go",
     label: "Go",
   },
-  "source.graphql": {
+  {
+    scope: "source.graphql",
     name: "graphql",
     label: "GraphQL",
   },
-  "source.ini": {
+  {
+    scope: "source.ini",
     name: "ini",
     label: "INI",
   },
-  "source.java": {
+  {
+    scope: "source.java",
     name: "java",
     label: "Java",
   },
-  "source.js": {
-    name: "js",
+  {
+    scope: "source.js",
+    name: "javascript",
     label: "JavaScript",
   },
-  "source.json": {
+  {
+    scope: "source.json",
     name: "json",
     label: "JSON",
   },
-  "source.kotlin": {
+  {
+    scope: "source.kotlin",
     name: "kotlin",
     label: "Kotlin",
   },
-  "source.lua": {
+  {
+    scope: "source.lua",
     name: "lua",
     label: "Lua",
   },
-  "source.makefile": {
+  {
+    scope: "source.makefile",
     name: "makefile",
     label: "Makefile",
   },
-  "source.objc": {
-    name: "objc",
+  {
+    scope: "source.objc",
+    name: "objective-c",
     label: "Objective-C",
   },
-  "source.objc.platform": {
-    name: undefined,
-    label: undefined,
-  },
-  "source.perl": {
+  // {
+  //   scope: "source.objc.platform",
+  //   name: undefined,
+  //   label: undefined,
+  // },
+  {
+    scope: "source.perl",
     name: "perl",
     label: "Perl",
   },
-  "source.python": {
+  {
+    scope: "source.python",
     name: "python",
     label: "Python",
   },
-  "source.r": {
+  {
+    scope: "source.r",
     name: "r",
     label: "R",
   },
-  "source.ruby": {
+  {
+    scope: "source.ruby",
     name: "ruby",
     label: "Ruby",
   },
-  "source.rust": {
+  {
+    scope: "source.rust",
     name: "rust",
     label: "Rust",
   },
-  "source.shell": {
+  {
+    scope: "source.shell",
     name: "shell",
     label: "Shell",
   },
-  "source.sql": {
+  {
+    scope: "source.sql",
     name: "sql",
     label: "SQL",
   },
-  "source.swift": {
+  {
+    scope: "source.swift",
     name: "swift",
     label: "Swift",
   },
-  "source.ts": {
-    name: "ts",
+  {
+    scope: "source.ts",
+    name: "typescript",
     label: "TypeScript",
   },
-  "source.vbnet": {
-    name: "vbnet",
+  {
+    scope: "source.vbnet",
+    name: "vb.net",
     label: "VB.Net",
   },
-  "source.yaml": {
+  {
+    scope: "source.yaml",
     name: "yaml",
     label: "YAML",
   },
-  "text.html.basic": {
+  {
+    scope: "text.html.basic",
     name: "html",
     label: "HTML",
   },
-  "text.html.php": {
+  {
+    scope: "text.html.php",
     name: "php",
     label: "PHP",
   },
-  "text.md": {
-    name: "md",
+  {
+    scope: "text.md",
+    name: "markdown",
     label: "Markdown",
   },
-  "text.xml": {
+  {
+    scope: "text.xml",
     name: "xml",
     label: "XML",
   },
-  "text.xml.svg": {
+  {
+    scope: "text.xml.svg",
     name: "svg",
     label: "SVG",
   },
-};
-const GRAMMARS = {
-  ...COMMON_GRAMMARS,
-};
+];

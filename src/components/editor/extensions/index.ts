@@ -148,6 +148,6 @@ export const defaultExtensions = [
     },
   }).configure({
     starryNight: await createStarryNight(common),
-    defaultLanguage: "md",
+    defaultLanguage: "markdown",
   }),
 ];
