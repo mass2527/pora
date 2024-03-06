@@ -49,6 +49,7 @@
     "@wooorm/starry-night": "^3.2.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "cmdk": "^0.2.1",
     "hast-util-from-html-isomorphic": "^2.0.0",
     "hast-util-to-string": "^3.0.0",
     "jotai": "^2.6.4",
