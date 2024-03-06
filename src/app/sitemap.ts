@@ -23,6 +23,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       include: {
         blog: true,
       },
+      where: {
+        status: "PUBLISHED",
+      },
     }),
   ]);
 
