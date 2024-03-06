@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { Button } from "~/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { assert, cn } from "~/lib/utils";
 import {
   Command,
@@ -57,13 +57,12 @@ export default function CodeBlock({
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <Button
-              variant="outline"
-              className="w-[200px] justify-between"
+              variant="ghost"
               onClick={(event) => event.stopPropagation()}
               onTouchStart={(event) => event.stopPropagation()}
             >
               {currentLanguage?.label}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[200px] p-0">
