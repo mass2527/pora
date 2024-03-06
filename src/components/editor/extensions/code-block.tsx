@@ -60,6 +60,7 @@ export default function CodeBlock({
               variant="outline"
               className="w-[200px] justify-between"
               onClick={(event) => event.stopPropagation()}
+              onTouchStart={(event) => event.stopPropagation()}
             >
               {currentLanguage?.label}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
