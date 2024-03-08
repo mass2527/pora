@@ -146,12 +146,18 @@ export default function UpdateBlogArticleForm({
           />
 
           <button
-            className="text-blue-500 text-sm flex items-center gap-1"
+            className="text-blue-500 text-sm flex items-center gap-1 w-fit"
             type="button"
             onClick={() => buttonRef.current?.click()}
           >
             <PlusIcon className="w-4 h-4" /> 새 카테고리
           </button>
+
+          {article.blog.categories.length === 0 && (
+            <p className="text-sm text-zinc-500">
+              등록된 카테고리가 없나요? 새 카테고리 버튼을 눌러 추가해 주세요.
+            </p>
+          )}
 
           <FormField
             control={form.control}
