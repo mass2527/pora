@@ -168,7 +168,7 @@ export default function UpdateBlogArticleForm({
                 <div className="flex items-center gap-1">
                   <span className="text-sm text-zinc-500">
                     {process.env.NEXT_PUBLIC_DOMAIN_NAME}/blog/
-                    {article.blog.slug}/
+                    {article.blog.slug}/article/
                   </span>
                   <FormControl>
                     <Input placeholder="your-article-slug" {...field} />
