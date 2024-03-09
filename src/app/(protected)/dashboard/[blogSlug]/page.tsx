@@ -10,7 +10,7 @@ import { getBlog } from "./get-blog";
 
 const ARTICLE_STATUSES = {
   PUBLISHED: "발행됨",
-  WRITING: "작성중",
+  WRITING: "작성 중",
   HIDDEN: "숨겨짐",
 } as const;
 
