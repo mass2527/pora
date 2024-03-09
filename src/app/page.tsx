@@ -37,11 +37,12 @@ export default function LandingPage() {
                   <Link className={buttonVariants()} href="/dashboard">
                     시작하기
                   </Link>
+
                   <NewTabLink
                     className={buttonVariants({ variant: "outline" })}
-                    href="/demo"
+                    href="/blog/pora/article/introducing-pora"
                   >
-                    데모
+                    소개
                   </NewTabLink>
                 </div>
               </div>
