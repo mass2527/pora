@@ -103,7 +103,7 @@ export default function CreateBlogForm() {
               <FormLabel>슬러그*</FormLabel>
               <div className="flex items-center gap-1">
                 <span className="text-sm text-zinc-500 whitespace-nowrap">
-                  {process.env.NEXT_PUBLIC_DOMAIN_NAME}/blog/
+                  {process.env.NEXT_PUBLIC_APP_URL}/blog/
                 </span>
                 <FormControl>
                   <Input placeholder="my-blog-slug" {...field} />
